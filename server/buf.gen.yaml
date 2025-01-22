@@ -11,11 +11,5 @@ plugins:
   - local: protoc-gen-connect-go
     out: server/internal/api
     opt: paths=source_relative
-  - local: protoc-gen-es
-    out: client/src/api
-    opt: target=ts
-  - local: protoc-gen-connect-es
-    out: client/src/api
-    opt: target=ts
 inputs:
   - directory: api

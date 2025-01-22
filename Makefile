@@ -3,9 +3,11 @@ ifneq ("$(wildcard .env)","")
 	export $(shell sed 's/=.*//' .env)
 endif
 
+export PATH := $(PWD)/client/node_modules/.bin:$(PATH)
+
 .PHONY: dev
 dev:
-	@$(MAKE) dev-server
+	@$(MAKE) -j2 dev-server dev-client
 
 .PHONY: start-server
 start-server:
@@ -13,16 +15,21 @@ start-server:
 
 .PHONY: dev-server
 dev-server:
-	cd server && air
+	@cd server && air
 
 .PHONY: build-server
 build-server:
 	go build -o=./server/bin/main ./server/cmd
 
+.PHONY: dev-client
+dev-client:
+	@cd client && pnpm dev
+
 .PHONY: codegen
 codegen:
 	buf lint
-	buf generate
+	buf generate --template ./server/buf.gen.yaml api
+	buf generate --template ./client/buf.gen.yaml api
 
 .PHONY: models
 models:
