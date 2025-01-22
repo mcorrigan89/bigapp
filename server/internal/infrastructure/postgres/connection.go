@@ -67,6 +67,7 @@ func CreateTransaction(ctx context.Context, db *pgxpool.Pool) (pgx.Tx, context.C
 
 	tx, err := db.Begin(ctx)
 	if err != nil {
+		cancel()
 		return nil, nil, err
 	}
 

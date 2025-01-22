@@ -1,10 +1,14 @@
-"use client"; // form.tsx
+"use client";
 
 import { useForm } from "@conform-to/react";
 import { parseWithZod } from "@conform-to/zod";
 import { useActionState } from "react";
 import { loginAction } from "./action";
 import { loginSchema } from "./schema";
+import { Button } from "@/components/button";
+import { Input } from "@/components/input";
+import { Label } from "@/components/label";
+import { FormError } from "@/components/form-error";
 
 export default function LoginPage() {
   const [lastResult, action] = useActionState(loginAction, undefined);
@@ -23,19 +27,31 @@ export default function LoginPage() {
   });
 
   return (
-    <div>
-      <form id={form.id} onSubmit={form.onSubmit} action={action} noValidate>
-        <div>
-          <label>Email</label>
-          <input
+    <div className="flex h-screen flex-col items-center justify-center">
+      <form
+        id={form.id}
+        onSubmit={form.onSubmit}
+        action={action}
+        noValidate
+        className="flex flex-col gap-4"
+      >
+        <div className="flex flex-col gap-1 text-mono-1400">
+          <Label htmlFor="email" className="text-md">
+            Email
+          </Label>
+          <Input
+            id="email"
             type="email"
             key={fields.email.key}
             name={fields.email.name}
             defaultValue={fields.email.initialValue}
+            data-error={fields.email.errors && fields.email.errors.length > 0}
           />
-          <div>{fields.email.errors}</div>
+          {fields.email.errors?.map((error) => (
+            <FormError key={error}>{error}</FormError>
+          ))}
         </div>
-        <button>Login</button>
+        <Button variant={"default"}>Login</Button>
       </form>
     </div>
   );

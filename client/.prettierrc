@@ -1,0 +1,9 @@
+{
+    "tabWidth": 2,
+    "useTabs": false,
+    "plugins": ["prettier-plugin-tailwindcss"],
+    "tailwindStylesheet": "./src/styles/globals.css",
+    "tailwindFunctions": ["clsx", "cn", "tw", "cva"],
+    "tailwindPreserveWhitespace": true,
+    "tailwindPreserveDuplicates": false
+}

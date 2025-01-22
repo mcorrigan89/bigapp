@@ -1,6 +1,6 @@
 export default async function Home() {
   return (
-    <div>
+    <div className="bg-brand">
       <div>Hello world</div>
     </div>
   );

@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@import "./colors";
+
+@theme {
+  --font-family-*: initial;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

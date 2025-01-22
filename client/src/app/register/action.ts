@@ -15,8 +15,6 @@ export async function createUserAction(prevState: unknown, formData: FormData) {
     return submission.reply();
   }
 
-  submission.value.email;
-
   try {
     const response = await createUser({
       email: submission.value.email,

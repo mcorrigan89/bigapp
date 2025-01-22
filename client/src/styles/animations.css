@@ -1,0 +1,117 @@
+@theme {
+  --animate-disco: disco 0.4s linear infinite alternate both;
+  --animate-slide-in-top: slide-in-top 0.5s ease-out both;
+  --animate-fade-in-top: fade-in-top 0.2s cubic-bezier(0.39, 0.575, 0.565, 1)
+    both;
+  --animate-fade-out-back: fade-out-bck 0.2s
+    cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  --animate-portal: portal 0.1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+  --animate-portal-bg: portal-bg 0.1s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+
+  --animate-move: stroke-dasharray 15 move 35s linear infinite;
+
+  --animate-border-spin: border-spin 4s linear infinite;
+}
+
+@keyframes slide-in-top {
+  0% {
+    transform: translateY(-1000px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-in-top {
+  0% {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out-bck {
+  0% {
+    transform: translateZ(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateZ(-80px);
+    opacity: 0;
+  }
+}
+
+@keyframes disco {
+  0% {
+    background: #19dcea;
+  }
+  25% {
+    background: #b22cff;
+  }
+  50% {
+    background: #ea2222;
+  }
+  75% {
+    background: #f5be10;
+  }
+  100% {
+    background: #3bd80d;
+  }
+}
+
+@keyframes portal {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes portal-bg {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.joy-path {
+  stroke-dasharray: 45;
+  animation: move 8s ease-out infinite;
+}
+
+@keyframes move {
+  0% {
+    stroke-dashoffset: 200;
+    stroke: #440066;
+    fill: #333333;
+    opacity: 0.7;
+  }
+
+  15% {
+    stroke-dashoffset: 10;
+    stroke: #5f269b;
+    opacity: 0;
+  }
+  100% {
+    stroke-dashoffset: 200;
+    stroke: #5f269b;
+    fill: #333333;
+    opacity: 0.8;
+  }
+}
+
+@keyframes border-spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
