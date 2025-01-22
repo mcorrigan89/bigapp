@@ -3,13 +3,13 @@ managed:
   enabled: true
   override:
     - file_option: go_package_prefix
-      value: github.com/mcorrigan89/simple_auth/server/internal/api/gen
+      value: github.com/mcorrigan89/simple_auth/server/internal/interfaces/rpc/gen
 plugins:
   - local: protoc-gen-go
-    out: server/internal/api/gen
+    out: server/internal/interfaces/rpc/gen
     opt: paths=source_relative
   - local: protoc-gen-connect-go
-    out: server/internal/api/gen
+    out: server/internal/interfaces/rpc/gen
     opt: paths=source_relative
 inputs:
   - directory: api

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"net/http"
 	"os"
 	"sync"
 
@@ -12,6 +13,7 @@ import (
 	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/handlers"
 	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/middleware"
 	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/router"
+	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/rpc/service"
 	"github.com/rs/zerolog"
 )
 
@@ -37,6 +39,7 @@ func main() {
 	defer db.Close()
 
 	wg := sync.WaitGroup{}
+	mux := http.NewServeMux()
 
 	postgresUserRepository := repositories.NewPostgresUserRepository()
 	userService := services.NewUserService(postgresUserRepository)
@@ -44,7 +47,10 @@ func main() {
 	userHandler := handlers.NewUserHandler(&logger, userApplicationService)
 
 	mdlwr := middleware.CreateMiddleware(&cfg, db, &logger, userService)
-	routes := router.NewRouter(mdlwr, userHandler)
+	// HTTP Routes
+	httpRoutes := router.NewRouter(mux, mdlwr, userHandler)
+	// Connect RPC Routes
+	service.NewRpcRoutes(mux, &logger, &wg, userApplicationService)
 
 	server := &appServer{
 		wg:     &wg,
@@ -52,7 +58,7 @@ func main() {
 		logger: &logger,
 	}
 
-	err = server.serve(routes)
+	err = server.serve(httpRoutes)
 	if err != nil {
 		logger.Err(err).Msg("Failed to start server")
 		os.Exit(1)

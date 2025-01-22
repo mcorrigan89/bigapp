@@ -13,8 +13,8 @@ WHERE user_session.token = $1
 AND user_session.user_expired = FALSE;
 
 -- name: CreateUser :one
-INSERT INTO users (given_name, family_name, email, email_verified, avatar_url) 
-VALUES (sqlc.narg(given_name), sqlc.narg(family_name), sqlc.arg(email), sqlc.arg(email_verified)::boolean, sqlc.narg(avatar_url)) RETURNING *;
+INSERT INTO users (id, given_name, family_name, email, email_verified, avatar_url) 
+VALUES (sqlc.arg(id), sqlc.narg(given_name), sqlc.narg(family_name), sqlc.arg(email), sqlc.arg(email_verified)::boolean, sqlc.narg(avatar_url)) RETURNING *;
  
 -- name: UpdateUser :one
 UPDATE users SET given_name = $2, family_name = $3 WHERE id = $1 RETURNING *;

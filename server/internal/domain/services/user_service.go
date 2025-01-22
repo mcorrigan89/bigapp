@@ -13,6 +13,7 @@ type UserService interface {
 	GetUserByID(ctx context.Context, querier models.Querier, userId uuid.UUID) (*entities.UserEntity, error)
 	GetUserByEmail(ctx context.Context, querier models.Querier, email string) (*entities.UserEntity, error)
 	GetUserContextBySessionToken(ctx context.Context, querier models.Querier, sessionToken string) (*entities.UserContextEntity, error)
+	CreateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error)
 }
 
 type userService struct {
@@ -43,6 +44,15 @@ func (s *userService) GetUserByEmail(ctx context.Context, querier models.Querier
 
 func (s *userService) GetUserContextBySessionToken(ctx context.Context, querier models.Querier, sessionToken string) (*entities.UserContextEntity, error) {
 	user, err := s.userRepo.GetUserContextBySessionToken(ctx, querier, sessionToken)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (s *userService) CreateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error) {
+	user, err := s.userRepo.CreateUser(ctx, querier, user)
 	if err != nil {
 		return nil, err
 	}

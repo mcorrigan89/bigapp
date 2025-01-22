@@ -51,3 +51,22 @@ func (repo *postgresUserRepository) GetUserContextBySessionToken(ctx context.Con
 
 	return entities.NewUserContextEntity(row.User, row.UserSession), nil
 }
+
+func (repo *postgresUserRepository) CreateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error) {
+	ctx, cancel := context.WithTimeout(ctx, postgres.DefaultTimeout)
+	defer cancel()
+
+	row, err := querier.CreateUser(ctx, models.CreateUserParams{
+		ID:            user.ID,
+		GivenName:     user.GivenName,
+		FamilyName:    user.FamilyName,
+		Email:         user.Email,
+		EmailVerified: false,
+		AvatarUrl:     nil,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return entities.NewUserEntity(row), nil
+}

@@ -6,6 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/mcorrigan89/simple_auth/server/internal/application"
+	"github.com/mcorrigan89/simple_auth/server/internal/application/queries"
 	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/dto"
 	"github.com/rs/zerolog"
 )
@@ -33,7 +34,11 @@ func (h *UserHandler) GetUserByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.userAppService.GetUserByID(ctx, userUUID)
+	query := queries.UserByIDQuery{
+		ID: userUUID,
+	}
+
+	user, err := h.userAppService.GetUserByID(ctx, query)
 	if err != nil {
 		http.Error(w, "Failed to get user by ID", http.StatusInternalServerError)
 		return
@@ -62,7 +67,11 @@ func (h *UserHandler) GetUserByEmail(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := h.userAppService.GetUserByEmail(ctx, userEmail)
+	query := queries.UserByEmailQuery{
+		Email: userEmail,
+	}
+
+	user, err := h.userAppService.GetUserByEmail(ctx, query)
 	if err != nil {
 		http.Error(w, "Failed to get user by email", http.StatusInternalServerError)
 		return

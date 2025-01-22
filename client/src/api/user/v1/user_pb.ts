@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file user/v1/user.proto.
  */
 export const file_user_v1_user: GenFile = /*@__PURE__*/
-  fileDesc("ChJ1c2VyL3YxL3VzZXIucHJvdG8SB3VzZXIudjEiiwEKBFVzZXISCgoCaWQYASABKAkSFwoKZ2l2ZW5fbmFtZRgCIAEoCUgAiAEBEhgKC2ZhbWlseV9uYW1lGAMgASgJSAGIAQESDQoFZW1haWwYBCABKAkSFgoOZW1haWxfdmVyaWZpZWQYBSABKAhCDQoLX2dpdmVuX25hbWVCDgoMX2ZhbWlseV9uYW1lIjAKC1VzZXJTZXNzaW9uEg0KBXRva2VuGAEgASgJEhIKCmV4cGlyZXNfYXQYAiABKAkiIAoSR2V0VXNlckJ5SWRSZXF1ZXN0EgoKAmlkGAEgASgJIjIKE0dldFVzZXJCeUlkUmVzcG9uc2USGwoEdXNlchgBIAEoCzINLnVzZXIudjEuVXNlciJ0ChFDcmVhdGVVc2VyUmVxdWVzdBIXCgpnaXZlbl9uYW1lGAEgASgJSACIAQESGAoLZmFtaWx5X25hbWUYAiABKAlIAYgBARINCgVlbWFpbBgDIAEoCUINCgtfZ2l2ZW5fbmFtZUIOCgxfZmFtaWx5X25hbWUiMQoSQ3JlYXRlVXNlclJlc3BvbnNlEhsKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXIiLQocR2V0VXNlckJ5U2Vzc2lvblRva2VuUmVxdWVzdBINCgV0b2tlbhgBIAEoCSI8Ch1HZXRVc2VyQnlTZXNzaW9uVG9rZW5SZXNwb25zZRIbCgR1c2VyGAEgASgLMg0udXNlci52MS5Vc2VyMpACCg9JZGVudGl0eVNlcnZpY2USSgoLR2V0VXNlckJ5SWQSGy51c2VyLnYxLkdldFVzZXJCeUlkUmVxdWVzdBocLnVzZXIudjEuR2V0VXNlckJ5SWRSZXNwb25zZSIAEmgKFUdldFVzZXJCeVNlc3Npb25Ub2tlbhIlLnVzZXIudjEuR2V0VXNlckJ5U2Vzc2lvblRva2VuUmVxdWVzdBomLnVzZXIudjEuR2V0VXNlckJ5U2Vzc2lvblRva2VuUmVzcG9uc2UiABJHCgpDcmVhdGVVc2VyEhoudXNlci52MS5DcmVhdGVVc2VyUmVxdWVzdBobLnVzZXIudjEuQ3JlYXRlVXNlclJlc3BvbnNlIgBCVQoLY29tLnVzZXIudjFCCVVzZXJQcm90b1ABogIDVVhYqgIHVXNlci5WMcoCB1VzZXJcVjHiAhNVc2VyXFYxXEdQQk1ldGFkYXRh6gIIVXNlcjo6VjFiBnByb3RvMw");
+  fileDesc("ChJ1c2VyL3YxL3VzZXIucHJvdG8SB3VzZXIudjEiiwEKBFVzZXISCgoCaWQYASABKAkSFwoKZ2l2ZW5fbmFtZRgCIAEoCUgAiAEBEhgKC2ZhbWlseV9uYW1lGAMgASgJSAGIAQESDQoFZW1haWwYBCABKAkSFgoOZW1haWxfdmVyaWZpZWQYBSABKAhCDQoLX2dpdmVuX25hbWVCDgoMX2ZhbWlseV9uYW1lIjAKC1VzZXJTZXNzaW9uEg0KBXRva2VuGAEgASgJEhIKCmV4cGlyZXNfYXQYAiABKAkiIAoSR2V0VXNlckJ5SWRSZXF1ZXN0EgoKAmlkGAEgASgJIjIKE0dldFVzZXJCeUlkUmVzcG9uc2USGwoEdXNlchgBIAEoCzINLnVzZXIudjEuVXNlciJ0ChFDcmVhdGVVc2VyUmVxdWVzdBIXCgpnaXZlbl9uYW1lGAEgASgJSACIAQESGAoLZmFtaWx5X25hbWUYAiABKAlIAYgBARINCgVlbWFpbBgDIAEoCUINCgtfZ2l2ZW5fbmFtZUIOCgxfZmFtaWx5X25hbWUiMQoSQ3JlYXRlVXNlclJlc3BvbnNlEhsKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXIiLQocR2V0VXNlckJ5U2Vzc2lvblRva2VuUmVxdWVzdBINCgV0b2tlbhgBIAEoCSI8Ch1HZXRVc2VyQnlTZXNzaW9uVG9rZW5SZXNwb25zZRIbCgR1c2VyGAEgASgLMg0udXNlci52MS5Vc2VyMowCCgtVc2VyU2VydmljZRJKCgtHZXRVc2VyQnlJZBIbLnVzZXIudjEuR2V0VXNlckJ5SWRSZXF1ZXN0GhwudXNlci52MS5HZXRVc2VyQnlJZFJlc3BvbnNlIgASaAoVR2V0VXNlckJ5U2Vzc2lvblRva2VuEiUudXNlci52MS5HZXRVc2VyQnlTZXNzaW9uVG9rZW5SZXF1ZXN0GiYudXNlci52MS5HZXRVc2VyQnlTZXNzaW9uVG9rZW5SZXNwb25zZSIAEkcKCkNyZWF0ZVVzZXISGi51c2VyLnYxLkNyZWF0ZVVzZXJSZXF1ZXN0GhsudXNlci52MS5DcmVhdGVVc2VyUmVzcG9uc2UiAEJVCgtjb20udXNlci52MUIJVXNlclByb3RvUAGiAgNVWFiqAgdVc2VyLlYxygIHVXNlclxWMeICE1VzZXJcVjFcR1BCTWV0YWRhdGHqAghVc2VyOjpWMWIGcHJvdG8z");
 
 /**
  * @generated from message user.v1.User
@@ -184,11 +184,11 @@ export const GetUserBySessionTokenResponseSchema: GenMessage<GetUserBySessionTok
   messageDesc(file_user_v1_user, 7);
 
 /**
- * @generated from service user.v1.IdentityService
+ * @generated from service user.v1.UserService
  */
-export const IdentityService: GenService<{
+export const UserService: GenService<{
   /**
-   * @generated from rpc user.v1.IdentityService.GetUserById
+   * @generated from rpc user.v1.UserService.GetUserById
    */
   getUserById: {
     methodKind: "unary";
@@ -196,7 +196,7 @@ export const IdentityService: GenService<{
     output: typeof GetUserByIdResponseSchema;
   },
   /**
-   * @generated from rpc user.v1.IdentityService.GetUserBySessionToken
+   * @generated from rpc user.v1.UserService.GetUserBySessionToken
    */
   getUserBySessionToken: {
     methodKind: "unary";
@@ -204,7 +204,7 @@ export const IdentityService: GenService<{
     output: typeof GetUserBySessionTokenResponseSchema;
   },
   /**
-   * @generated from rpc user.v1.IdentityService.CreateUser
+   * @generated from rpc user.v1.UserService.CreateUser
    */
   createUser: {
     methodKind: "unary";

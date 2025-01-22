@@ -31,7 +31,7 @@ message GetUserBySessionTokenRequest { string token = 1; }
 
 message GetUserBySessionTokenResponse { User user = 1; }
 
-service IdentityService {
+service UserService {
   rpc GetUserById(GetUserByIdRequest) returns (GetUserByIdResponse) {}
   rpc GetUserBySessionToken(GetUserBySessionTokenRequest)
       returns (GetUserBySessionTokenResponse) {}
