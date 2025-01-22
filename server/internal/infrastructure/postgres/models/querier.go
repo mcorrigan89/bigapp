@@ -11,9 +11,13 @@ import (
 )
 
 type Querier interface {
+	CreateReferenceLink(ctx context.Context, arg CreateReferenceLinkParams) (ReferenceLink, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	CreateUserSession(ctx context.Context, arg CreateUserSessionParams) (UserSession, error)
+	DeleteReferenceLink(ctx context.Context, id uuid.UUID) (ReferenceLink, error)
 	ExpireUserSession(ctx context.Context, id uuid.UUID) error
+	GetReferenceLinkByID(ctx context.Context, id uuid.UUID) (GetReferenceLinkByIDRow, error)
+	GetReferenceLinkByToken(ctx context.Context, token string) (GetReferenceLinkByTokenRow, error)
 	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)
 	GetUserByID(ctx context.Context, id uuid.UUID) (GetUserByIDRow, error)
 	GetUserBySessionToken(ctx context.Context, token string) (GetUserBySessionTokenRow, error)

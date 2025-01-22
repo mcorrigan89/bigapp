@@ -42,3 +42,23 @@ export async function userByToken(token: string) {
   });
   return res;
 }
+
+export async function loginEmail({ email }: { email: string }) {
+  const client = createClient(UserService, transport);
+  const res = await client.createLoginEmail({
+    email,
+  });
+  return res;
+}
+
+export async function loginWithRefLink({
+  refLinkToken,
+}: {
+  refLinkToken: string;
+}) {
+  const client = createClient(UserService, transport);
+  const res = await client.loginWithReferenceLink({
+    token: refLinkToken,
+  });
+  return res;
+}

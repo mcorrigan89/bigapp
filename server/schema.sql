@@ -50,6 +50,24 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: reference_link; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.reference_link (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    link_id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    link_type text NOT NULL,
+    token text NOT NULL,
+    expires_at timestamp with time zone NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    version integer DEFAULT 1 NOT NULL
+);
+
+
+ALTER TABLE public.reference_link OWNER TO admin;
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: admin
 --
 
@@ -98,6 +116,14 @@ CREATE TABLE public.users (
 
 
 ALTER TABLE public.users OWNER TO admin;
+
+--
+-- Name: reference_link reference_link_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.reference_link
+    ADD CONSTRAINT reference_link_pkey PRIMARY KEY (id);
+
 
 --
 -- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: admin

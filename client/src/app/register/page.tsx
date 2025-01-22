@@ -55,7 +55,7 @@ export default function RegisterPage() {
           />
           <div>{fields.familyName.errors}</div>
         </div>
-        <button>Login</button>
+        <button>Register</button>
       </form>
     </div>
   );

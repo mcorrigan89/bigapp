@@ -10,6 +10,17 @@ import (
 	"github.com/google/uuid"
 )
 
+type ReferenceLink struct {
+	ID        uuid.UUID  `json:"id"`
+	LinkID    uuid.UUID  `json:"link_id"`
+	LinkType  string     `json:"link_type"`
+	Token     string     `json:"token"`
+	ExpiresAt time.Time  `json:"expires_at"`
+	CreatedAt *time.Time `json:"created_at"`
+	UpdatedAt *time.Time `json:"updated_at"`
+	Version   int32      `json:"version"`
+}
+
 type SchemaMigration struct {
 	Version int64 `json:"version"`
 	Dirty   bool  `json:"dirty"`

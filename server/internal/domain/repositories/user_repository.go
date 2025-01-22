@@ -6,7 +6,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
-	"github.com/mcorrigan89/simple_auth/server/internal/models"
+	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres/models"
 )
 
 type UserRepository interface {

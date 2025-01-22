@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"fmt"
 	"sync"
 
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -11,7 +12,8 @@ import (
 	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
 	"github.com/mcorrigan89/simple_auth/server/internal/domain/services"
 	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres"
-	"github.com/mcorrigan89/simple_auth/server/internal/models"
+	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres/models"
+
 	"github.com/rs/zerolog"
 )
 
@@ -20,6 +22,8 @@ type UserApplicationService interface {
 	GetUserByEmail(ctx context.Context, query queries.UserByEmailQuery) (*entities.UserEntity, error)
 	GetUserBySessionToken(ctx context.Context, query queries.UserBySessionTokenQuery) (*entities.UserEntity, error)
 	CreateUser(ctx context.Context, cmd commands.CreateNewUserCommand) (*entities.UserContextEntity, error)
+	RequestEmailLogin(ctx context.Context, cmd commands.RequestEmailLoginCommand) error
+	LoginWithReferenceLink(ctx context.Context, cmd commands.LoginWithReferenceLinkCommand) (*entities.UserContextEntity, error)
 }
 
 type userApplicationService struct {
@@ -27,25 +31,26 @@ type userApplicationService struct {
 	wg          *sync.WaitGroup
 	logger      *zerolog.Logger
 	db          *pgxpool.Pool
+	queries     models.Querier
 	userService services.UserService
 }
 
 func NewUserApplicationService(db *pgxpool.Pool, wg *sync.WaitGroup, cfg *common.Config, logger *zerolog.Logger, userService services.UserService) *userApplicationService {
+	dbQueries := models.New(db)
 	return &userApplicationService{
 		db:          db,
 		config:      cfg,
 		wg:          wg,
 		logger:      logger,
+		queries:     dbQueries,
 		userService: userService,
 	}
 }
 
 func (app *userApplicationService) GetUserByID(ctx context.Context, query queries.UserByIDQuery) (*entities.UserEntity, error) {
-	queries := models.New(app.db)
-
 	app.logger.Info().Ctx(ctx).Msg("Getting user by ID")
 
-	user, err := app.userService.GetUserByID(ctx, queries, query.ID)
+	user, err := app.userService.GetUserByID(ctx, app.queries, query.ID)
 	if err != nil {
 		app.logger.Err(err).Ctx(ctx).Msg("Failed to get user by ID")
 		return nil, err
@@ -55,11 +60,9 @@ func (app *userApplicationService) GetUserByID(ctx context.Context, query querie
 }
 
 func (app *userApplicationService) GetUserByEmail(ctx context.Context, query queries.UserByEmailQuery) (*entities.UserEntity, error) {
-	queries := models.New(app.db)
-
 	app.logger.Info().Ctx(ctx).Msg("Getting user by email")
 
-	user, err := app.userService.GetUserByEmail(ctx, queries, query.Email)
+	user, err := app.userService.GetUserByEmail(ctx, app.queries, query.Email)
 	if err != nil {
 		app.logger.Err(err).Ctx(ctx).Msg("Failed to get user by email")
 		return nil, err
@@ -69,11 +72,9 @@ func (app *userApplicationService) GetUserByEmail(ctx context.Context, query que
 }
 
 func (app *userApplicationService) GetUserBySessionToken(ctx context.Context, query queries.UserBySessionTokenQuery) (*entities.UserEntity, error) {
-	queries := models.New(app.db)
-
 	app.logger.Info().Ctx(ctx).Msg("Getting user by sessionToken")
 
-	userContext, err := app.userService.GetUserContextBySessionToken(ctx, queries, query.SessionToken)
+	userContext, err := app.userService.GetUserContextBySessionToken(ctx, app.queries, query.SessionToken)
 	if err != nil {
 		app.logger.Err(err).Ctx(ctx).Msg("Failed to get user by sessionToken")
 		return nil, err
@@ -83,7 +84,6 @@ func (app *userApplicationService) GetUserBySessionToken(ctx context.Context, qu
 }
 
 func (app *userApplicationService) CreateUser(ctx context.Context, cmd commands.CreateNewUserCommand) (*entities.UserContextEntity, error) {
-	queries := models.New(app.db)
 	tx, cancel, err := postgres.CreateTransaction(ctx, app.db)
 	defer cancel()
 	if err != nil {
@@ -92,7 +92,7 @@ func (app *userApplicationService) CreateUser(ctx context.Context, cmd commands.
 	}
 	defer tx.Rollback(ctx)
 
-	qtx := queries.WithTx(tx)
+	qtx := models.New(app.db).WithTx(tx)
 
 	app.logger.Info().Ctx(ctx).Msg("Creating new user")
 
@@ -107,6 +107,52 @@ func (app *userApplicationService) CreateUser(ctx context.Context, cmd commands.
 	userSession, err := app.userService.CreateSession(ctx, qtx, createdUser)
 	if err != nil {
 		app.logger.Err(err).Ctx(ctx).Msg("Failed to create new session")
+		return nil, err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to commit transaction")
+		return nil, err
+	}
+
+	return userSession, nil
+}
+
+func (app *userApplicationService) RequestEmailLogin(ctx context.Context, cmd commands.RequestEmailLoginCommand) error {
+	app.logger.Info().Ctx(ctx).Msg("Creating new user")
+
+	email := cmd.ToDomain()
+
+	loginLink, err := app.userService.CreateLoginLink(ctx, app.queries, email)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to create login link")
+		return err
+	}
+
+	fmt.Println(loginLink.Token)
+
+	return nil
+}
+
+func (app *userApplicationService) LoginWithReferenceLink(ctx context.Context, cmd commands.LoginWithReferenceLinkCommand) (*entities.UserContextEntity, error) {
+	app.logger.Info().Ctx(ctx).Msg("Login with reference link")
+
+	tx, cancel, err := postgres.CreateTransaction(ctx, app.db)
+	defer cancel()
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to create transaction")
+		return nil, err
+	}
+	defer tx.Rollback(ctx)
+
+	qtx := models.New(app.db).WithTx(tx)
+
+	token := cmd.ToDomain()
+
+	userSession, err := app.userService.LoginWithLink(ctx, qtx, token)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to create login link")
 		return nil, err
 	}
 

@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file user/v1/user.proto.
  */
 export const file_user_v1_user: GenFile = /*@__PURE__*/
-  fileDesc("ChJ1c2VyL3YxL3VzZXIucHJvdG8SB3VzZXIudjEiiwEKBFVzZXISCgoCaWQYASABKAkSFwoKZ2l2ZW5fbmFtZRgCIAEoCUgAiAEBEhgKC2ZhbWlseV9uYW1lGAMgASgJSAGIAQESDQoFZW1haWwYBCABKAkSFgoOZW1haWxfdmVyaWZpZWQYBSABKAhCDQoLX2dpdmVuX25hbWVCDgoMX2ZhbWlseV9uYW1lIjAKC1VzZXJTZXNzaW9uEg0KBXRva2VuGAEgASgJEhIKCmV4cGlyZXNfYXQYAiABKAkiIAoSR2V0VXNlckJ5SWRSZXF1ZXN0EgoKAmlkGAEgASgJIjIKE0dldFVzZXJCeUlkUmVzcG9uc2USGwoEdXNlchgBIAEoCzINLnVzZXIudjEuVXNlciJ0ChFDcmVhdGVVc2VyUmVxdWVzdBIXCgpnaXZlbl9uYW1lGAEgASgJSACIAQESGAoLZmFtaWx5X25hbWUYAiABKAlIAYgBARINCgVlbWFpbBgDIAEoCUINCgtfZ2l2ZW5fbmFtZUIOCgxfZmFtaWx5X25hbWUiWAoSQ3JlYXRlVXNlclJlc3BvbnNlEhsKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXISJQoHc2Vzc2lvbhgCIAEoCzIULnVzZXIudjEuVXNlclNlc3Npb24iLQocR2V0VXNlckJ5U2Vzc2lvblRva2VuUmVxdWVzdBINCgV0b2tlbhgBIAEoCSJjCh1HZXRVc2VyQnlTZXNzaW9uVG9rZW5SZXNwb25zZRIbCgR1c2VyGAEgASgLMg0udXNlci52MS5Vc2VyEiUKB3Nlc3Npb24YAiABKAsyFC51c2VyLnYxLlVzZXJTZXNzaW9uMowCCgtVc2VyU2VydmljZRJKCgtHZXRVc2VyQnlJZBIbLnVzZXIudjEuR2V0VXNlckJ5SWRSZXF1ZXN0GhwudXNlci52MS5HZXRVc2VyQnlJZFJlc3BvbnNlIgASaAoVR2V0VXNlckJ5U2Vzc2lvblRva2VuEiUudXNlci52MS5HZXRVc2VyQnlTZXNzaW9uVG9rZW5SZXF1ZXN0GiYudXNlci52MS5HZXRVc2VyQnlTZXNzaW9uVG9rZW5SZXNwb25zZSIAEkcKCkNyZWF0ZVVzZXISGi51c2VyLnYxLkNyZWF0ZVVzZXJSZXF1ZXN0GhsudXNlci52MS5DcmVhdGVVc2VyUmVzcG9uc2UiAEJVCgtjb20udXNlci52MUIJVXNlclByb3RvUAGiAgNVWFiqAgdVc2VyLlYxygIHVXNlclxWMeICE1VzZXJcVjFcR1BCTWV0YWRhdGHqAghVc2VyOjpWMWIGcHJvdG8z");
+  fileDesc("ChJ1c2VyL3YxL3VzZXIucHJvdG8SB3VzZXIudjEiiwEKBFVzZXISCgoCaWQYASABKAkSFwoKZ2l2ZW5fbmFtZRgCIAEoCUgAiAEBEhgKC2ZhbWlseV9uYW1lGAMgASgJSAGIAQESDQoFZW1haWwYBCABKAkSFgoOZW1haWxfdmVyaWZpZWQYBSABKAhCDQoLX2dpdmVuX25hbWVCDgoMX2ZhbWlseV9uYW1lIjAKC1VzZXJTZXNzaW9uEg0KBXRva2VuGAEgASgJEhIKCmV4cGlyZXNfYXQYAiABKAkiIAoSR2V0VXNlckJ5SWRSZXF1ZXN0EgoKAmlkGAEgASgJIjIKE0dldFVzZXJCeUlkUmVzcG9uc2USGwoEdXNlchgBIAEoCzINLnVzZXIudjEuVXNlciJ0ChFDcmVhdGVVc2VyUmVxdWVzdBIXCgpnaXZlbl9uYW1lGAEgASgJSACIAQESGAoLZmFtaWx5X25hbWUYAiABKAlIAYgBARINCgVlbWFpbBgDIAEoCUINCgtfZ2l2ZW5fbmFtZUIOCgxfZmFtaWx5X25hbWUiWAoSQ3JlYXRlVXNlclJlc3BvbnNlEhsKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXISJQoHc2Vzc2lvbhgCIAEoCzIULnVzZXIudjEuVXNlclNlc3Npb24iLQocR2V0VXNlckJ5U2Vzc2lvblRva2VuUmVxdWVzdBINCgV0b2tlbhgBIAEoCSJjCh1HZXRVc2VyQnlTZXNzaW9uVG9rZW5SZXNwb25zZRIbCgR1c2VyGAEgASgLMg0udXNlci52MS5Vc2VyEiUKB3Nlc3Npb24YAiABKAsyFC51c2VyLnYxLlVzZXJTZXNzaW9uIigKF0NyZWF0ZUxvZ2luRW1haWxSZXF1ZXN0Eg0KBWVtYWlsGAEgASgJIioKGENyZWF0ZUxvZ2luRW1haWxSZXNwb25zZRIOCgZzdGF0dXMYASABKAkiLgodTG9naW5XaXRoUmVmZXJlbmNlTGlua1JlcXVlc3QSDQoFdG9rZW4YASABKAkiZAoeTG9naW5XaXRoUmVmZXJlbmNlTGlua1Jlc3BvbnNlEhsKBHVzZXIYASABKAsyDS51c2VyLnYxLlVzZXISJQoHc2Vzc2lvbhgCIAEoCzIULnVzZXIudjEuVXNlclNlc3Npb24y1AMKC1VzZXJTZXJ2aWNlEkoKC0dldFVzZXJCeUlkEhsudXNlci52MS5HZXRVc2VyQnlJZFJlcXVlc3QaHC51c2VyLnYxLkdldFVzZXJCeUlkUmVzcG9uc2UiABJoChVHZXRVc2VyQnlTZXNzaW9uVG9rZW4SJS51c2VyLnYxLkdldFVzZXJCeVNlc3Npb25Ub2tlblJlcXVlc3QaJi51c2VyLnYxLkdldFVzZXJCeVNlc3Npb25Ub2tlblJlc3BvbnNlIgASRwoKQ3JlYXRlVXNlchIaLnVzZXIudjEuQ3JlYXRlVXNlclJlcXVlc3QaGy51c2VyLnYxLkNyZWF0ZVVzZXJSZXNwb25zZSIAElkKEENyZWF0ZUxvZ2luRW1haWwSIC51c2VyLnYxLkNyZWF0ZUxvZ2luRW1haWxSZXF1ZXN0GiEudXNlci52MS5DcmVhdGVMb2dpbkVtYWlsUmVzcG9uc2UiABJrChZMb2dpbldpdGhSZWZlcmVuY2VMaW5rEiYudXNlci52MS5Mb2dpbldpdGhSZWZlcmVuY2VMaW5rUmVxdWVzdBonLnVzZXIudjEuTG9naW5XaXRoUmVmZXJlbmNlTGlua1Jlc3BvbnNlIgBCVQoLY29tLnVzZXIudjFCCVVzZXJQcm90b1ABogIDVVhYqgIHVXNlci5WMcoCB1VzZXJcVjHiAhNVc2VyXFYxXEdQQk1ldGFkYXRh6gIIVXNlcjo6VjFiBnByb3RvMw");
 
 /**
  * @generated from message user.v1.User
@@ -194,6 +194,79 @@ export const GetUserBySessionTokenResponseSchema: GenMessage<GetUserBySessionTok
   messageDesc(file_user_v1_user, 7);
 
 /**
+ * @generated from message user.v1.CreateLoginEmailRequest
+ */
+export type CreateLoginEmailRequest = Message<"user.v1.CreateLoginEmailRequest"> & {
+  /**
+   * @generated from field: string email = 1;
+   */
+  email: string;
+};
+
+/**
+ * Describes the message user.v1.CreateLoginEmailRequest.
+ * Use `create(CreateLoginEmailRequestSchema)` to create a new message.
+ */
+export const CreateLoginEmailRequestSchema: GenMessage<CreateLoginEmailRequest> = /*@__PURE__*/
+  messageDesc(file_user_v1_user, 8);
+
+/**
+ * @generated from message user.v1.CreateLoginEmailResponse
+ */
+export type CreateLoginEmailResponse = Message<"user.v1.CreateLoginEmailResponse"> & {
+  /**
+   * @generated from field: string status = 1;
+   */
+  status: string;
+};
+
+/**
+ * Describes the message user.v1.CreateLoginEmailResponse.
+ * Use `create(CreateLoginEmailResponseSchema)` to create a new message.
+ */
+export const CreateLoginEmailResponseSchema: GenMessage<CreateLoginEmailResponse> = /*@__PURE__*/
+  messageDesc(file_user_v1_user, 9);
+
+/**
+ * @generated from message user.v1.LoginWithReferenceLinkRequest
+ */
+export type LoginWithReferenceLinkRequest = Message<"user.v1.LoginWithReferenceLinkRequest"> & {
+  /**
+   * @generated from field: string token = 1;
+   */
+  token: string;
+};
+
+/**
+ * Describes the message user.v1.LoginWithReferenceLinkRequest.
+ * Use `create(LoginWithReferenceLinkRequestSchema)` to create a new message.
+ */
+export const LoginWithReferenceLinkRequestSchema: GenMessage<LoginWithReferenceLinkRequest> = /*@__PURE__*/
+  messageDesc(file_user_v1_user, 10);
+
+/**
+ * @generated from message user.v1.LoginWithReferenceLinkResponse
+ */
+export type LoginWithReferenceLinkResponse = Message<"user.v1.LoginWithReferenceLinkResponse"> & {
+  /**
+   * @generated from field: user.v1.User user = 1;
+   */
+  user?: User;
+
+  /**
+   * @generated from field: user.v1.UserSession session = 2;
+   */
+  session?: UserSession;
+};
+
+/**
+ * Describes the message user.v1.LoginWithReferenceLinkResponse.
+ * Use `create(LoginWithReferenceLinkResponseSchema)` to create a new message.
+ */
+export const LoginWithReferenceLinkResponseSchema: GenMessage<LoginWithReferenceLinkResponse> = /*@__PURE__*/
+  messageDesc(file_user_v1_user, 11);
+
+/**
  * @generated from service user.v1.UserService
  */
 export const UserService: GenService<{
@@ -220,6 +293,22 @@ export const UserService: GenService<{
     methodKind: "unary";
     input: typeof CreateUserRequestSchema;
     output: typeof CreateUserResponseSchema;
+  },
+  /**
+   * @generated from rpc user.v1.UserService.CreateLoginEmail
+   */
+  createLoginEmail: {
+    methodKind: "unary";
+    input: typeof CreateLoginEmailRequestSchema;
+    output: typeof CreateLoginEmailResponseSchema;
+  },
+  /**
+   * @generated from rpc user.v1.UserService.LoginWithReferenceLink
+   */
+  loginWithReferenceLink: {
+    methodKind: "unary";
+    input: typeof LoginWithReferenceLinkRequestSchema;
+    output: typeof LoginWithReferenceLinkResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_user_v1_user, 0);

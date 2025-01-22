@@ -42,7 +42,9 @@ func main() {
 	mux := http.NewServeMux()
 
 	postgresUserRepository := repositories.NewPostgresUserRepository()
-	userService := services.NewUserService(postgresUserRepository)
+	postgresReferenceLinkRepository := repositories.NewPostgresReferenceLinkRepository()
+
+	userService := services.NewUserService(postgresUserRepository, postgresReferenceLinkRepository)
 	userApplicationService := application.NewUserApplicationService(db, &wg, &cfg, &logger, userService)
 	userHandler := handlers.NewUserHandler(&logger, userApplicationService)
 

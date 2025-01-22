@@ -19,3 +19,19 @@ func (cmd *CreateNewUserCommand) ToDomain() *entities.UserEntity {
 		FamilyName: cmd.FamilyName,
 	}
 }
+
+type RequestEmailLoginCommand struct {
+	Email string `json:"email" validate:"required,email"`
+}
+
+func (cmd *RequestEmailLoginCommand) ToDomain() string {
+	return cmd.Email
+}
+
+type LoginWithReferenceLinkCommand struct {
+	ReferenceLinkToken string `json:"token" validate:"required"`
+}
+
+func (cmd *LoginWithReferenceLinkCommand) ToDomain() string {
+	return cmd.ReferenceLinkToken
+}

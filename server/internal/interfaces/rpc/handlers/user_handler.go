@@ -60,7 +60,7 @@ func (rpc *userServiceV1) GetUserById(ctx context.Context, req *connect.Request[
 			Email:      userEntity.Email,
 		},
 	})
-	res.Header().Set("Identity-Version", "v1")
+	res.Header().Set("User-Version", "v1")
 	return res, nil
 }
 
@@ -94,7 +94,7 @@ func (rpc *userServiceV1) GetUserBySessionToken(ctx context.Context, req *connec
 		},
 	})
 
-	res.Header().Set("Identity-Version", "v1")
+	res.Header().Set("User-Version", "v1")
 	return res, nil
 }
 
@@ -131,6 +131,58 @@ func (rpc *userServiceV1) CreateUser(ctx context.Context, req *connect.Request[u
 		},
 	})
 
-	res.Header().Set("Identity-Version", "v1")
+	res.Header().Set("User-Version", "v1")
+	return res, nil
+}
+
+func (rpc *userServiceV1) CreateLoginEmail(ctx context.Context, req *connect.Request[userv1.CreateLoginEmailRequest]) (*connect.Response[userv1.CreateLoginEmailResponse], error) {
+	email := req.Msg.Email
+
+	cmd := commands.RequestEmailLoginCommand{
+		Email: email,
+	}
+
+	err := rpc.userApplicationService.RequestEmailLogin(ctx, cmd)
+	if err != nil {
+		rpc.logger.Err(err).Ctx(ctx).Msg("Error getting user by session token")
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+
+	res := connect.NewResponse(&userv1.CreateLoginEmailResponse{
+		Status: "OK",
+	})
+
+	res.Header().Set("User-Version", "v1")
+	return res, nil
+}
+
+func (rpc *userServiceV1) LoginWithReferenceLink(ctx context.Context, req *connect.Request[userv1.LoginWithReferenceLinkRequest]) (*connect.Response[userv1.LoginWithReferenceLinkResponse], error) {
+
+	token := req.Msg.Token
+
+	cmd := commands.LoginWithReferenceLinkCommand{
+		ReferenceLinkToken: token,
+	}
+
+	userSessionEntity, err := rpc.userApplicationService.LoginWithReferenceLink(ctx, cmd)
+	if err != nil {
+		rpc.logger.Err(err).Ctx(ctx).Msg("Error getting user by session token")
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+
+	res := connect.NewResponse(&userv1.LoginWithReferenceLinkResponse{
+		User: &userv1.User{
+			Id:         userSessionEntity.User.ID.String(),
+			GivenName:  userSessionEntity.User.GivenName,
+			FamilyName: userSessionEntity.User.FamilyName,
+			Email:      userSessionEntity.User.Email,
+		},
+		Session: &userv1.UserSession{
+			Token:     userSessionEntity.SessionToken,
+			ExpiresAt: userSessionEntity.ExpiresAt().Format(time.RFC1123Z),
+		},
+	})
+
+	res.Header().Set("User-Version", "v1")
 	return res, nil
 }

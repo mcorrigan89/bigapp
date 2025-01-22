@@ -1,6 +1,6 @@
-ifneq ("$(wildcard .env)","")
-	include .env
-	export $(shell sed 's/=.*//' .env)
+ifneq ("$(wildcard server/.env)","")
+	include server/.env
+	export $(shell sed 's/=.*//' server/.env)
 endif
 
 export PATH := $(PWD)/client/node_modules/.bin:$(PATH)
