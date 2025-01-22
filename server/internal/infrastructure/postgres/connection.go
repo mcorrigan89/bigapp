@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/lib/pq"
 	"github.com/mcorrigan89/simple_auth/server/internal/common"
@@ -59,4 +60,15 @@ func OpenDBPool(cfg *common.Config) (*pgxpool.Pool, error) {
 	}
 
 	return dbpool, nil
+}
+
+func CreateTransaction(ctx context.Context, db *pgxpool.Pool) (pgx.Tx, context.CancelFunc, error) {
+	ctx, cancel := context.WithTimeout(ctx, DefaultTimeout)
+
+	tx, err := db.Begin(ctx)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return tx, cancel, nil
 }

@@ -9,8 +9,7 @@ WHERE users.email = $1;
 -- name: GetUserBySessionToken :one
 SELECT sqlc.embed(users), sqlc.embed(user_session) FROM users
 JOIN user_session ON users.id = user_session.user_id
-WHERE user_session.token = $1
-AND user_session.user_expired = FALSE;
+WHERE user_session.token = $1;
 
 -- name: CreateUser :one
 INSERT INTO users (id, given_name, family_name, email, email_verified, avatar_url) 

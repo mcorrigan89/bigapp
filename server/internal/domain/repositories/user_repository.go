@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
@@ -13,4 +14,5 @@ type UserRepository interface {
 	GetUserByEmail(ctx context.Context, querier models.Querier, email string) (*entities.UserEntity, error)
 	GetUserContextBySessionToken(ctx context.Context, querier models.Querier, sessionToken string) (*entities.UserContextEntity, error)
 	CreateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error)
+	CreateSession(ctx context.Context, querier models.Querier, user *entities.UserEntity, token string, expiresAt time.Time) (*entities.UserContextEntity, error)
 }

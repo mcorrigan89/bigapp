@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
@@ -49,7 +50,9 @@ func (repo *postgresUserRepository) GetUserContextBySessionToken(ctx context.Con
 		return nil, err
 	}
 
-	return entities.NewUserContextEntity(row.User, row.UserSession), nil
+	userEntity := entities.NewUserEntity(row.User)
+
+	return entities.NewUserContextEntity(userEntity, row.UserSession), nil
 }
 
 func (repo *postgresUserRepository) CreateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error) {
@@ -69,4 +72,20 @@ func (repo *postgresUserRepository) CreateUser(ctx context.Context, querier mode
 	}
 
 	return entities.NewUserEntity(row), nil
+}
+
+func (repo *postgresUserRepository) CreateSession(ctx context.Context, querier models.Querier, user *entities.UserEntity, token string, expiresAt time.Time) (*entities.UserContextEntity, error) {
+	ctx, cancel := context.WithTimeout(ctx, postgres.DefaultTimeout)
+	defer cancel()
+
+	row, err := querier.CreateUserSession(ctx, models.CreateUserSessionParams{
+		UserID:    user.ID,
+		Token:     token,
+		ExpiresAt: expiresAt,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return entities.NewUserContextEntity(user, row), nil
 }

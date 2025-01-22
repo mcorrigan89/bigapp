@@ -2,11 +2,13 @@ package services
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
 	"github.com/mcorrigan89/simple_auth/server/internal/domain/repositories"
 	"github.com/mcorrigan89/simple_auth/server/internal/models"
+	"github.com/rs/xid"
 )
 
 type UserService interface {
@@ -14,6 +16,7 @@ type UserService interface {
 	GetUserByEmail(ctx context.Context, querier models.Querier, email string) (*entities.UserEntity, error)
 	GetUserContextBySessionToken(ctx context.Context, querier models.Querier, sessionToken string) (*entities.UserContextEntity, error)
 	CreateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error)
+	CreateSession(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserContextEntity, error)
 }
 
 type userService struct {
@@ -58,4 +61,17 @@ func (s *userService) CreateUser(ctx context.Context, querier models.Querier, us
 	}
 
 	return user, nil
+}
+
+func (s *userService) CreateSession(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserContextEntity, error) {
+
+	token := xid.New().String()
+	expiresAt := time.Now().Add(time.Hour * 24 * 30)
+
+	userSession, err := s.userRepo.CreateSession(ctx, querier, user, token, expiresAt)
+	if err != nil {
+		return nil, err
+	}
+
+	return userSession, nil
 }

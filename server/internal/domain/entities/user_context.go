@@ -16,11 +16,11 @@ type UserContextEntity struct {
 	impersonatorID *uuid.UUID
 }
 
-func NewUserContextEntity(userModel models.User, userSessionModel models.UserSession) *UserContextEntity {
+func NewUserContextEntity(user *UserEntity, userSessionModel models.UserSession) *UserContextEntity {
 	return &UserContextEntity{
 		SessionToken:   userSessionModel.Token,
-		UserID:         userModel.ID,
-		User:           NewUserEntity(userModel),
+		UserID:         user.ID,
+		User:           user,
 		userExpired:    userSessionModel.UserExpired,
 		expiresAt:      userSessionModel.ExpiresAt,
 		impersonatorID: userSessionModel.ImpersonatorID,
@@ -29,4 +29,8 @@ func NewUserContextEntity(userModel models.User, userSessionModel models.UserSes
 
 func (uc *UserContextEntity) IsExpired() bool {
 	return uc.userExpired || uc.expiresAt.Before(time.Now())
+}
+
+func (uc *UserContextEntity) ExpiresAt() time.Time {
+	return uc.expiresAt
 }

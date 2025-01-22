@@ -142,7 +142,6 @@ const getUserBySessionToken = `-- name: GetUserBySessionToken :one
 SELECT users.id, users.given_name, users.family_name, users.email, users.email_verified, users.avatar_url, users.created_at, users.updated_at, users.version, user_session.id, user_session.user_id, user_session.impersonator_id, user_session.token, user_session.expires_at, user_session.user_expired, user_session.created_at, user_session.updated_at, user_session.version FROM users
 JOIN user_session ON users.id = user_session.user_id
 WHERE user_session.token = $1
-AND user_session.user_expired = FALSE
 `
 
 type GetUserBySessionTokenRow struct {

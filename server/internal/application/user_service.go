@@ -10,6 +10,7 @@ import (
 	"github.com/mcorrigan89/simple_auth/server/internal/common"
 	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
 	"github.com/mcorrigan89/simple_auth/server/internal/domain/services"
+	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres"
 	"github.com/mcorrigan89/simple_auth/server/internal/models"
 	"github.com/rs/zerolog"
 )
@@ -18,7 +19,7 @@ type UserApplicationService interface {
 	GetUserByID(ctx context.Context, query queries.UserByIDQuery) (*entities.UserEntity, error)
 	GetUserByEmail(ctx context.Context, query queries.UserByEmailQuery) (*entities.UserEntity, error)
 	GetUserBySessionToken(ctx context.Context, query queries.UserBySessionTokenQuery) (*entities.UserEntity, error)
-	CreateUser(ctx context.Context, cmd commands.CreateNewUserCommand) (*entities.UserEntity, error)
+	CreateUser(ctx context.Context, cmd commands.CreateNewUserCommand) (*entities.UserContextEntity, error)
 }
 
 type userApplicationService struct {
@@ -81,18 +82,39 @@ func (app *userApplicationService) GetUserBySessionToken(ctx context.Context, qu
 	return userContext.User, nil
 }
 
-func (app *userApplicationService) CreateUser(ctx context.Context, cmd commands.CreateNewUserCommand) (*entities.UserEntity, error) {
+func (app *userApplicationService) CreateUser(ctx context.Context, cmd commands.CreateNewUserCommand) (*entities.UserContextEntity, error) {
 	queries := models.New(app.db)
+	tx, cancel, err := postgres.CreateTransaction(ctx, app.db)
+	defer cancel()
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to create transaction")
+		return nil, err
+	}
+	defer tx.Rollback(ctx)
+
+	qtx := queries.WithTx(tx)
 
 	app.logger.Info().Ctx(ctx).Msg("Creating new user")
 
 	userEntity := cmd.ToDomain()
 
-	createdUser, err := app.userService.CreateUser(ctx, queries, userEntity)
+	createdUser, err := app.userService.CreateUser(ctx, qtx, userEntity)
 	if err != nil {
 		app.logger.Err(err).Ctx(ctx).Msg("Failed to create new user")
 		return nil, err
 	}
 
-	return createdUser, nil
+	userSession, err := app.userService.CreateSession(ctx, qtx, createdUser)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to create new session")
+		return nil, err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to commit transaction")
+		return nil, err
+	}
+
+	return userSession, nil
 }

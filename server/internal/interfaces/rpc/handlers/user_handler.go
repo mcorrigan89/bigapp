@@ -3,12 +3,14 @@ package handlers
 import (
 	"context"
 	"errors"
+	"time"
 
 	"connectrpc.com/connect"
 
 	"github.com/google/uuid"
 
 	"github.com/mcorrigan89/simple_auth/server/internal/application"
+	"github.com/mcorrigan89/simple_auth/server/internal/application/commands"
 	"github.com/mcorrigan89/simple_auth/server/internal/application/queries"
 	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
 	userv1 "github.com/mcorrigan89/simple_auth/server/internal/interfaces/rpc/gen/user/v1"
@@ -96,6 +98,39 @@ func (rpc *userServiceV1) GetUserBySessionToken(ctx context.Context, req *connec
 	return res, nil
 }
 
-func (s *userServiceV1) CreateUser(ctx context.Context, req *connect.Request[userv1.CreateUserRequest]) (*connect.Response[userv1.CreateUserResponse], error) {
-	panic("not implemented")
+func (rpc *userServiceV1) CreateUser(ctx context.Context, req *connect.Request[userv1.CreateUserRequest]) (*connect.Response[userv1.CreateUserResponse], error) {
+	email := req.Msg.Email
+	givenName := req.Msg.GivenName
+	familyName := req.Msg.FamilyName
+
+	cmd := commands.CreateNewUserCommand{
+		Email:      email,
+		GivenName:  givenName,
+		FamilyName: familyName,
+	}
+
+	userSessionEntity, err := rpc.userApplicationService.CreateUser(ctx, cmd)
+	if err != nil {
+		if err == entities.ErrUserNotFound {
+			return nil, connect.NewError(connect.CodeNotFound, err)
+		}
+		rpc.logger.Err(err).Ctx(ctx).Msg("Error getting user by session token")
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+
+	res := connect.NewResponse(&userv1.CreateUserResponse{
+		User: &userv1.User{
+			Id:         userSessionEntity.User.ID.String(),
+			GivenName:  userSessionEntity.User.GivenName,
+			FamilyName: userSessionEntity.User.FamilyName,
+			Email:      userSessionEntity.User.Email,
+		},
+		Session: &userv1.UserSession{
+			Token:     userSessionEntity.SessionToken,
+			ExpiresAt: userSessionEntity.ExpiresAt().Format(time.RFC1123Z),
+		},
+	})
+
+	res.Header().Set("Identity-Version", "v1")
+	return res, nil
 }
