@@ -16,7 +16,7 @@ func NewPostgresUserRepository() *postgresUserRepository {
 	return &postgresUserRepository{}
 }
 
-func (repo *postgresUserRepository) GetUserByID(ctx context.Context, querier *models.Queries, userId uuid.UUID) (*entities.UserEntity, error) {
+func (repo *postgresUserRepository) GetUserByID(ctx context.Context, querier models.Querier, userId uuid.UUID) (*entities.UserEntity, error) {
 	ctx, cancel := context.WithTimeout(ctx, postgres.DefaultTimeout)
 	defer cancel()
 
@@ -28,7 +28,7 @@ func (repo *postgresUserRepository) GetUserByID(ctx context.Context, querier *mo
 	return entities.NewUserEntity(row.User), nil
 }
 
-func (repo *postgresUserRepository) GetUserByEmail(ctx context.Context, querier *models.Queries, email string) (*entities.UserEntity, error) {
+func (repo *postgresUserRepository) GetUserByEmail(ctx context.Context, querier models.Querier, email string) (*entities.UserEntity, error) {
 	ctx, cancel := context.WithTimeout(ctx, postgres.DefaultTimeout)
 	defer cancel()
 
@@ -38,4 +38,16 @@ func (repo *postgresUserRepository) GetUserByEmail(ctx context.Context, querier 
 	}
 
 	return entities.NewUserEntity(row.User), nil
+}
+
+func (repo *postgresUserRepository) GetUserContextBySessionToken(ctx context.Context, querier models.Querier, sessionToken string) (*entities.UserContextEntity, error) {
+	ctx, cancel := context.WithTimeout(ctx, postgres.DefaultTimeout)
+	defer cancel()
+
+	row, err := querier.GetUserBySessionToken(ctx, sessionToken)
+	if err != nil {
+		return nil, err
+	}
+
+	return entities.NewUserContextEntity(row.User, row.UserSession), nil
 }

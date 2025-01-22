@@ -10,8 +10,9 @@ import (
 )
 
 type UserService interface {
-	GetUserByID(ctx context.Context, querier *models.Queries, userId uuid.UUID) (*entities.UserEntity, error)
-	GetUserByEmail(ctx context.Context, querier *models.Queries, email string) (*entities.UserEntity, error)
+	GetUserByID(ctx context.Context, querier models.Querier, userId uuid.UUID) (*entities.UserEntity, error)
+	GetUserByEmail(ctx context.Context, querier models.Querier, email string) (*entities.UserEntity, error)
+	GetUserContextBySessionToken(ctx context.Context, querier models.Querier, sessionToken string) (*entities.UserContextEntity, error)
 }
 
 type userService struct {
@@ -22,7 +23,7 @@ func NewUserService(userRepo repositories.UserRepository) *userService {
 	return &userService{userRepo: userRepo}
 }
 
-func (s *userService) GetUserByID(ctx context.Context, querier *models.Queries, userId uuid.UUID) (*entities.UserEntity, error) {
+func (s *userService) GetUserByID(ctx context.Context, querier models.Querier, userId uuid.UUID) (*entities.UserEntity, error) {
 	user, err := s.userRepo.GetUserByID(ctx, querier, userId)
 	if err != nil {
 		return nil, err
@@ -31,8 +32,17 @@ func (s *userService) GetUserByID(ctx context.Context, querier *models.Queries, 
 	return user, nil
 }
 
-func (s *userService) GetUserByEmail(ctx context.Context, querier *models.Queries, email string) (*entities.UserEntity, error) {
+func (s *userService) GetUserByEmail(ctx context.Context, querier models.Querier, email string) (*entities.UserEntity, error) {
 	user, err := s.userRepo.GetUserByEmail(ctx, querier, email)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (s *userService) GetUserContextBySessionToken(ctx context.Context, querier models.Querier, sessionToken string) (*entities.UserContextEntity, error) {
+	user, err := s.userRepo.GetUserContextBySessionToken(ctx, querier, sessionToken)
 	if err != nil {
 		return nil, err
 	}

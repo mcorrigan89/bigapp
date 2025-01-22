@@ -29,3 +29,14 @@ sql:
               type: "UUID"
           - db_type: "public.citext"
             go_type: "string"
+          - db_type: "pg_catalog.timestamptz"
+            nullable: false
+            go_type: 
+              import: "time"
+              type: "Time"
+          - db_type: "pg_catalog.timestamptz"
+            nullable: true
+            go_type: 
+              pointer: true
+              import: "time"
+              type: "Time"

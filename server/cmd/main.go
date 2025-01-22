@@ -38,12 +38,12 @@ func main() {
 
 	wg := sync.WaitGroup{}
 
-	mdlwr := middleware.CreateMiddleware(&cfg, &logger)
-
 	postgresUserRepository := repositories.NewPostgresUserRepository()
 	userService := services.NewUserService(postgresUserRepository)
 	userApplicationService := application.NewUserApplicationService(db, &wg, &cfg, &logger, userService)
 	userHandler := handlers.NewUserHandler(&logger, userApplicationService)
+
+	mdlwr := middleware.CreateMiddleware(&cfg, db, &logger, userService)
 	routes := router.NewRouter(mdlwr, userHandler)
 
 	server := &appServer{

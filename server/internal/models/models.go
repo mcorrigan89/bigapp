@@ -5,8 +5,9 @@
 package models
 
 import (
+	"time"
+
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type SchemaMigration struct {
@@ -15,25 +16,25 @@ type SchemaMigration struct {
 }
 
 type User struct {
-	ID            uuid.UUID          `json:"id"`
-	GivenName     *string            `json:"given_name"`
-	FamilyName    *string            `json:"family_name"`
-	Email         string             `json:"email"`
-	EmailVerified *bool              `json:"email_verified"`
-	AvatarUrl     *string            `json:"avatar_url"`
-	CreatedAt     pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt     pgtype.Timestamptz `json:"updated_at"`
-	Version       int32              `json:"version"`
+	ID            uuid.UUID  `json:"id"`
+	GivenName     *string    `json:"given_name"`
+	FamilyName    *string    `json:"family_name"`
+	Email         string     `json:"email"`
+	EmailVerified *bool      `json:"email_verified"`
+	AvatarUrl     *string    `json:"avatar_url"`
+	CreatedAt     *time.Time `json:"created_at"`
+	UpdatedAt     *time.Time `json:"updated_at"`
+	Version       int32      `json:"version"`
 }
 
 type UserSession struct {
-	ID             uuid.UUID          `json:"id"`
-	UserID         uuid.UUID          `json:"user_id"`
-	ImpersonatorID *uuid.UUID         `json:"impersonator_id"`
-	Token          string             `json:"token"`
-	ExpiresAt      pgtype.Timestamptz `json:"expires_at"`
-	UserExpired    bool               `json:"user_expired"`
-	CreatedAt      pgtype.Timestamptz `json:"created_at"`
-	UpdatedAt      pgtype.Timestamptz `json:"updated_at"`
-	Version        int32              `json:"version"`
+	ID             uuid.UUID  `json:"id"`
+	UserID         uuid.UUID  `json:"user_id"`
+	ImpersonatorID *uuid.UUID `json:"impersonator_id"`
+	Token          string     `json:"token"`
+	ExpiresAt      time.Time  `json:"expires_at"`
+	UserExpired    bool       `json:"user_expired"`
+	CreatedAt      *time.Time `json:"created_at"`
+	UpdatedAt      *time.Time `json:"updated_at"`
+	Version        int32      `json:"version"`
 }

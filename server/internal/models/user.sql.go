@@ -7,9 +7,9 @@ package models
 
 import (
 	"context"
+	"time"
 
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createUser = `-- name: CreateUser :one
@@ -53,9 +53,9 @@ INSERT INTO user_session (user_id, token, expires_at) VALUES ($1, $2, $3) RETURN
 `
 
 type CreateUserSessionParams struct {
-	UserID    uuid.UUID          `json:"user_id"`
-	Token     string             `json:"token"`
-	ExpiresAt pgtype.Timestamptz `json:"expires_at"`
+	UserID    uuid.UUID `json:"user_id"`
+	Token     string    `json:"token"`
+	ExpiresAt time.Time `json:"expires_at"`
 }
 
 func (q *Queries) CreateUserSession(ctx context.Context, arg CreateUserSessionParams) (UserSession, error) {

@@ -1,58 +1,26 @@
 package main
 
 import (
-	"context"
 	"os"
 	"time"
 
+	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/middleware"
 	"github.com/rs/zerolog"
 )
-
-type contextKey string
-
-const (
-	ipKey            contextKey = "ip"
-	correlationIDKey contextKey = "correlation_id"
-	sessionTokenKey  contextKey = "sessionTokenKey"
-)
-
-func getCorrelationIdFromContext(ctx context.Context) string {
-	correlationId, ok := ctx.Value(correlationIDKey).(string)
-	if !ok {
-		return ""
-	}
-	return correlationId
-}
-
-func getSessionTokenFromContext(ctx context.Context) string {
-	sessionToken, ok := ctx.Value(sessionTokenKey).(string)
-	if !ok {
-		return ""
-	}
-	return sessionToken
-}
-
-func getIPFromContext(ctx context.Context) string {
-	ip, ok := ctx.Value(ipKey).(string)
-	if !ok {
-		return ""
-	}
-	return ip
-}
 
 type TracingHook struct{}
 
 func (h TracingHook) Run(e *zerolog.Event, level zerolog.Level, msg string) {
 	ctx := e.GetCtx()
-	correlationId := getCorrelationIdFromContext(ctx)
+	correlationId := middleware.GetCorrelationIdFromContext(ctx)
 	if correlationId != "" {
 		e.Str("correlation_id", correlationId)
 	}
-	ip := getIPFromContext(ctx)
+	ip := middleware.GetIPFromContext(ctx)
 	if ip != "" {
 		e.Str("ip_address", ip)
 	}
-	sessionToken := getSessionTokenFromContext(ctx)
+	sessionToken := middleware.GetSessionTokenFromContext(ctx)
 	if sessionToken != "" {
 		e.Str("session_token", sessionToken)
 	}

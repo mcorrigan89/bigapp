@@ -11,7 +11,7 @@ func NewRouter(middleware middleware.Middleware, userHandler *handlers.UserHandl
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /user/{id}", userHandler.GetUserByID)
-	mux.HandleFunc("GET /user/email/{email}", userHandler.GetUserByEmail)
+	mux.HandleFunc("GET /user/email/{email}", middleware.Authorization(userHandler.GetUserByEmail))
 
 	return middleware.RecoverPanic(middleware.EnabledCORS(middleware.ContextBuilder(mux)))
 }
