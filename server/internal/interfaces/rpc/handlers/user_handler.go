@@ -144,7 +144,7 @@ func (rpc *userServiceV1) CreateLoginEmail(ctx context.Context, req *connect.Req
 
 	err := rpc.userApplicationService.RequestEmailLogin(ctx, cmd)
 	if err != nil {
-		rpc.logger.Err(err).Ctx(ctx).Msg("Error getting user by session token")
+		rpc.logger.Err(err).Ctx(ctx).Msg("Error sending email login")
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
 

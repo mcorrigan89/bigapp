@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/mcorrigan89/simple_auth/server/internal/application/commands"
 	"github.com/mcorrigan89/simple_auth/server/internal/application/queries"
@@ -27,23 +28,25 @@ type UserApplicationService interface {
 }
 
 type userApplicationService struct {
-	config      *common.Config
-	wg          *sync.WaitGroup
-	logger      *zerolog.Logger
-	db          *pgxpool.Pool
-	queries     models.Querier
-	userService services.UserService
+	config       *common.Config
+	wg           *sync.WaitGroup
+	logger       *zerolog.Logger
+	db           *pgxpool.Pool
+	queries      models.Querier
+	userService  services.UserService
+	emailService services.EmailService
 }
 
-func NewUserApplicationService(db *pgxpool.Pool, wg *sync.WaitGroup, cfg *common.Config, logger *zerolog.Logger, userService services.UserService) *userApplicationService {
+func NewUserApplicationService(db *pgxpool.Pool, wg *sync.WaitGroup, cfg *common.Config, logger *zerolog.Logger, userService services.UserService, emailService services.EmailService) *userApplicationService {
 	dbQueries := models.New(db)
 	return &userApplicationService{
-		db:          db,
-		config:      cfg,
-		wg:          wg,
-		logger:      logger,
-		queries:     dbQueries,
-		userService: userService,
+		db:           db,
+		config:       cfg,
+		wg:           wg,
+		logger:       logger,
+		queries:      dbQueries,
+		userService:  userService,
+		emailService: emailService,
 	}
 }
 
@@ -120,7 +123,7 @@ func (app *userApplicationService) CreateUser(ctx context.Context, cmd commands.
 }
 
 func (app *userApplicationService) RequestEmailLogin(ctx context.Context, cmd commands.RequestEmailLoginCommand) error {
-	app.logger.Info().Ctx(ctx).Msg("Creating new user")
+	app.logger.Info().Ctx(ctx).Msg("Requesting email login")
 
 	email := cmd.ToDomain()
 
@@ -130,7 +133,19 @@ func (app *userApplicationService) RequestEmailLogin(ctx context.Context, cmd co
 		return err
 	}
 
-	fmt.Println(loginLink.Token)
+	emailEntity := entities.EmailEntity{
+		ID:        uuid.New(),
+		ToEmail:   email,
+		FromEmail: "mcorrigan89@gmail.com",
+		Subject:   "Login to Simple Auth",
+		Body:      fmt.Sprintf("Click the link to login: %s/authenticate?token=%s", app.config.CientURL, loginLink.Token),
+	}
+
+	_, err = app.emailService.SendEmail(ctx, app.queries, &emailEntity)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to send email")
+		return err
+	}
 
 	return nil
 }

@@ -8,6 +8,7 @@ import (
 	"github.com/mcorrigan89/simple_auth/server/internal/application"
 	"github.com/mcorrigan89/simple_auth/server/internal/common"
 	"github.com/mcorrigan89/simple_auth/server/internal/domain/services"
+	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/email"
 	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres"
 	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres/repositories"
 	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/handlers"
@@ -43,9 +44,12 @@ func main() {
 
 	postgresUserRepository := repositories.NewPostgresUserRepository()
 	postgresReferenceLinkRepository := repositories.NewPostgresReferenceLinkRepository()
+	smtpService := email.NewSmtpService(&cfg)
 
 	userService := services.NewUserService(postgresUserRepository, postgresReferenceLinkRepository)
-	userApplicationService := application.NewUserApplicationService(db, &wg, &cfg, &logger, userService)
+	emailService := services.NewEmailService(smtpService)
+
+	userApplicationService := application.NewUserApplicationService(db, &wg, &cfg, &logger, userService, emailService)
 	userHandler := handlers.NewUserHandler(&logger, userApplicationService)
 
 	mdlwr := middleware.CreateMiddleware(&cfg, db, &logger, userService)
