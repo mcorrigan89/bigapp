@@ -1,4 +1,4 @@
-package main
+package postgres
 
 import (
 	"context"
@@ -9,6 +9,8 @@ import (
 	_ "github.com/lib/pq"
 	"github.com/mcorrigan89/simple_auth/server/internal/common"
 )
+
+const DefaultTimeout = 10 * time.Second
 
 func configDB(cfg *common.Config) *pgxpool.Config {
 	const defaultMaxConns = int32(4)
@@ -33,7 +35,7 @@ func configDB(cfg *common.Config) *pgxpool.Config {
 	return dbConfig
 }
 
-func openDBPool(cfg *common.Config) (*pgxpool.Pool, error) {
+func OpenDBPool(cfg *common.Config) (*pgxpool.Pool, error) {
 	dbConfigurationOptions := configDB(cfg)
 
 	dbpool, err := pgxpool.NewWithConfig(context.Background(), dbConfigurationOptions)

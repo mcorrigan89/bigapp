@@ -15,17 +15,17 @@ import (
 	"golang.org/x/net/http2/h2c"
 )
 
-func (app *application) serve() error {
+func (server *appServer) serve(routes http.Handler) error {
 
 	tlsConfig := &tls.Config{
 		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
 	}
 
-	routes := h2c.NewHandler(app.routes(), &http2.Server{})
+	routesHandler := h2c.NewHandler(routes, &http2.Server{})
 
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", app.config.Port),
-		Handler:      routes,
+		Addr:         fmt.Sprintf(":%d", server.config.Port),
+		Handler:      routesHandler,
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
@@ -40,24 +40,24 @@ func (app *application) serve() error {
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 		s := <-quit
 
-		app.logger.Info().Str("signal", s.String()).Msg("caught signal")
+		server.logger.Info().Str("signal", s.String()).Msg("caught signal")
 
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
 
 		err := srv.Shutdown(ctx)
 		if err != nil {
-			app.logger.Err(err).Ctx(ctx).Msg("failed to shutdown server")
+			server.logger.Err(err).Ctx(ctx).Msg("failed to shutdown server")
 			shutdownError <- err
 		}
 
-		app.logger.Info().Str("addr", srv.Addr).Msg("completing background tasks")
+		server.logger.Info().Str("addr", srv.Addr).Msg("completing background tasks")
 
-		app.wg.Wait()
+		server.wg.Wait()
 		shutdownError <- nil
 	}()
 
-	app.logger.Info().Str("addr", srv.Addr).Str("env", app.config.Env).Msg("listening on")
+	server.logger.Info().Str("addr", srv.Addr).Str("env", server.config.Env).Msg("listening on")
 
 	err := srv.ListenAndServe()
 
@@ -65,7 +65,7 @@ func (app *application) serve() error {
 		return err
 	}
 
-	app.logger.Info().Str("addr", srv.Addr).Msg("stopped server")
+	server.logger.Info().Str("addr", srv.Addr).Msg("stopped server")
 
 	return nil
 }
