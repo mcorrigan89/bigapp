@@ -27,32 +27,34 @@ export default function LoginPage() {
   });
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center">
-      <form
-        id={form.id}
-        onSubmit={form.onSubmit}
-        action={action}
-        noValidate
-        className="flex flex-col gap-4"
-      >
-        <div className="flex flex-col gap-1 text-mono-1400">
-          <Label htmlFor="email" className="text-md">
-            Email
-          </Label>
-          <Input
-            id="email"
-            type="email"
-            key={fields.email.key}
-            name={fields.email.name}
-            defaultValue={fields.email.initialValue}
-            data-error={fields.email.errors && fields.email.errors.length > 0}
-          />
-          {fields.email.errors?.map((error) => (
-            <FormError key={error}>{error}</FormError>
-          ))}
-        </div>
-        <Button variant={"default"}>Login</Button>
-      </form>
-    </div>
+    <>
+      <div className="flex h-screen flex-col items-center justify-center">
+        <form
+          id={form.id}
+          onSubmit={form.onSubmit}
+          action={action}
+          noValidate
+          className="flex flex-col gap-4"
+        >
+          <div className="text-mono-1400 flex flex-col gap-1">
+            <Label htmlFor="email" className="text-md">
+              Email
+            </Label>
+            <Input
+              id="email"
+              type="email"
+              key={fields.email.key}
+              name={fields.email.name}
+              defaultValue={fields.email.initialValue}
+              data-error={fields.email.errors && fields.email.errors.length > 0}
+            />
+            {fields.email.errors?.map((error) => (
+              <FormError key={error}>{error}</FormError>
+            ))}
+          </div>
+          <Button variant={"default"}>Login</Button>
+        </form>
+      </div>
+    </>
   );
 }

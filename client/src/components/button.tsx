@@ -4,20 +4,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "rounded font-medium text-white hover:cursor-pointer",
+  "rounded text-sm font-medium text-white hover:cursor-pointer",
   {
     variants: {
       variant: {
-        default: "bg-primary-800 hover:bg-primary-700 active:bg-primary-900",
-        positive:
-          "bg-positive-800 hover:bg-positive-700 active:bg-positive-900",
-        negative:
-          "bg-negative-800 hover:bg-negative-700 active:bg-negative-900",
+        default: "bg-indigo-700 hover:bg-indigo-600 active:bg-indigo-800",
+        positive: "bg-teal-700 hover:bg-teal-600 active:bg-teal-800",
+        negative: "bg-rose-700 hover:bg-rose-600 active:bg-rose-800",
       },
       size: {
-        default: "h-10 px-4",
-        small: "h-8 px-3",
-        large: "h-12 px-6",
+        small: "px-2 py-1",
+        default: "px-2.5 py-1.5",
+        large: "px-4 py-2",
       },
     },
     defaultVariants: {

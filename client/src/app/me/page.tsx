@@ -2,7 +2,7 @@ import { userByToken } from "@/api/client";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import Image from "next/image";
-import { Navbar } from "../components/navbar/navbar";
+import { NavBar } from "../../components/navbar";
 import { env } from "@/env";
 
 export default async function CurrentUserPage() {
@@ -13,6 +13,11 @@ export default async function CurrentUserPage() {
   }
 
   const response = await userByToken(sessionToken.value);
+  await userByToken(sessionToken.value);
+  await userByToken(sessionToken.value);
+  await userByToken(sessionToken.value);
+  await userByToken(sessionToken.value);
+  await userByToken(sessionToken.value);
   const user = response.user;
 
   if (!user) {
@@ -22,7 +27,7 @@ export default async function CurrentUserPage() {
 
   return (
     <>
-      <Navbar />
+      <NavBar />
       <div>
         <div>Current User</div>
         <div>First Name</div>

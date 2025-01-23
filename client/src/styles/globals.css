@@ -1,6 +1,8 @@
 @import "tailwindcss";
 @import "./colors";
 
+@variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-family-*: initial;
 }

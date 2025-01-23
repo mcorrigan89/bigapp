@@ -1,4 +1,4 @@
-import { Navbar } from "../components/navbar/navbar";
+import { Navbar } from "../../components/navbarold/navbar";
 import ImageUploadForm from "./form";
 
 export default function ImageUploadPage() {
