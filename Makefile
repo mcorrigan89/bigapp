@@ -41,6 +41,10 @@ start-client:
 dev-client:
 	@cd client && pnpm dev
 
+.PHONY: icons
+icons:
+	@cd client && pnpm icons
+
 .PHONY: codegen
 codegen:
 	buf lint

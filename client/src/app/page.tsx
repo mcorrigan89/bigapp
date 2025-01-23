@@ -1,9 +1,9 @@
-import CookieSVG from "@/icons/cookie.svg";
+import { Tent } from "@/icons";
 
 export default async function Home() {
   return (
     <div className="bg-brand">
-      <CookieSVG />
+      <Tent width={48} height={48} />
       <div>Hello world</div>
     </div>
   );
