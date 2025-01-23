@@ -2,9 +2,12 @@ package repositories
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
 	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres"
 	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres/models"
@@ -84,7 +87,19 @@ func (repo *postgresUserRepository) CreateUser(ctx context.Context, querier mode
 		UserHandle:    user.Handle,
 	})
 	if err != nil {
+		var pgErr *pgconn.PgError
+		if errors.As(err, &pgErr) && pgErr.Code == "23505" {
+			switch pgErr.ConstraintName {
+			case "users_email_key":
+				return nil, entities.ErrEmailInUse
+			case "users_user_handle_key":
+				return nil, entities.ErrHandleInUse
+			default:
+				return nil, fmt.Errorf("unique constraint violation: %s", pgErr.ConstraintName)
+			}
+		}
 		return nil, err
+
 	}
 
 	avatarImageEntity, err := repo.getAvatarImageEntity(ctx, querier, &row)

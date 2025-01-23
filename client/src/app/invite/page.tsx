@@ -52,6 +52,9 @@ export default function InvitePage() {
               <FormError key={error}>{error}</FormError>
             ))}
           </div>
+          {form.errors?.map((error) => (
+            <FormError key={error}>{error}</FormError>
+          ))}
           <Button variant={"default"}>Login</Button>
         </form>
       </div>

@@ -2,6 +2,7 @@ package application
 
 import (
 	"context"
+	"errors"
 	"sync"
 
 	"github.com/google/uuid"
@@ -140,19 +141,36 @@ func (app *userApplicationService) InviteUser(ctx context.Context, cmd commands.
 
 	userEntity := cmd.ToDomain()
 
-	createdUser, err := app.userService.CreateUser(ctx, qtx, userEntity)
-	if err != nil {
-		app.logger.Err(err).Ctx(ctx).Msg("Failed to create new user")
+	var userForInvite *entities.UserEntity
+
+	foundUser, err := app.userService.GetUserByEmail(ctx, qtx, userEntity.Email)
+	if err != nil && !errors.Is(err, entities.ErrUserNotFound) {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to get user by email")
 		return err
 	}
 
-	inviteLink, err := app.userService.CreateInviteLink(ctx, app.queries, createdUser)
+	if foundUser != nil && foundUser.Claimed {
+		return entities.ErrUserClaimed
+	}
+
+	if foundUser == nil {
+		createdUser, err := app.userService.CreateUser(ctx, qtx, userEntity)
+		if err != nil {
+			app.logger.Err(err).Ctx(ctx).Msg("Failed to create new user")
+			return err
+		}
+		userForInvite = createdUser
+	} else {
+		userForInvite = foundUser
+	}
+
+	inviteLink, err := app.userService.CreateInviteLink(ctx, app.queries, userForInvite)
 	if err != nil {
 		app.logger.Err(err).Ctx(ctx).Msg("Failed to create login link")
 		return err
 	}
 
-	plainBody, htmlBody, err := app.emailTemplateService.LoginEmail("invite.tmpl", inviteLink)
+	plainBody, htmlBody, err := app.emailTemplateService.LoginEmail("invite.go.tmpl", inviteLink)
 	if err != nil {
 		app.logger.Err(err).Ctx(ctx).Msg("Failed to create email template")
 		return err
@@ -160,7 +178,7 @@ func (app *userApplicationService) InviteUser(ctx context.Context, cmd commands.
 
 	emailEntity := entities.EmailEntity{
 		ID:        uuid.New(),
-		ToEmail:   createdUser.Email,
+		ToEmail:   userForInvite.Email,
 		FromEmail: "mcorrigan89@gmail.com",
 		Subject:   "Invite to Simple Auth",
 		PlainBody: plainBody,
@@ -193,7 +211,7 @@ func (app *userApplicationService) RequestEmailLogin(ctx context.Context, cmd co
 		return err
 	}
 
-	plainBody, htmlBody, err := app.emailTemplateService.LoginEmail("login.tmpl", loginLink)
+	plainBody, htmlBody, err := app.emailTemplateService.LoginEmail("login.go.tmpl", loginLink)
 	if err != nil {
 		app.logger.Err(err).Ctx(ctx).Msg("Failed to create email template")
 		return err

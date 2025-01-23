@@ -112,7 +112,7 @@ func (s *userService) CreateInviteLink(ctx context.Context, querier models.Queri
 		LinkID:    userEntity.ID,
 		Token:     xid.New().String(),
 		Type:      entities.RefLinkTypeInvite,
-		ExpiresAt: time.Now().Add(time.Minute * 30),
+		ExpiresAt: time.Now().Add(time.Hour * 24 * 30),
 	}
 
 	loginLinkEntity, err := s.refLinkRepo.CreateReferenceLink(ctx, querier, &newLinkEntity)

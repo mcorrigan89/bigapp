@@ -4,6 +4,12 @@ import { redirect } from "next/navigation";
 import { parseWithZod } from "@conform-to/zod";
 import { inviteSchema } from "./schema";
 import { inviteUser } from "@/api/client";
+import { ErrorCode } from "@/api/gen/user/v1/user_pb";
+import { ErrorHandler, handleServiceCall } from "@/api/handlers";
+
+const handlers: ErrorHandler = {
+  [ErrorCode.EMAIL_EXISTS]: (msg) => console.error(msg),
+};
 
 export async function inviteAction(prevState: unknown, formData: FormData) {
   const submission = parseWithZod(formData, {
@@ -14,17 +20,17 @@ export async function inviteAction(prevState: unknown, formData: FormData) {
     return submission.reply();
   }
 
-  try {
-    const response = await inviteUser({
+  const response = await handleServiceCall(
+    inviteUser({
       email: submission.value.email,
+    }),
+    handlers,
+  );
+  if (response.error) {
+    return submission.reply({
+      formErrors: [response.error.message],
     });
-    if (response.status !== "OK") {
-      return submission.reply();
-    }
-  } catch (err) {
-    console.error(err);
-    return submission.reply();
-  } finally {
-    redirect("/");
   }
+
+  redirect("/");
 }

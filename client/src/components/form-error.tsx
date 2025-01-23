@@ -7,7 +7,7 @@ const FormError = React.forwardRef<HTMLDivElement, FormErrorProps>(
   ({ className, ...props }, ref) => {
     return (
       <div
-        className={cn("px-1.5 text-sm text-negative-500", className)}
+        className={cn("px-1.5 text-sm text-rose-500", className)}
         ref={ref}
         {...props}
       >

@@ -134,13 +134,24 @@ func (rpc *userServiceV1) CreateUser(ctx context.Context, req *connect.Request[u
 		FamilyName: familyName,
 	}
 
+	var res *connect.Response[userv1.CreateUserResponse]
+
 	userSessionEntity, err := rpc.userApplicationService.CreateUser(ctx, cmd)
 	if err != nil {
-		if err == entities.ErrUserNotFound {
-			return nil, connect.NewError(connect.CodeNotFound, err)
+		rpc.logger.Err(err).Ctx(ctx).Msg("Error sending email login")
+		switch err {
+		case entities.ErrEmailInUse:
+			res = connect.NewResponse(&userv1.CreateUserResponse{
+				Error: &userv1.ErrorDetails{
+					Code:    userv1.ErrorCode_ERROR_CODE_EMAIL_EXISTS,
+					Message: "Email is not available",
+				},
+			})
+			res.Header().Set("User-Version", "v1")
+			return res, nil
+		default:
+			return nil, connect.NewError(connect.CodeInternal, err)
 		}
-		rpc.logger.Err(err).Ctx(ctx).Msg("Error getting user by session token")
-		return nil, connect.NewError(connect.CodeInternal, err)
 	}
 
 	var avatar *imagev1.Image
@@ -154,7 +165,7 @@ func (rpc *userServiceV1) CreateUser(ctx context.Context, req *connect.Request[u
 		}
 	}
 
-	res := connect.NewResponse(&userv1.CreateUserResponse{
+	res = connect.NewResponse(&userv1.CreateUserResponse{
 		User: &userv1.User{
 			Id:         userSessionEntity.User.ID.String(),
 			GivenName:  userSessionEntity.User.GivenName,
@@ -243,13 +254,36 @@ func (rpc *userServiceV1) InviteUser(ctx context.Context, req *connect.Request[u
 		Email: email,
 	}
 
+	var res *connect.Response[userv1.InviteUserResponse]
+
 	err := rpc.userApplicationService.InviteUser(ctx, cmd)
 	if err != nil {
 		rpc.logger.Err(err).Ctx(ctx).Msg("Error sending email login")
-		return nil, connect.NewError(connect.CodeInternal, err)
+		switch err {
+		case entities.ErrEmailInUse:
+			res = connect.NewResponse(&userv1.InviteUserResponse{
+				Error: &userv1.ErrorDetails{
+					Code:    userv1.ErrorCode_ERROR_CODE_EMAIL_EXISTS,
+					Message: "Email is not available",
+				},
+			})
+			res.Header().Set("User-Version", "v1")
+			return res, nil
+		case entities.ErrUserClaimed:
+			res = connect.NewResponse(&userv1.InviteUserResponse{
+				Error: &userv1.ErrorDetails{
+					Code:    userv1.ErrorCode_ERROR_CODE_EMAIL_EXISTS,
+					Message: "User is already claimed",
+				},
+			})
+			res.Header().Set("User-Version", "v1")
+			return res, nil
+		default:
+			return nil, connect.NewError(connect.CodeInternal, err)
+		}
 	}
 
-	res := connect.NewResponse(&userv1.InviteUserResponse{
+	res = connect.NewResponse(&userv1.InviteUserResponse{
 		Status: "OK",
 	})
 
