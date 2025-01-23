@@ -1,10 +1,5 @@
 import type { SVGProps, ForwardRefExoticComponent, RefAttributes } from "react";
 
-/**
- * A reduced version of `SVGElementType` from @types/react. This type was added
- * with the release of React 19, and is included here in order to support usage
- * with older versions.
- */
 type SVGElementType =
   | "circle"
   | "ellipse"

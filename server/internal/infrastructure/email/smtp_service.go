@@ -21,7 +21,8 @@ func NewSmtpService(cfg *common.Config) *smtpService {
 func (service *smtpService) SendEmail(ctx context.Context, email *entities.EmailEntity) error {
 	msg := mail.NewMsg()
 	msg.Subject(email.Subject)
-	msg.SetBodyString(mail.TypeTextPlain, email.Body)
+	msg.SetBodyString(mail.TypeTextPlain, email.PlainBody)
+	msg.AddAlternativeString(mail.TypeTextHTML, email.HtmlBody)
 
 	err := service.addEmails(msg, email.ToEmail, email.FromEmail)
 	if err != nil {

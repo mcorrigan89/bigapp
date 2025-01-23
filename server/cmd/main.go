@@ -53,9 +53,10 @@ func main() {
 
 	userService := services.NewUserService(postgresUserRepository, postgresReferenceLinkRepository, postgresImageRepository)
 	emailService := services.NewEmailService(smtpService)
+	emailTemplateService := services.NewEmailTemplateService(&cfg)
 	imageService := services.NewImageService(postgresImageRepository)
 
-	userApplicationService := application.NewUserApplicationService(db, &wg, &cfg, &logger, userService, emailService)
+	userApplicationService := application.NewUserApplicationService(db, &wg, &cfg, &logger, userService, emailService, emailTemplateService)
 	imageApplicationService := application.NewImageApplicationService(db, &wg, &cfg, &logger, imageService, userService, imageMediaService)
 	userHandler := handlers.NewUserHandler(&logger, userApplicationService)
 	imageHandler := handlers.NewImageHandler(&logger, imageApplicationService)

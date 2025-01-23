@@ -18,10 +18,9 @@ export async function uploadImageAction(
   }
 
   try {
-    const response = await uploadImage({
+    await uploadImage({
       file: submission.value.file,
     });
-    console.log(response);
   } catch (err) {
     console.error(err);
     return submission.reply();

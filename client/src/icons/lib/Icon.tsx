@@ -17,21 +17,6 @@ interface IconComponentProps extends SVGIconProps {
   iconNode: IconNode;
 }
 
-/**
- * Lucide icon component
- *
- * @component Icon
- * @param {object} props
- * @param {string} props.color - The color of the icon
- * @param {number} props.size - The size of the icon
- * @param {number} props.strokeWidth - The stroke width of the icon
- * @param {boolean} props.absoluteStrokeWidth - Whether to use absolute stroke width
- * @param {string} props.className - The class name of the icon
- * @param {IconNode} props.children - The children of the icon
- * @param {IconNode} props.iconNode - The icon node of the icon
- *
- * @returns {ForwardRefExoticComponent} LucideIcon
- */
 const Icon = forwardRef<SVGSVGElement, IconComponentProps>(
   (
     {
@@ -67,5 +52,7 @@ const Icon = forwardRef<SVGSVGElement, IconComponentProps>(
     );
   },
 );
+
+Icon.displayName = "Icon";
 
 export { Icon };

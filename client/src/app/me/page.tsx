@@ -2,7 +2,8 @@ import { userByToken } from "@/api/client";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import Image from "next/image";
-import { Navbar } from "../components/navbar";
+import { Navbar } from "../components/navbar/navbar";
+import { env } from "@/env";
 
 export default async function CurrentUserPage() {
   const cookieStore = await cookies();
@@ -33,7 +34,7 @@ export default async function CurrentUserPage() {
         <div>{avatarImage?.url}</div>
         {avatarImage ? (
           <Image
-            src={"http://localhost:3001" + avatarImage.url}
+            src={env.SERVER_URL + avatarImage.url}
             width={avatarImage.width}
             height={avatarImage.height}
             alt="avatar"

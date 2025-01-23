@@ -1,8 +1,4 @@
 import React from "react";
-import {
-  Button as AriaButton,
-  ButtonProps as AriaButtonProps,
-} from "react-aria-components";
 import { cva, type VariantProps } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
@@ -32,13 +28,15 @@ const buttonVariants = cva(
 );
 
 export interface ButtonProps
-  extends AriaButtonProps,
-    VariantProps<typeof buttonVariants> {}
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {
+  asChild?: boolean;
+}
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, ...props }, ref) => {
     return (
-      <AriaButton
+      <button
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}

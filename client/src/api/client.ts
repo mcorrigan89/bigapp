@@ -1,3 +1,5 @@
+"use server";
+
 import { createClient } from "@connectrpc/connect";
 import { UserService } from "@/api/gen/user/v1/user_pb";
 import { createConnectTransport } from "@connectrpc/connect-node";

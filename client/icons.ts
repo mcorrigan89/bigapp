@@ -10,6 +10,18 @@ const pascalCase = (s: string) => {
   return s.replace(/-./g, (x) => x[1].toUpperCase());
 };
 
+function generateId(length: number = 16): string {
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const timestamp = Date.now().toString(36);
+  const randomChars = Array.from(
+    { length: length - timestamp.length },
+    () => chars[Math.floor(Math.random() * chars.length)],
+  ).join("");
+
+  return timestamp + randomChars;
+}
+
 const svgFiles = fs
   .readdirSync(ICONS_DIR + "/svgs")
   .filter((fileName) => path.extname(fileName) === ".svg")
@@ -31,7 +43,7 @@ const svgFiles = fs
   .map((svgFile) => {
     const _iconNode = svgFile.parsedData.children.map((child) => [
       child.name,
-      child.attributes,
+      { ...child.attributes, key: generateId(6) },
     ]);
     return { [svgFile.fileName]: _iconNode };
   });

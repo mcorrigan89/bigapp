@@ -2,7 +2,6 @@ package application
 
 import (
 	"context"
-	"fmt"
 	"sync"
 
 	"github.com/google/uuid"
@@ -28,25 +27,27 @@ type UserApplicationService interface {
 }
 
 type userApplicationService struct {
-	config       *common.Config
-	wg           *sync.WaitGroup
-	logger       *zerolog.Logger
-	db           *pgxpool.Pool
-	queries      models.Querier
-	userService  services.UserService
-	emailService services.EmailService
+	config               *common.Config
+	wg                   *sync.WaitGroup
+	logger               *zerolog.Logger
+	db                   *pgxpool.Pool
+	queries              models.Querier
+	userService          services.UserService
+	emailService         services.EmailService
+	emailTemplateService services.EmailTemplateService
 }
 
-func NewUserApplicationService(db *pgxpool.Pool, wg *sync.WaitGroup, cfg *common.Config, logger *zerolog.Logger, userService services.UserService, emailService services.EmailService) *userApplicationService {
+func NewUserApplicationService(db *pgxpool.Pool, wg *sync.WaitGroup, cfg *common.Config, logger *zerolog.Logger, userService services.UserService, emailService services.EmailService, emailTemplateService services.EmailTemplateService) *userApplicationService {
 	dbQueries := models.New(db)
 	return &userApplicationService{
-		db:           db,
-		config:       cfg,
-		wg:           wg,
-		logger:       logger,
-		queries:      dbQueries,
-		userService:  userService,
-		emailService: emailService,
+		db:                   db,
+		config:               cfg,
+		wg:                   wg,
+		logger:               logger,
+		queries:              dbQueries,
+		userService:          userService,
+		emailService:         emailService,
+		emailTemplateService: emailTemplateService,
 	}
 }
 
@@ -133,12 +134,19 @@ func (app *userApplicationService) RequestEmailLogin(ctx context.Context, cmd co
 		return err
 	}
 
+	plainBody, htmlBody, err := app.emailTemplateService.LoginEmail("login.tmpl", loginLink)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to create email template")
+		return err
+	}
+
 	emailEntity := entities.EmailEntity{
 		ID:        uuid.New(),
 		ToEmail:   email,
 		FromEmail: "mcorrigan89@gmail.com",
 		Subject:   "Login to Simple Auth",
-		Body:      fmt.Sprintf("Click the link to login: %s/authenticate?token=%s", app.config.CientURL, loginLink.Token),
+		PlainBody: plainBody,
+		HtmlBody:  htmlBody,
 	}
 
 	_, err = app.emailService.SendEmail(ctx, app.queries, &emailEntity)

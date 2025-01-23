@@ -9,7 +9,8 @@ type EmailEntity struct {
 	ToEmail   string
 	FromEmail string
 	Subject   string
-	Body      string
+	PlainBody string
+	HtmlBody  string
 }
 
 type EmailEntityArgs struct {
@@ -17,7 +18,8 @@ type EmailEntityArgs struct {
 	ToEmail   string
 	FromEmail string
 	Subject   string
-	Body      string
+	PlainBody string
+	HtmlBody  string
 }
 
 func NewEmailEntity(args EmailEntityArgs) *EmailEntity {
@@ -26,6 +28,7 @@ func NewEmailEntity(args EmailEntityArgs) *EmailEntity {
 		ToEmail:   args.ToEmail,
 		FromEmail: args.FromEmail,
 		Subject:   args.Subject,
-		Body:      args.Body,
+		PlainBody: args.PlainBody,
+		HtmlBody:  args.HtmlBody,
 	}
 }
