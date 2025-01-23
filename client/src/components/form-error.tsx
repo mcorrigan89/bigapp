@@ -1,12 +1,16 @@
+import { cn } from "@/lib/utils";
 import React from "react";
 
-export interface FormErrorProps
-  extends React.BaseHTMLAttributes<HTMLDivElement> {}
+export type FormErrorProps = React.BaseHTMLAttributes<HTMLDivElement>;
 
 const FormError = React.forwardRef<HTMLDivElement, FormErrorProps>(
   ({ className, ...props }, ref) => {
     return (
-      <div className={"px-1.5 text-sm text-negative-500"} ref={ref} {...props}>
+      <div
+        className={cn("px-1.5 text-sm text-negative-500", className)}
+        ref={ref}
+        {...props}
+      >
         {props.children}
       </div>
     );

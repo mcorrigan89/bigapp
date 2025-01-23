@@ -3,8 +3,7 @@
 import { redirect } from "next/navigation";
 import { parseWithZod } from "@conform-to/zod";
 import { loginSchema } from "./schema";
-import { cookies } from "next/headers";
-import { createUser, loginEmail } from "@/api/client";
+import { loginEmail } from "@/api/client";
 
 export async function loginAction(prevState: unknown, formData: FormData) {
   const submission = parseWithZod(formData, {

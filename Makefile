@@ -9,6 +9,14 @@ export PATH := $(PWD)/client/node_modules/.bin:$(PATH)
 dev:
 	@$(MAKE) -j2 dev-server dev-client
 
+.PHONY: build
+build:
+	@$(MAKE) -j2 build-server build-client
+
+.PHONY: start
+start:
+	@$(MAKE) -j2 start-server start-client
+
 .PHONY: start-server
 start-server:
 	./server/bin/main
@@ -19,7 +27,15 @@ dev-server:
 
 .PHONY: build-server
 build-server:
-	go build -o=./server/bin/main ./server/cmd
+	@cd server && go build -o=./bin/main ./cmd
+
+.PHONY: build-client
+build-client:
+	@cd client && pnpm build
+
+.PHONY: start-client
+start-client:
+	@cd client && pnpm start
 
 .PHONY: dev-client
 dev-client:

@@ -3,7 +3,7 @@ managed:
   enabled: true
 plugins:
   - local: protoc-gen-es
-    out: client/src/api
+    out: client/src/api/gen
     opt: target=ts
 inputs:
   - directory: api
