@@ -13,8 +13,16 @@ import (
 )
 
 const createUser = `-- name: CreateUser :one
-INSERT INTO users (id, given_name, family_name, email, email_verified) 
-VALUES ($1, $2, $3, $4, $5::boolean) RETURNING id, given_name, family_name, email, email_verified, avatar_id, created_at, updated_at, version
+INSERT INTO users (id, given_name, family_name, email, email_verified, claimed, user_handle) 
+VALUES (
+    $1, 
+    $2, 
+    $3, 
+    $4, 
+    $5::boolean,
+    $6,
+    $7
+) RETURNING id, given_name, family_name, email, email_verified, user_handle, claimed, avatar_id, created_at, updated_at, version
 `
 
 type CreateUserParams struct {
@@ -23,6 +31,8 @@ type CreateUserParams struct {
 	FamilyName    *string   `json:"family_name"`
 	Email         string    `json:"email"`
 	EmailVerified bool      `json:"email_verified"`
+	Claimed       bool      `json:"claimed"`
+	UserHandle    string    `json:"user_handle"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
@@ -32,6 +42,8 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		arg.FamilyName,
 		arg.Email,
 		arg.EmailVerified,
+		arg.Claimed,
+		arg.UserHandle,
 	)
 	var i User
 	err := row.Scan(
@@ -40,6 +52,8 @@ func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, e
 		&i.FamilyName,
 		&i.Email,
 		&i.EmailVerified,
+		&i.UserHandle,
+		&i.Claimed,
 		&i.AvatarID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -85,7 +99,7 @@ func (q *Queries) ExpireUserSession(ctx context.Context, id uuid.UUID) error {
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT users.id, users.given_name, users.family_name, users.email, users.email_verified, users.avatar_id, users.created_at, users.updated_at, users.version FROM users
+SELECT users.id, users.given_name, users.family_name, users.email, users.email_verified, users.user_handle, users.claimed, users.avatar_id, users.created_at, users.updated_at, users.version FROM users
 WHERE users.email = $1
 `
 
@@ -102,6 +116,8 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEm
 		&i.User.FamilyName,
 		&i.User.Email,
 		&i.User.EmailVerified,
+		&i.User.UserHandle,
+		&i.User.Claimed,
 		&i.User.AvatarID,
 		&i.User.CreatedAt,
 		&i.User.UpdatedAt,
@@ -111,7 +127,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEm
 }
 
 const getUserByID = `-- name: GetUserByID :one
-SELECT users.id, users.given_name, users.family_name, users.email, users.email_verified, users.avatar_id, users.created_at, users.updated_at, users.version FROM users
+SELECT users.id, users.given_name, users.family_name, users.email, users.email_verified, users.user_handle, users.claimed, users.avatar_id, users.created_at, users.updated_at, users.version FROM users
 WHERE users.id = $1
 `
 
@@ -128,6 +144,8 @@ func (q *Queries) GetUserByID(ctx context.Context, id uuid.UUID) (GetUserByIDRow
 		&i.User.FamilyName,
 		&i.User.Email,
 		&i.User.EmailVerified,
+		&i.User.UserHandle,
+		&i.User.Claimed,
 		&i.User.AvatarID,
 		&i.User.CreatedAt,
 		&i.User.UpdatedAt,
@@ -137,7 +155,7 @@ func (q *Queries) GetUserByID(ctx context.Context, id uuid.UUID) (GetUserByIDRow
 }
 
 const getUserBySessionToken = `-- name: GetUserBySessionToken :one
-SELECT users.id, users.given_name, users.family_name, users.email, users.email_verified, users.avatar_id, users.created_at, users.updated_at, users.version, user_session.id, user_session.user_id, user_session.impersonator_id, user_session.token, user_session.expires_at, user_session.user_expired, user_session.created_at, user_session.updated_at, user_session.version FROM users
+SELECT users.id, users.given_name, users.family_name, users.email, users.email_verified, users.user_handle, users.claimed, users.avatar_id, users.created_at, users.updated_at, users.version, user_session.id, user_session.user_id, user_session.impersonator_id, user_session.token, user_session.expires_at, user_session.user_expired, user_session.created_at, user_session.updated_at, user_session.version FROM users
 JOIN user_session ON users.id = user_session.user_id
 WHERE user_session.token = $1
 `
@@ -156,6 +174,8 @@ func (q *Queries) GetUserBySessionToken(ctx context.Context, token string) (GetU
 		&i.User.FamilyName,
 		&i.User.Email,
 		&i.User.EmailVerified,
+		&i.User.UserHandle,
+		&i.User.Claimed,
 		&i.User.AvatarID,
 		&i.User.CreatedAt,
 		&i.User.UpdatedAt,
@@ -174,7 +194,7 @@ func (q *Queries) GetUserBySessionToken(ctx context.Context, token string) (GetU
 }
 
 const setAvatarImage = `-- name: SetAvatarImage :one
-UPDATE users SET avatar_id = $1 WHERE id = $2 RETURNING id, given_name, family_name, email, email_verified, avatar_id, created_at, updated_at, version
+UPDATE users SET avatar_id = $1 WHERE id = $2 RETURNING id, given_name, family_name, email, email_verified, user_handle, claimed, avatar_id, created_at, updated_at, version
 `
 
 type SetAvatarImageParams struct {
@@ -191,6 +211,8 @@ func (q *Queries) SetAvatarImage(ctx context.Context, arg SetAvatarImageParams) 
 		&i.FamilyName,
 		&i.Email,
 		&i.EmailVerified,
+		&i.UserHandle,
+		&i.Claimed,
 		&i.AvatarID,
 		&i.CreatedAt,
 		&i.UpdatedAt,
@@ -200,17 +222,37 @@ func (q *Queries) SetAvatarImage(ctx context.Context, arg SetAvatarImageParams) 
 }
 
 const updateUser = `-- name: UpdateUser :one
-UPDATE users SET given_name = $1, family_name = $2 WHERE id = $3 RETURNING id, given_name, family_name, email, email_verified, avatar_id, created_at, updated_at, version
+UPDATE users SET 
+    id = $1, 
+    given_name = $2, 
+    family_name = $3,
+    email = $4,
+    email_verified = $5::boolean,
+    claimed = $6,
+    user_handle = $7
+WHERE id = $1 RETURNING id, given_name, family_name, email, email_verified, user_handle, claimed, avatar_id, created_at, updated_at, version
 `
 
 type UpdateUserParams struct {
-	GivenName  *string   `json:"given_name"`
-	FamilyName *string   `json:"family_name"`
-	UserID     uuid.UUID `json:"user_id"`
+	ID            uuid.UUID `json:"id"`
+	GivenName     *string   `json:"given_name"`
+	FamilyName    *string   `json:"family_name"`
+	Email         string    `json:"email"`
+	EmailVerified bool      `json:"email_verified"`
+	Claimed       bool      `json:"claimed"`
+	UserHandle    string    `json:"user_handle"`
 }
 
 func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error) {
-	row := q.db.QueryRow(ctx, updateUser, arg.GivenName, arg.FamilyName, arg.UserID)
+	row := q.db.QueryRow(ctx, updateUser,
+		arg.ID,
+		arg.GivenName,
+		arg.FamilyName,
+		arg.Email,
+		arg.EmailVerified,
+		arg.Claimed,
+		arg.UserHandle,
+	)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -218,6 +260,8 @@ func (q *Queries) UpdateUser(ctx context.Context, arg UpdateUserParams) (User, e
 		&i.FamilyName,
 		&i.Email,
 		&i.EmailVerified,
+		&i.UserHandle,
+		&i.Claimed,
 		&i.AvatarID,
 		&i.CreatedAt,
 		&i.UpdatedAt,

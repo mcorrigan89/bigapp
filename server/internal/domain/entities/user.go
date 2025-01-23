@@ -12,19 +12,25 @@ var (
 )
 
 type UserEntity struct {
-	ID         uuid.UUID
-	GivenName  *string
-	FamilyName *string
-	Email      string
-	Avatar     *ImageEntity
+	ID            uuid.UUID
+	GivenName     *string
+	FamilyName    *string
+	Email         string
+	EmailVerified bool
+	Claimed       bool
+	Handle        string
+	Avatar        *ImageEntity
 }
 
 func NewUserEntity(userModel models.User, imageEntity *ImageEntity) *UserEntity {
 	return &UserEntity{
-		ID:         userModel.ID,
-		GivenName:  userModel.GivenName,
-		FamilyName: userModel.FamilyName,
-		Email:      userModel.Email,
-		Avatar:     imageEntity,
+		ID:            userModel.ID,
+		GivenName:     userModel.GivenName,
+		FamilyName:    userModel.FamilyName,
+		Email:         userModel.Email,
+		EmailVerified: userModel.EmailVerified,
+		Claimed:       userModel.Claimed,
+		Handle:        userModel.UserHandle,
+		Avatar:        imageEntity,
 	}
 }

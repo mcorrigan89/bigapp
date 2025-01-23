@@ -15,7 +15,8 @@ var (
 )
 
 var (
-	RefLinkTypeLogin = "login"
+	RefLinkTypeLogin  = "login"
+	RefLinkTypeInvite = "invite"
 )
 
 type ReferenceLinkEntity struct {

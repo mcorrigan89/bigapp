@@ -42,6 +42,14 @@ message LoginWithReferenceLinkRequest { string token = 1; }
 
 message LoginWithReferenceLinkResponse { User user = 1; UserSession session = 2; }
 
+message InviteUserRequest { string email = 1; }
+
+message InviteUserResponse { string status = 1; }
+
+message AcceptInviteReferenceLinkRequest { string token = 1;  }
+
+message AcceptInviteReferenceLinkResponse { User user = 1; UserSession session = 2; }
+
 service UserService {
   rpc GetUserById(GetUserByIdRequest) returns (GetUserByIdResponse) {}
   rpc GetUserBySessionToken(GetUserBySessionTokenRequest)
@@ -49,4 +57,6 @@ service UserService {
   rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {}
   rpc CreateLoginEmail(CreateLoginEmailRequest) returns (CreateLoginEmailResponse) {}
   rpc LoginWithReferenceLink(LoginWithReferenceLinkRequest) returns (LoginWithReferenceLinkResponse) {}
+  rpc InviteUser(InviteUserRequest) returns (InviteUserResponse) {}
+  rpc AcceptInviteReferenceLink(AcceptInviteReferenceLinkRequest) returns (AcceptInviteReferenceLinkResponse) {}
 }

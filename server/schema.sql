@@ -126,7 +126,9 @@ CREATE TABLE public.users (
     given_name text,
     family_name text,
     email public.citext NOT NULL,
-    email_verified boolean DEFAULT false,
+    email_verified boolean DEFAULT false NOT NULL,
+    user_handle text NOT NULL,
+    claimed boolean DEFAULT false NOT NULL,
     avatar_id uuid,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
@@ -182,6 +184,14 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: users users_user_handle_key; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_user_handle_key UNIQUE (user_handle);
 
 
 --

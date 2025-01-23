@@ -19,7 +19,9 @@ type UserService interface {
 	CreateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error)
 	CreateSession(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserContextEntity, error)
 	CreateLoginLink(ctx context.Context, querier models.Querier, email string) (*entities.ReferenceLinkEntity, error)
+	CreateInviteLink(ctx context.Context, querier models.Querier, userEntity *entities.UserEntity) (*entities.ReferenceLinkEntity, error)
 	LoginWithLink(ctx context.Context, querier models.Querier, token string) (*entities.UserContextEntity, error)
+	AcceptInviteLink(ctx context.Context, querier models.Querier, token string) (*entities.UserContextEntity, error)
 	SetAvatarImage(ctx context.Context, querier models.Querier, image *entities.ImageEntity, user *entities.UserEntity) (*entities.UserEntity, error)
 }
 
@@ -104,6 +106,23 @@ func (s *userService) CreateLoginLink(ctx context.Context, querier models.Querie
 	return loginLinkEntity, nil
 }
 
+func (s *userService) CreateInviteLink(ctx context.Context, querier models.Querier, userEntity *entities.UserEntity) (*entities.ReferenceLinkEntity, error) {
+	newLinkEntity := entities.ReferenceLinkEntity{
+		ID:        uuid.New(),
+		LinkID:    userEntity.ID,
+		Token:     xid.New().String(),
+		Type:      entities.RefLinkTypeInvite,
+		ExpiresAt: time.Now().Add(time.Minute * 30),
+	}
+
+	loginLinkEntity, err := s.refLinkRepo.CreateReferenceLink(ctx, querier, &newLinkEntity)
+	if err != nil {
+		return nil, err
+	}
+
+	return loginLinkEntity, nil
+}
+
 func (s *userService) LoginWithLink(ctx context.Context, querier models.Querier, token string) (*entities.UserContextEntity, error) {
 	refLinkEntity, err := s.refLinkRepo.GetReferenceLinkByToken(ctx, querier, token)
 	if err != nil {
@@ -119,6 +138,46 @@ func (s *userService) LoginWithLink(ctx context.Context, querier models.Querier,
 	}
 
 	userEntity, err := s.userRepo.GetUserByID(ctx, querier, refLinkEntity.LinkID)
+	if err != nil {
+		return nil, err
+	}
+
+	userSession, err := s.CreateSession(ctx, querier, userEntity)
+	if err != nil {
+		return nil, err
+	}
+
+	err = s.refLinkRepo.DeleteReferenceLink(ctx, querier, refLinkEntity)
+	if err != nil {
+		return nil, err
+	}
+
+	return userSession, nil
+}
+
+func (s *userService) AcceptInviteLink(ctx context.Context, querier models.Querier, token string) (*entities.UserContextEntity, error) {
+	refLinkEntity, err := s.refLinkRepo.GetReferenceLinkByToken(ctx, querier, token)
+	if err != nil {
+		return nil, err
+	}
+
+	if refLinkEntity.IsExpired() {
+		return nil, entities.ErrLinkExpired
+	}
+
+	if refLinkEntity.Type != entities.RefLinkTypeInvite {
+		return nil, entities.ErrLinkInvalid
+	}
+
+	userEntity, err := s.userRepo.GetUserByID(ctx, querier, refLinkEntity.LinkID)
+	if err != nil {
+		return nil, err
+	}
+
+	userEntity.Claimed = true
+	userEntity.EmailVerified = true
+
+	userEntity, err = s.userRepo.UpdateUser(ctx, querier, userEntity)
 	if err != nil {
 		return nil, err
 	}

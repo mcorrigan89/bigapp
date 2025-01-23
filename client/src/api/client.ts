@@ -128,6 +128,36 @@ export async function loginWithRefLink({
   return res;
 }
 
+export async function inviteUser({ email }: { email: string }) {
+  const client = createClient(UserService, transport);
+  const res = await client.inviteUser(
+    {
+      email,
+    },
+    {
+      headers: await getHeaders(),
+    },
+  );
+  return res;
+}
+
+export async function acceptInviteRefLink({
+  refLinkToken,
+}: {
+  refLinkToken: string;
+}) {
+  const client = createClient(UserService, transport);
+  const res = await client.acceptInviteReferenceLink(
+    {
+      token: refLinkToken,
+    },
+    {
+      headers: await getHeaders(),
+    },
+  );
+  return res;
+}
+
 export async function uploadImage({ file }: { file: File }) {
   const formData = new FormData();
   formData.append("image", file);

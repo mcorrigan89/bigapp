@@ -24,6 +24,8 @@ type UserApplicationService interface {
 	CreateUser(ctx context.Context, cmd commands.CreateNewUserCommand) (*entities.UserContextEntity, error)
 	RequestEmailLogin(ctx context.Context, cmd commands.RequestEmailLoginCommand) error
 	LoginWithReferenceLink(ctx context.Context, cmd commands.LoginWithReferenceLinkCommand) (*entities.UserContextEntity, error)
+	InviteUser(ctx context.Context, cmd commands.InviteUserCommand) error
+	AcceptInviteReferenceLink(ctx context.Context, cmd commands.AcceptInviteReferenceLinkCommand) (*entities.UserContextEntity, error)
 }
 
 type userApplicationService struct {
@@ -123,6 +125,63 @@ func (app *userApplicationService) CreateUser(ctx context.Context, cmd commands.
 	return userSession, nil
 }
 
+func (app *userApplicationService) InviteUser(ctx context.Context, cmd commands.InviteUserCommand) error {
+	tx, cancel, err := postgres.CreateTransaction(ctx, app.db)
+	defer cancel()
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to create transaction")
+		return err
+	}
+	defer tx.Rollback(ctx)
+
+	qtx := models.New(app.db).WithTx(tx)
+
+	app.logger.Info().Ctx(ctx).Msg("Creating new user")
+
+	userEntity := cmd.ToDomain()
+
+	createdUser, err := app.userService.CreateUser(ctx, qtx, userEntity)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to create new user")
+		return err
+	}
+
+	inviteLink, err := app.userService.CreateInviteLink(ctx, app.queries, createdUser)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to create login link")
+		return err
+	}
+
+	plainBody, htmlBody, err := app.emailTemplateService.LoginEmail("invite.tmpl", inviteLink)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to create email template")
+		return err
+	}
+
+	emailEntity := entities.EmailEntity{
+		ID:        uuid.New(),
+		ToEmail:   createdUser.Email,
+		FromEmail: "mcorrigan89@gmail.com",
+		Subject:   "Invite to Simple Auth",
+		PlainBody: plainBody,
+		HtmlBody:  htmlBody,
+	}
+
+	_, err = app.emailService.SendEmail(ctx, app.queries, &emailEntity)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to send email")
+		return err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to commit transaction")
+		return err
+	}
+
+	return nil
+}
+
 func (app *userApplicationService) RequestEmailLogin(ctx context.Context, cmd commands.RequestEmailLoginCommand) error {
 	app.logger.Info().Ctx(ctx).Msg("Requesting email login")
 
@@ -171,11 +230,37 @@ func (app *userApplicationService) LoginWithReferenceLink(ctx context.Context, c
 
 	qtx := models.New(app.db).WithTx(tx)
 
-	token := cmd.ToDomain()
-
-	userSession, err := app.userService.LoginWithLink(ctx, qtx, token)
+	userSession, err := app.userService.LoginWithLink(ctx, qtx, cmd.ReferenceLinkToken)
 	if err != nil {
 		app.logger.Err(err).Ctx(ctx).Msg("Failed to create login link")
+		return nil, err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to commit transaction")
+		return nil, err
+	}
+
+	return userSession, nil
+}
+
+func (app *userApplicationService) AcceptInviteReferenceLink(ctx context.Context, cmd commands.AcceptInviteReferenceLinkCommand) (*entities.UserContextEntity, error) {
+	app.logger.Info().Ctx(ctx).Msg("Login with reference link")
+
+	tx, cancel, err := postgres.CreateTransaction(ctx, app.db)
+	defer cancel()
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to create transaction")
+		return nil, err
+	}
+	defer tx.Rollback(ctx)
+
+	qtx := models.New(app.db).WithTx(tx)
+
+	userSession, err := app.userService.AcceptInviteLink(ctx, qtx, cmd.ReferenceLinkToken)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to accept invite link")
 		return nil, err
 	}
 

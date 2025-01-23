@@ -3,6 +3,7 @@ package commands
 import (
 	"github.com/google/uuid"
 	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
+	"github.com/rs/xid"
 )
 
 type CreateNewUserCommand struct {
@@ -17,6 +18,8 @@ func (cmd *CreateNewUserCommand) ToDomain() *entities.UserEntity {
 		Email:      cmd.Email,
 		GivenName:  cmd.GivenName,
 		FamilyName: cmd.FamilyName,
+		Claimed:    true,
+		Handle:     xid.New().String(),
 	}
 }
 
@@ -32,6 +35,23 @@ type LoginWithReferenceLinkCommand struct {
 	ReferenceLinkToken string `json:"token" validate:"required"`
 }
 
-func (cmd *LoginWithReferenceLinkCommand) ToDomain() string {
-	return cmd.ReferenceLinkToken
+type InviteUserCommand struct {
+	Email      string  `json:"email" validate:"required,email"`
+	GivenName  *string `json:"firstName" validate:"-"`
+	FamilyName *string `json:"lastName" validate:"-"`
+}
+
+func (cmd *InviteUserCommand) ToDomain() *entities.UserEntity {
+	return &entities.UserEntity{
+		ID:         uuid.New(),
+		Email:      cmd.Email,
+		GivenName:  cmd.GivenName,
+		FamilyName: cmd.FamilyName,
+		Claimed:    false,
+		Handle:     xid.New().String(),
+	}
+}
+
+type AcceptInviteReferenceLinkCommand struct {
+	ReferenceLinkToken string `json:"token" validate:"required"`
 }

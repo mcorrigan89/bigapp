@@ -46,6 +46,11 @@ const (
 	// UserServiceLoginWithReferenceLinkProcedure is the fully-qualified name of the UserService's
 	// LoginWithReferenceLink RPC.
 	UserServiceLoginWithReferenceLinkProcedure = "/user.v1.UserService/LoginWithReferenceLink"
+	// UserServiceInviteUserProcedure is the fully-qualified name of the UserService's InviteUser RPC.
+	UserServiceInviteUserProcedure = "/user.v1.UserService/InviteUser"
+	// UserServiceAcceptInviteReferenceLinkProcedure is the fully-qualified name of the UserService's
+	// AcceptInviteReferenceLink RPC.
+	UserServiceAcceptInviteReferenceLinkProcedure = "/user.v1.UserService/AcceptInviteReferenceLink"
 )
 
 // UserServiceClient is a client for the user.v1.UserService service.
@@ -55,6 +60,8 @@ type UserServiceClient interface {
 	CreateUser(context.Context, *connect.Request[v1.CreateUserRequest]) (*connect.Response[v1.CreateUserResponse], error)
 	CreateLoginEmail(context.Context, *connect.Request[v1.CreateLoginEmailRequest]) (*connect.Response[v1.CreateLoginEmailResponse], error)
 	LoginWithReferenceLink(context.Context, *connect.Request[v1.LoginWithReferenceLinkRequest]) (*connect.Response[v1.LoginWithReferenceLinkResponse], error)
+	InviteUser(context.Context, *connect.Request[v1.InviteUserRequest]) (*connect.Response[v1.InviteUserResponse], error)
+	AcceptInviteReferenceLink(context.Context, *connect.Request[v1.AcceptInviteReferenceLinkRequest]) (*connect.Response[v1.AcceptInviteReferenceLinkResponse], error)
 }
 
 // NewUserServiceClient constructs a client for the user.v1.UserService service. By default, it uses
@@ -98,16 +105,30 @@ func NewUserServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(userServiceMethods.ByName("LoginWithReferenceLink")),
 			connect.WithClientOptions(opts...),
 		),
+		inviteUser: connect.NewClient[v1.InviteUserRequest, v1.InviteUserResponse](
+			httpClient,
+			baseURL+UserServiceInviteUserProcedure,
+			connect.WithSchema(userServiceMethods.ByName("InviteUser")),
+			connect.WithClientOptions(opts...),
+		),
+		acceptInviteReferenceLink: connect.NewClient[v1.AcceptInviteReferenceLinkRequest, v1.AcceptInviteReferenceLinkResponse](
+			httpClient,
+			baseURL+UserServiceAcceptInviteReferenceLinkProcedure,
+			connect.WithSchema(userServiceMethods.ByName("AcceptInviteReferenceLink")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // userServiceClient implements UserServiceClient.
 type userServiceClient struct {
-	getUserById            *connect.Client[v1.GetUserByIdRequest, v1.GetUserByIdResponse]
-	getUserBySessionToken  *connect.Client[v1.GetUserBySessionTokenRequest, v1.GetUserBySessionTokenResponse]
-	createUser             *connect.Client[v1.CreateUserRequest, v1.CreateUserResponse]
-	createLoginEmail       *connect.Client[v1.CreateLoginEmailRequest, v1.CreateLoginEmailResponse]
-	loginWithReferenceLink *connect.Client[v1.LoginWithReferenceLinkRequest, v1.LoginWithReferenceLinkResponse]
+	getUserById               *connect.Client[v1.GetUserByIdRequest, v1.GetUserByIdResponse]
+	getUserBySessionToken     *connect.Client[v1.GetUserBySessionTokenRequest, v1.GetUserBySessionTokenResponse]
+	createUser                *connect.Client[v1.CreateUserRequest, v1.CreateUserResponse]
+	createLoginEmail          *connect.Client[v1.CreateLoginEmailRequest, v1.CreateLoginEmailResponse]
+	loginWithReferenceLink    *connect.Client[v1.LoginWithReferenceLinkRequest, v1.LoginWithReferenceLinkResponse]
+	inviteUser                *connect.Client[v1.InviteUserRequest, v1.InviteUserResponse]
+	acceptInviteReferenceLink *connect.Client[v1.AcceptInviteReferenceLinkRequest, v1.AcceptInviteReferenceLinkResponse]
 }
 
 // GetUserById calls user.v1.UserService.GetUserById.
@@ -135,6 +156,16 @@ func (c *userServiceClient) LoginWithReferenceLink(ctx context.Context, req *con
 	return c.loginWithReferenceLink.CallUnary(ctx, req)
 }
 
+// InviteUser calls user.v1.UserService.InviteUser.
+func (c *userServiceClient) InviteUser(ctx context.Context, req *connect.Request[v1.InviteUserRequest]) (*connect.Response[v1.InviteUserResponse], error) {
+	return c.inviteUser.CallUnary(ctx, req)
+}
+
+// AcceptInviteReferenceLink calls user.v1.UserService.AcceptInviteReferenceLink.
+func (c *userServiceClient) AcceptInviteReferenceLink(ctx context.Context, req *connect.Request[v1.AcceptInviteReferenceLinkRequest]) (*connect.Response[v1.AcceptInviteReferenceLinkResponse], error) {
+	return c.acceptInviteReferenceLink.CallUnary(ctx, req)
+}
+
 // UserServiceHandler is an implementation of the user.v1.UserService service.
 type UserServiceHandler interface {
 	GetUserById(context.Context, *connect.Request[v1.GetUserByIdRequest]) (*connect.Response[v1.GetUserByIdResponse], error)
@@ -142,6 +173,8 @@ type UserServiceHandler interface {
 	CreateUser(context.Context, *connect.Request[v1.CreateUserRequest]) (*connect.Response[v1.CreateUserResponse], error)
 	CreateLoginEmail(context.Context, *connect.Request[v1.CreateLoginEmailRequest]) (*connect.Response[v1.CreateLoginEmailResponse], error)
 	LoginWithReferenceLink(context.Context, *connect.Request[v1.LoginWithReferenceLinkRequest]) (*connect.Response[v1.LoginWithReferenceLinkResponse], error)
+	InviteUser(context.Context, *connect.Request[v1.InviteUserRequest]) (*connect.Response[v1.InviteUserResponse], error)
+	AcceptInviteReferenceLink(context.Context, *connect.Request[v1.AcceptInviteReferenceLinkRequest]) (*connect.Response[v1.AcceptInviteReferenceLinkResponse], error)
 }
 
 // NewUserServiceHandler builds an HTTP handler from the service implementation. It returns the path
@@ -181,6 +214,18 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(userServiceMethods.ByName("LoginWithReferenceLink")),
 		connect.WithHandlerOptions(opts...),
 	)
+	userServiceInviteUserHandler := connect.NewUnaryHandler(
+		UserServiceInviteUserProcedure,
+		svc.InviteUser,
+		connect.WithSchema(userServiceMethods.ByName("InviteUser")),
+		connect.WithHandlerOptions(opts...),
+	)
+	userServiceAcceptInviteReferenceLinkHandler := connect.NewUnaryHandler(
+		UserServiceAcceptInviteReferenceLinkProcedure,
+		svc.AcceptInviteReferenceLink,
+		connect.WithSchema(userServiceMethods.ByName("AcceptInviteReferenceLink")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/user.v1.UserService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case UserServiceGetUserByIdProcedure:
@@ -193,6 +238,10 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 			userServiceCreateLoginEmailHandler.ServeHTTP(w, r)
 		case UserServiceLoginWithReferenceLinkProcedure:
 			userServiceLoginWithReferenceLinkHandler.ServeHTTP(w, r)
+		case UserServiceInviteUserProcedure:
+			userServiceInviteUserHandler.ServeHTTP(w, r)
+		case UserServiceAcceptInviteReferenceLinkProcedure:
+			userServiceAcceptInviteReferenceLinkHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -220,4 +269,12 @@ func (UnimplementedUserServiceHandler) CreateLoginEmail(context.Context, *connec
 
 func (UnimplementedUserServiceHandler) LoginWithReferenceLink(context.Context, *connect.Request[v1.LoginWithReferenceLinkRequest]) (*connect.Response[v1.LoginWithReferenceLinkResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("user.v1.UserService.LoginWithReferenceLink is not implemented"))
+}
+
+func (UnimplementedUserServiceHandler) InviteUser(context.Context, *connect.Request[v1.InviteUserRequest]) (*connect.Response[v1.InviteUserResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("user.v1.UserService.InviteUser is not implemented"))
+}
+
+func (UnimplementedUserServiceHandler) AcceptInviteReferenceLink(context.Context, *connect.Request[v1.AcceptInviteReferenceLinkRequest]) (*connect.Response[v1.AcceptInviteReferenceLinkResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("user.v1.UserService.AcceptInviteReferenceLink is not implemented"))
 }

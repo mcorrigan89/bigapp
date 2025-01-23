@@ -12,11 +12,27 @@ JOIN user_session ON users.id = user_session.user_id
 WHERE user_session.token = $1;
 
 -- name: CreateUser :one
-INSERT INTO users (id, given_name, family_name, email, email_verified) 
-VALUES (sqlc.arg(id), sqlc.narg(given_name), sqlc.narg(family_name), sqlc.arg(email), sqlc.arg(email_verified)::boolean) RETURNING *;
+INSERT INTO users (id, given_name, family_name, email, email_verified, claimed, user_handle) 
+VALUES (
+    sqlc.arg(id), 
+    sqlc.narg(given_name), 
+    sqlc.narg(family_name), 
+    sqlc.arg(email), 
+    sqlc.arg(email_verified)::boolean,
+    sqlc.arg(claimed),
+    sqlc.arg(user_handle)
+) RETURNING *;
  
 -- name: UpdateUser :one
-UPDATE users SET given_name = sqlc.narg(given_name), family_name = sqlc.narg(family_name) WHERE id = sqlc.arg(user_id) RETURNING *;
+UPDATE users SET 
+    id = sqlc.arg(id), 
+    given_name = sqlc.narg(given_name), 
+    family_name = sqlc.narg(family_name),
+    email = sqlc.arg(email),
+    email_verified = sqlc.arg(email_verified)::boolean,
+    claimed = sqlc.arg(claimed),
+    user_handle = sqlc.arg(user_handle)
+WHERE id = sqlc.arg(id) RETURNING *;
 
 -- name: SetAvatarImage :one
 UPDATE users SET avatar_id = sqlc.arg(image_id) WHERE id = sqlc.arg(user_id) RETURNING *;

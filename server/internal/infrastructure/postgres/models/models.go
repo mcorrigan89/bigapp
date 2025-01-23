@@ -43,7 +43,9 @@ type User struct {
 	GivenName     *string    `json:"given_name"`
 	FamilyName    *string    `json:"family_name"`
 	Email         string     `json:"email"`
-	EmailVerified *bool      `json:"email_verified"`
+	EmailVerified bool       `json:"email_verified"`
+	UserHandle    string     `json:"user_handle"`
+	Claimed       bool       `json:"claimed"`
 	AvatarID      *uuid.UUID `json:"avatar_id"`
 	CreatedAt     *time.Time `json:"created_at"`
 	UpdatedAt     *time.Time `json:"updated_at"`

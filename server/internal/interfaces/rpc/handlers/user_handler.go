@@ -53,19 +53,24 @@ func (rpc *userServiceV1) GetUserById(ctx context.Context, req *connect.Request[
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
 
+	var avatar *imagev1.Image
+	if userEntity.Avatar != nil {
+		avatar = &imagev1.Image{
+			Id:     userEntity.Avatar.ID.String(),
+			Url:    userEntity.Avatar.UrlSlug(),
+			Width:  userEntity.Avatar.Width,
+			Height: userEntity.Avatar.Height,
+			Size:   userEntity.Avatar.Size,
+		}
+	}
+
 	res := connect.NewResponse(&userv1.GetUserByIdResponse{
 		User: &userv1.User{
 			Id:         userEntity.ID.String(),
 			GivenName:  userEntity.GivenName,
 			FamilyName: userEntity.FamilyName,
 			Email:      userEntity.Email,
-			Avatar: &imagev1.Image{
-				Id:     userEntity.Avatar.ID.String(),
-				Url:    userEntity.Avatar.UrlSlug(),
-				Width:  userEntity.Avatar.Width,
-				Height: userEntity.Avatar.Height,
-				Size:   userEntity.Avatar.Size,
-			},
+			Avatar:     avatar,
 		},
 	})
 	res.Header().Set("User-Version", "v1")
@@ -93,19 +98,24 @@ func (rpc *userServiceV1) GetUserBySessionToken(ctx context.Context, req *connec
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
 
+	var avatar *imagev1.Image
+	if userEntity.Avatar != nil {
+		avatar = &imagev1.Image{
+			Id:     userEntity.Avatar.ID.String(),
+			Url:    userEntity.Avatar.UrlSlug(),
+			Width:  userEntity.Avatar.Width,
+			Height: userEntity.Avatar.Height,
+			Size:   userEntity.Avatar.Size,
+		}
+	}
+
 	res := connect.NewResponse(&userv1.GetUserBySessionTokenResponse{
 		User: &userv1.User{
 			Id:         userEntity.ID.String(),
 			GivenName:  userEntity.GivenName,
 			FamilyName: userEntity.FamilyName,
 			Email:      userEntity.Email,
-			Avatar: &imagev1.Image{
-				Id:     userEntity.Avatar.ID.String(),
-				Url:    userEntity.Avatar.UrlSlug(),
-				Width:  userEntity.Avatar.Width,
-				Height: userEntity.Avatar.Height,
-				Size:   userEntity.Avatar.Size,
-			},
+			Avatar:     avatar,
 		},
 	})
 
@@ -133,19 +143,24 @@ func (rpc *userServiceV1) CreateUser(ctx context.Context, req *connect.Request[u
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
 
+	var avatar *imagev1.Image
+	if userSessionEntity.User.Avatar != nil {
+		avatar = &imagev1.Image{
+			Id:     userSessionEntity.User.Avatar.ID.String(),
+			Url:    userSessionEntity.User.Avatar.UrlSlug(),
+			Width:  userSessionEntity.User.Avatar.Width,
+			Height: userSessionEntity.User.Avatar.Height,
+			Size:   userSessionEntity.User.Avatar.Size,
+		}
+	}
+
 	res := connect.NewResponse(&userv1.CreateUserResponse{
 		User: &userv1.User{
 			Id:         userSessionEntity.User.ID.String(),
 			GivenName:  userSessionEntity.User.GivenName,
 			FamilyName: userSessionEntity.User.FamilyName,
 			Email:      userSessionEntity.User.Email,
-			Avatar: &imagev1.Image{
-				Id:     userSessionEntity.User.Avatar.ID.String(),
-				Url:    userSessionEntity.User.Avatar.UrlSlug(),
-				Width:  userSessionEntity.User.Avatar.Width,
-				Height: userSessionEntity.User.Avatar.Height,
-				Size:   userSessionEntity.User.Avatar.Size,
-			},
+			Avatar:     avatar,
 		},
 		Session: &userv1.UserSession{
 			Token:     userSessionEntity.SessionToken,
@@ -192,19 +207,76 @@ func (rpc *userServiceV1) LoginWithReferenceLink(ctx context.Context, req *conne
 		return nil, connect.NewError(connect.CodeInternal, err)
 	}
 
+	var avatar *imagev1.Image
+	if userSessionEntity.User.Avatar != nil {
+		avatar = &imagev1.Image{
+			Id:     userSessionEntity.User.Avatar.ID.String(),
+			Url:    userSessionEntity.User.Avatar.UrlSlug(),
+			Width:  userSessionEntity.User.Avatar.Width,
+			Height: userSessionEntity.User.Avatar.Height,
+			Size:   userSessionEntity.User.Avatar.Size,
+		}
+	}
+
 	res := connect.NewResponse(&userv1.LoginWithReferenceLinkResponse{
 		User: &userv1.User{
 			Id:         userSessionEntity.User.ID.String(),
 			GivenName:  userSessionEntity.User.GivenName,
 			FamilyName: userSessionEntity.User.FamilyName,
 			Email:      userSessionEntity.User.Email,
-			Avatar: &imagev1.Image{
-				Id:     userSessionEntity.User.Avatar.ID.String(),
-				Url:    userSessionEntity.User.Avatar.UrlSlug(),
-				Width:  userSessionEntity.User.Avatar.Width,
-				Height: userSessionEntity.User.Avatar.Height,
-				Size:   userSessionEntity.User.Avatar.Size,
-			},
+			Avatar:     avatar,
+		},
+		Session: &userv1.UserSession{
+			Token:     userSessionEntity.SessionToken,
+			ExpiresAt: userSessionEntity.ExpiresAt().Format(time.RFC1123Z),
+		},
+	})
+
+	res.Header().Set("User-Version", "v1")
+	return res, nil
+}
+
+func (rpc *userServiceV1) InviteUser(ctx context.Context, req *connect.Request[userv1.InviteUserRequest]) (*connect.Response[userv1.InviteUserResponse], error) {
+	email := req.Msg.Email
+
+	cmd := commands.InviteUserCommand{
+		Email: email,
+	}
+
+	err := rpc.userApplicationService.InviteUser(ctx, cmd)
+	if err != nil {
+		rpc.logger.Err(err).Ctx(ctx).Msg("Error sending email login")
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+
+	res := connect.NewResponse(&userv1.InviteUserResponse{
+		Status: "OK",
+	})
+
+	res.Header().Set("User-Version", "v1")
+	return res, nil
+}
+
+func (rpc *userServiceV1) AcceptInviteReferenceLink(ctx context.Context, req *connect.Request[userv1.AcceptInviteReferenceLinkRequest]) (*connect.Response[userv1.AcceptInviteReferenceLinkResponse], error) {
+	token := req.Msg.Token
+
+	cmd := commands.AcceptInviteReferenceLinkCommand{
+		ReferenceLinkToken: token,
+	}
+
+	userSessionEntity, err := rpc.userApplicationService.AcceptInviteReferenceLink(ctx, cmd)
+	if err != nil {
+		rpc.logger.Err(err).Ctx(ctx).Msg("Error accepting email invite")
+		return nil, connect.NewError(connect.CodeInternal, err)
+	}
+
+	res := connect.NewResponse(&userv1.AcceptInviteReferenceLinkResponse{
+		User: &userv1.User{
+			Id:         userSessionEntity.User.ID.String(),
+			GivenName:  userSessionEntity.User.GivenName,
+			FamilyName: userSessionEntity.User.FamilyName,
+			Email:      userSessionEntity.User.Email,
+			Avatar:     nil,
 		},
 		Session: &userv1.UserSession{
 			Token:     userSessionEntity.SessionToken,

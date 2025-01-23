@@ -80,6 +80,33 @@ func (repo *postgresUserRepository) CreateUser(ctx context.Context, querier mode
 		FamilyName:    user.FamilyName,
 		Email:         user.Email,
 		EmailVerified: false,
+		Claimed:       user.Claimed,
+		UserHandle:    user.Handle,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	avatarImageEntity, err := repo.getAvatarImageEntity(ctx, querier, &row)
+	if err != nil {
+		return nil, err
+	}
+
+	return entities.NewUserEntity(row, avatarImageEntity), nil
+}
+
+func (repo *postgresUserRepository) UpdateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error) {
+	ctx, cancel := context.WithTimeout(ctx, postgres.DefaultTimeout)
+	defer cancel()
+
+	row, err := querier.UpdateUser(ctx, models.UpdateUserParams{
+		ID:            user.ID,
+		GivenName:     user.GivenName,
+		FamilyName:    user.FamilyName,
+		Email:         user.Email,
+		EmailVerified: user.EmailVerified,
+		Claimed:       user.Claimed,
+		UserHandle:    user.Handle,
 	})
 	if err != nil {
 		return nil, err
