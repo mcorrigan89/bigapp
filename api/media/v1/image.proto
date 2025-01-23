@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package media.v1;
+
+message Image {
+  string id = 1;
+  string url = 2;
+  int32 width = 3;
+  int32 height = 4;
+  int32 size = 5;
+}
+
+message GetImageByIdRequest {
+  string image_id = 1;
+}
+
+message GetImageByIdResponse {
+  Image image = 1;
+}
+
+service ImageService {
+  rpc GetImageById(GetImageByIdRequest) returns (GetImageByIdResponse) {}
+}

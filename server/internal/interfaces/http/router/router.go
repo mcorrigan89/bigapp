@@ -3,8 +3,8 @@ package router
 import (
 	"net/http"
 
-	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/handlers"
-	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/middleware"
+	"github.com/mcorrigan89/bigapp/server/internal/interfaces/http/handlers"
+	"github.com/mcorrigan89/bigapp/server/internal/interfaces/http/middleware"
 )
 
 func NewRouter(mux *http.ServeMux, middleware middleware.Middleware, userHandler *handlers.UserHandler, imageHandler *handlers.ImageHandler) http.Handler {
@@ -15,7 +15,7 @@ func NewRouter(mux *http.ServeMux, middleware middleware.Middleware, userHandler
 
 	// Image routes
 	mux.HandleFunc("POST /image/upload", imageHandler.UploadImage)
-	mux.HandleFunc("GET /image/{id}/metadata", imageHandler.GetImageByID)
+	mux.HandleFunc("GET /image/{id}/metadata", middleware.Authorization(imageHandler.GetImageByID))
 	mux.HandleFunc("GET /image/{id}", imageHandler.GetImageDataByID)
 
 	return middleware.RecoverPanic(middleware.EnabledCORS(middleware.ContextBuilder(mux)))

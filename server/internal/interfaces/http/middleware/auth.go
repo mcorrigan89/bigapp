@@ -1,10 +1,20 @@
 package middleware
 
 import (
+	"context"
 	"net/http"
 
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
 )
+
+func GetUserFromContext(ctx context.Context) *entities.UserContextEntity {
+	userContext, ok := ctx.Value(currentUserContextKey).(*entities.UserContextEntity)
+	if !ok {
+		return nil
+	}
+
+	return userContext
+}
 
 func (m *middleware) Authorization(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

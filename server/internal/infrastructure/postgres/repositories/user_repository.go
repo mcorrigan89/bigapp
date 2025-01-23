@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres/models"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres/models"
 )
 
 type postgresUserRepository struct {
@@ -26,7 +26,12 @@ func (repo *postgresUserRepository) GetUserByID(ctx context.Context, querier mod
 		return nil, err
 	}
 
-	return entities.NewUserEntity(row.User), nil
+	avatarImageEntity, err := repo.getAvatarImageEntity(ctx, querier, &row.User)
+	if err != nil {
+		return nil, err
+	}
+
+	return entities.NewUserEntity(row.User, avatarImageEntity), nil
 }
 
 func (repo *postgresUserRepository) GetUserByEmail(ctx context.Context, querier models.Querier, email string) (*entities.UserEntity, error) {
@@ -38,7 +43,12 @@ func (repo *postgresUserRepository) GetUserByEmail(ctx context.Context, querier 
 		return nil, err
 	}
 
-	return entities.NewUserEntity(row.User), nil
+	avatarImageEntity, err := repo.getAvatarImageEntity(ctx, querier, &row.User)
+	if err != nil {
+		return nil, err
+	}
+
+	return entities.NewUserEntity(row.User, avatarImageEntity), nil
 }
 
 func (repo *postgresUserRepository) GetUserContextBySessionToken(ctx context.Context, querier models.Querier, sessionToken string) (*entities.UserContextEntity, error) {
@@ -50,7 +60,12 @@ func (repo *postgresUserRepository) GetUserContextBySessionToken(ctx context.Con
 		return nil, err
 	}
 
-	userEntity := entities.NewUserEntity(row.User)
+	avatarImageEntity, err := repo.getAvatarImageEntity(ctx, querier, &row.User)
+	if err != nil {
+		return nil, err
+	}
+
+	userEntity := entities.NewUserEntity(row.User, avatarImageEntity)
 
 	return entities.NewUserContextEntity(userEntity, row.UserSession), nil
 }
@@ -65,13 +80,17 @@ func (repo *postgresUserRepository) CreateUser(ctx context.Context, querier mode
 		FamilyName:    user.FamilyName,
 		Email:         user.Email,
 		EmailVerified: false,
-		AvatarUrl:     nil,
 	})
 	if err != nil {
 		return nil, err
 	}
 
-	return entities.NewUserEntity(row), nil
+	avatarImageEntity, err := repo.getAvatarImageEntity(ctx, querier, &row)
+	if err != nil {
+		return nil, err
+	}
+
+	return entities.NewUserEntity(row, avatarImageEntity), nil
 }
 
 func (repo *postgresUserRepository) CreateSession(ctx context.Context, querier models.Querier, user *entities.UserEntity, token string, expiresAt time.Time) (*entities.UserContextEntity, error) {
@@ -88,4 +107,37 @@ func (repo *postgresUserRepository) CreateSession(ctx context.Context, querier m
 	}
 
 	return entities.NewUserContextEntity(user, row), nil
+}
+
+func (repo *postgresUserRepository) SetAvatarImage(ctx context.Context, querier models.Querier, image *entities.ImageEntity, user *entities.UserEntity) (*entities.UserEntity, error) {
+	ctx, cancel := context.WithTimeout(ctx, postgres.DefaultTimeout)
+	defer cancel()
+
+	row, err := querier.SetAvatarImage(ctx, models.SetAvatarImageParams{
+		UserID:  user.ID,
+		ImageID: &image.ID,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	avatarImageEntity, err := repo.getAvatarImageEntity(ctx, querier, &row)
+	if err != nil {
+		return nil, err
+	}
+
+	return entities.NewUserEntity(row, avatarImageEntity), nil
+}
+
+func (repo *postgresUserRepository) getAvatarImageEntity(ctx context.Context, querier models.Querier, user *models.User) (*entities.ImageEntity, error) {
+	if user.AvatarID != nil {
+		avatarRow, err := querier.GetImageByID(ctx, *user.AvatarID)
+		if err != nil {
+			return nil, err
+		}
+
+		return entities.NewImageEntity(avatarRow.Image), nil
+	}
+
+	return nil, nil
 }

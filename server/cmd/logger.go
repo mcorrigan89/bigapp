@@ -4,7 +4,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/middleware"
+	"github.com/mcorrigan89/bigapp/server/internal/interfaces/http/middleware"
 	"github.com/rs/zerolog"
 )
 

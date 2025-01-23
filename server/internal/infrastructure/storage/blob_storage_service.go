@@ -2,13 +2,11 @@ package storage
 
 import (
 	"context"
-	"fmt"
 	"io"
 
-	"github.com/mcorrigan89/simple_auth/server/internal/common"
+	"github.com/mcorrigan89/bigapp/server/internal/common"
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
-	"github.com/rs/xid"
 )
 
 var useSSL = false
@@ -47,22 +45,19 @@ func (s *blobStorageService) GetObject(ctx context.Context, bucketName, objectKe
 	return respByte, nil
 }
 
-func (s *blobStorageService) UploadObject(ctx context.Context, bucketName, objectKey string, object io.Reader, size int64) (*string, error) {
+func (s *blobStorageService) UploadObject(ctx context.Context, bucketName, objectKey string, object io.Reader, size int64) error {
 	minioClient, err := minio.New(s.config.Storage.Endpoint, &minio.Options{
 		Creds:  credentials.NewStaticV4(s.config.Storage.AccessKey, s.config.Storage.SecretKey, ""),
 		Secure: useSSL,
 	})
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	uniqueId := xid.New().String()
-	uniqueObjectKey := fmt.Sprintf("%s-%s", uniqueId, objectKey)
-
-	_, err = minioClient.PutObject(ctx, bucketName, uniqueObjectKey, object, size, minio.PutObjectOptions{})
+	_, err = minioClient.PutObject(ctx, bucketName, objectKey, object, size, minio.PutObjectOptions{})
 	if err != nil {
-		return nil, err
+		return err
 	}
 
-	return &uniqueObjectKey, nil
+	return nil
 }

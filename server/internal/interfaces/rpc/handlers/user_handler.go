@@ -9,11 +9,12 @@ import (
 
 	"github.com/google/uuid"
 
-	"github.com/mcorrigan89/simple_auth/server/internal/application"
-	"github.com/mcorrigan89/simple_auth/server/internal/application/commands"
-	"github.com/mcorrigan89/simple_auth/server/internal/application/queries"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
-	userv1 "github.com/mcorrigan89/simple_auth/server/internal/interfaces/rpc/gen/user/v1"
+	"github.com/mcorrigan89/bigapp/server/internal/application"
+	"github.com/mcorrigan89/bigapp/server/internal/application/commands"
+	"github.com/mcorrigan89/bigapp/server/internal/application/queries"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
+	imagev1 "github.com/mcorrigan89/bigapp/server/internal/interfaces/rpc/gen/media/v1"
+	userv1 "github.com/mcorrigan89/bigapp/server/internal/interfaces/rpc/gen/user/v1"
 
 	"github.com/rs/zerolog"
 )
@@ -58,6 +59,13 @@ func (rpc *userServiceV1) GetUserById(ctx context.Context, req *connect.Request[
 			GivenName:  userEntity.GivenName,
 			FamilyName: userEntity.FamilyName,
 			Email:      userEntity.Email,
+			Avatar: &imagev1.Image{
+				Id:     userEntity.Avatar.ID.String(),
+				Url:    userEntity.Avatar.UrlSlug(),
+				Width:  userEntity.Avatar.Width,
+				Height: userEntity.Avatar.Height,
+				Size:   userEntity.Avatar.Size,
+			},
 		},
 	})
 	res.Header().Set("User-Version", "v1")
@@ -91,6 +99,13 @@ func (rpc *userServiceV1) GetUserBySessionToken(ctx context.Context, req *connec
 			GivenName:  userEntity.GivenName,
 			FamilyName: userEntity.FamilyName,
 			Email:      userEntity.Email,
+			Avatar: &imagev1.Image{
+				Id:     userEntity.Avatar.ID.String(),
+				Url:    userEntity.Avatar.UrlSlug(),
+				Width:  userEntity.Avatar.Width,
+				Height: userEntity.Avatar.Height,
+				Size:   userEntity.Avatar.Size,
+			},
 		},
 	})
 
@@ -124,6 +139,13 @@ func (rpc *userServiceV1) CreateUser(ctx context.Context, req *connect.Request[u
 			GivenName:  userSessionEntity.User.GivenName,
 			FamilyName: userSessionEntity.User.FamilyName,
 			Email:      userSessionEntity.User.Email,
+			Avatar: &imagev1.Image{
+				Id:     userSessionEntity.User.Avatar.ID.String(),
+				Url:    userSessionEntity.User.Avatar.UrlSlug(),
+				Width:  userSessionEntity.User.Avatar.Width,
+				Height: userSessionEntity.User.Avatar.Height,
+				Size:   userSessionEntity.User.Avatar.Size,
+			},
 		},
 		Session: &userv1.UserSession{
 			Token:     userSessionEntity.SessionToken,
@@ -176,6 +198,13 @@ func (rpc *userServiceV1) LoginWithReferenceLink(ctx context.Context, req *conne
 			GivenName:  userSessionEntity.User.GivenName,
 			FamilyName: userSessionEntity.User.FamilyName,
 			Email:      userSessionEntity.User.Email,
+			Avatar: &imagev1.Image{
+				Id:     userSessionEntity.User.Avatar.ID.String(),
+				Url:    userSessionEntity.User.Avatar.UrlSlug(),
+				Width:  userSessionEntity.User.Avatar.Width,
+				Height: userSessionEntity.User.Avatar.Height,
+				Size:   userSessionEntity.User.Avatar.Size,
+			},
 		},
 		Session: &userv1.UserSession{
 			Token:     userSessionEntity.SessionToken,

@@ -23,6 +23,7 @@ type Querier interface {
 	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)
 	GetUserByID(ctx context.Context, id uuid.UUID) (GetUserByIDRow, error)
 	GetUserBySessionToken(ctx context.Context, token string) (GetUserBySessionTokenRow, error)
+	SetAvatarImage(ctx context.Context, arg SetAvatarImageParams) (User, error)
 	UpdateUser(ctx context.Context, arg UpdateUserParams) (User, error)
 }
 

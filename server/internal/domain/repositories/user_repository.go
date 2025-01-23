@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres/models"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres/models"
 )
 
 type UserRepository interface {
@@ -15,4 +15,5 @@ type UserRepository interface {
 	GetUserContextBySessionToken(ctx context.Context, querier models.Querier, sessionToken string) (*entities.UserContextEntity, error)
 	CreateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error)
 	CreateSession(ctx context.Context, querier models.Querier, user *entities.UserEntity, token string, expiresAt time.Time) (*entities.UserContextEntity, error)
+	SetAvatarImage(ctx context.Context, querier models.Querier, image *entities.ImageEntity, user *entities.UserEntity) (*entities.UserEntity, error)
 }

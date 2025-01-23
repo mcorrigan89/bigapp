@@ -1,6 +1,7 @@
 import { userByToken } from "@/api/client";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import Image from "next/image";
 
 export default async function CurrentUserPage() {
   const cookieStore = await cookies();
@@ -10,10 +11,31 @@ export default async function CurrentUserPage() {
   }
 
   const response = await userByToken(sessionToken.value);
+  const user = response.user;
+
+  if (!user) {
+    return redirect("/");
+  }
+  const avatarImage = user.avatar;
+
   return (
     <div>
-      <div>Hello world</div>
-      <div>{JSON.stringify(response.user)}</div>
+      <div>Current User</div>
+      <div>First Name</div>
+      <div>{user.givenName}</div>
+      <div>Last Name</div>
+      <div>{user.familyName}</div>
+      <div>Email</div>
+      <div>{user.email}</div>
+      <div>{avatarImage?.url}</div>
+      {avatarImage ? (
+        <Image
+          src={"http://localhost:3001" + avatarImage.url}
+          width={avatarImage.width}
+          height={avatarImage.height}
+          alt="avatar"
+        />
+      ) : null}
     </div>
   );
 }

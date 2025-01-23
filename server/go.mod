@@ -1,4 +1,4 @@
-module github.com/mcorrigan89/simple_auth/server
+module github.com/mcorrigan89/bigapp/server
 
 go 1.23.3
 

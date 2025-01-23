@@ -5,10 +5,11 @@ import (
 	"net/http"
 
 	"github.com/google/uuid"
-	"github.com/mcorrigan89/simple_auth/server/internal/application"
-	"github.com/mcorrigan89/simple_auth/server/internal/application/commands"
-	"github.com/mcorrigan89/simple_auth/server/internal/application/queries"
-	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/dto"
+	"github.com/mcorrigan89/bigapp/server/internal/application"
+	"github.com/mcorrigan89/bigapp/server/internal/application/commands"
+	"github.com/mcorrigan89/bigapp/server/internal/application/queries"
+	"github.com/mcorrigan89/bigapp/server/internal/interfaces/http/dto"
+	"github.com/mcorrigan89/bigapp/server/internal/interfaces/http/middleware"
 	"github.com/rs/zerolog"
 )
 
@@ -96,22 +97,23 @@ func (h *ImageHandler) UploadImage(w http.ResponseWriter, r *http.Request) {
 	}
 	defer file.Close()
 
-	// title := r.FormValue("title")
-	// if title == "" {
-	// 	h.logger.Error().Msg("Title is required")
-	// 	http.Error(w, "Title is required", http.StatusBadRequest)
-	// 	return
-	// }
+	userContextEntity := middleware.GetUserFromContext(ctx)
+	if userContextEntity == nil {
+		h.logger.Err(err).Ctx(ctx).Msg("User is not authenticated")
+		http.Error(w, "User is not authenticated", http.StatusUnauthorized)
+		return
+	}
 
 	fileName := fmt.Sprintf("%s-%s", handler.Filename, uuid.New().String())
 
-	cmd := commands.CreateNewImageCommand{
+	cmd := commands.CreateNewAvatarImageCommand{
+		UserID:   userContextEntity.UserID,
 		ObjectID: fileName,
 		File:     file,
 		Size:     handler.Size,
 	}
 
-	image, err := h.imageAppService.UploadImage(ctx, cmd)
+	image, err := h.imageAppService.UploadAvatarImage(ctx, cmd)
 	if err != nil {
 		http.Error(w, "Failed to get user by ID", http.StatusInternalServerError)
 		return

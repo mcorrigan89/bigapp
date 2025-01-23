@@ -2,12 +2,15 @@ syntax = "proto3";
 
 package user.v1;
 
+import "media/v1/image.proto";
+
 message User {
   string id = 1;
   optional string given_name = 2;
   optional string family_name = 3;
   string email = 4;
   bool email_verified = 5;
+  media.v1.Image avatar = 6;
 }
 
 message UserSession {

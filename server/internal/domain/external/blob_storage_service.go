@@ -7,5 +7,5 @@ import (
 
 type BlobStorageService interface {
 	GetObject(ctx context.Context, bucketName, objectKey string) ([]byte, error)
-	UploadObject(ctx context.Context, bucketName, objectKey string, object io.Reader, size int64) (*string, error)
+	UploadObject(ctx context.Context, bucketName, objectKey string, object io.Reader, size int64) error
 }

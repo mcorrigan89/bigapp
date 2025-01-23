@@ -44,7 +44,7 @@ type User struct {
 	FamilyName    *string    `json:"family_name"`
 	Email         string     `json:"email"`
 	EmailVerified *bool      `json:"email_verified"`
-	AvatarUrl     *string    `json:"avatar_url"`
+	AvatarID      *uuid.UUID `json:"avatar_id"`
 	CreatedAt     *time.Time `json:"created_at"`
 	UpdatedAt     *time.Time `json:"updated_at"`
 	Version       int32      `json:"version"`

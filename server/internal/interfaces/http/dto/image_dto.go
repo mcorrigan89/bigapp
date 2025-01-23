@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 
 	"github.com/google/uuid"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
 )
 
 type ImageDto struct {

@@ -3,8 +3,8 @@ package email
 import (
 	"context"
 
-	"github.com/mcorrigan89/simple_auth/server/internal/common"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
+	"github.com/mcorrigan89/bigapp/server/internal/common"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
 	"github.com/wneessen/go-mail"
 )
 

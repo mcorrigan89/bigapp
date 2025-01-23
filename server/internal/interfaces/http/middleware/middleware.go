@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/mcorrigan89/simple_auth/server/internal/common"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/services"
+	"github.com/mcorrigan89/bigapp/server/internal/common"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/services"
 	"github.com/rs/zerolog"
 )
 

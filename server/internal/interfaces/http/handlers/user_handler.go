@@ -5,9 +5,9 @@ import (
 	"net/mail"
 
 	"github.com/google/uuid"
-	"github.com/mcorrigan89/simple_auth/server/internal/application"
-	"github.com/mcorrigan89/simple_auth/server/internal/application/queries"
-	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/dto"
+	"github.com/mcorrigan89/bigapp/server/internal/application"
+	"github.com/mcorrigan89/bigapp/server/internal/application/queries"
+	"github.com/mcorrigan89/bigapp/server/internal/interfaces/http/dto"
 	"github.com/rs/zerolog"
 )
 

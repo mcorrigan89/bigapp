@@ -4,7 +4,7 @@ import (
 	"errors"
 
 	"github.com/google/uuid"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres/models"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres/models"
 )
 
 var (
@@ -16,13 +16,15 @@ type UserEntity struct {
 	GivenName  *string
 	FamilyName *string
 	Email      string
+	Avatar     *ImageEntity
 }
 
-func NewUserEntity(userModel models.User) *UserEntity {
+func NewUserEntity(userModel models.User, imageEntity *ImageEntity) *UserEntity {
 	return &UserEntity{
 		ID:         userModel.ID,
 		GivenName:  userModel.GivenName,
 		FamilyName: userModel.FamilyName,
 		Email:      userModel.Email,
+		Avatar:     imageEntity,
 	}
 }

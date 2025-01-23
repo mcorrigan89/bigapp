@@ -5,34 +5,36 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/repositories"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres/models"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/repositories"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres/models"
 
 	"github.com/rs/xid"
 )
 
 type UserService interface {
-	GetUserByID(ctx context.Context, querier models.Querier, userId uuid.UUID) (*entities.UserEntity, error)
+	GetUserByID(ctx context.Context, querier models.Querier, userID uuid.UUID) (*entities.UserEntity, error)
 	GetUserByEmail(ctx context.Context, querier models.Querier, email string) (*entities.UserEntity, error)
 	GetUserContextBySessionToken(ctx context.Context, querier models.Querier, sessionToken string) (*entities.UserContextEntity, error)
 	CreateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error)
 	CreateSession(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserContextEntity, error)
 	CreateLoginLink(ctx context.Context, querier models.Querier, email string) (*entities.ReferenceLinkEntity, error)
 	LoginWithLink(ctx context.Context, querier models.Querier, token string) (*entities.UserContextEntity, error)
+	SetAvatarImage(ctx context.Context, querier models.Querier, image *entities.ImageEntity, user *entities.UserEntity) (*entities.UserEntity, error)
 }
 
 type userService struct {
 	userRepo    repositories.UserRepository
 	refLinkRepo repositories.ReferenceLinkRepository
+	imageRepo   repositories.ImageRepository
 }
 
-func NewUserService(userRepo repositories.UserRepository, refLinkRepo repositories.ReferenceLinkRepository) *userService {
-	return &userService{userRepo: userRepo, refLinkRepo: refLinkRepo}
+func NewUserService(userRepo repositories.UserRepository, refLinkRepo repositories.ReferenceLinkRepository, imageRepo repositories.ImageRepository) *userService {
+	return &userService{userRepo: userRepo, refLinkRepo: refLinkRepo, imageRepo: imageRepo}
 }
 
-func (s *userService) GetUserByID(ctx context.Context, querier models.Querier, userId uuid.UUID) (*entities.UserEntity, error) {
-	user, err := s.userRepo.GetUserByID(ctx, querier, userId)
+func (s *userService) GetUserByID(ctx context.Context, querier models.Querier, userID uuid.UUID) (*entities.UserEntity, error) {
+	user, err := s.userRepo.GetUserByID(ctx, querier, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -132,4 +134,13 @@ func (s *userService) LoginWithLink(ctx context.Context, querier models.Querier,
 	}
 
 	return userSession, nil
+}
+
+func (s *userService) SetAvatarImage(ctx context.Context, querier models.Querier, image *entities.ImageEntity, user *entities.UserEntity) (*entities.UserEntity, error) {
+	userEntity, err := s.userRepo.SetAvatarImage(ctx, querier, image, user)
+	if err != nil {
+		return nil, err
+	}
+
+	return userEntity, nil
 }

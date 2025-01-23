@@ -4,7 +4,7 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres/models"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres/models"
 	"github.com/rs/xid"
 )
 

@@ -4,9 +4,9 @@ import (
 	"context"
 
 	"github.com/google/uuid"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/repositories"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres/models"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/repositories"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres/models"
 )
 
 type ImageService interface {

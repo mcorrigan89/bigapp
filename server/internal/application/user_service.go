@@ -7,13 +7,13 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/mcorrigan89/simple_auth/server/internal/application/commands"
-	"github.com/mcorrigan89/simple_auth/server/internal/application/queries"
-	"github.com/mcorrigan89/simple_auth/server/internal/common"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/services"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres/models"
+	"github.com/mcorrigan89/bigapp/server/internal/application/commands"
+	"github.com/mcorrigan89/bigapp/server/internal/application/queries"
+	"github.com/mcorrigan89/bigapp/server/internal/common"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/services"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres/models"
 
 	"github.com/rs/zerolog"
 )

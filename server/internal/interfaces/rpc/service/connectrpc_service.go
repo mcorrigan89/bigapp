@@ -6,9 +6,9 @@ import (
 
 	"connectrpc.com/grpcreflect"
 
-	"github.com/mcorrigan89/simple_auth/server/internal/application"
-	userv1connect "github.com/mcorrigan89/simple_auth/server/internal/interfaces/rpc/gen/user/v1/userv1connect"
-	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/rpc/handlers"
+	"github.com/mcorrigan89/bigapp/server/internal/application"
+	userv1connect "github.com/mcorrigan89/bigapp/server/internal/interfaces/rpc/gen/user/v1/userv1connect"
+	"github.com/mcorrigan89/bigapp/server/internal/interfaces/rpc/handlers"
 	"github.com/rs/zerolog"
 )
 

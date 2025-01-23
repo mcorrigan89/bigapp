@@ -127,7 +127,7 @@ CREATE TABLE public.users (
     family_name text,
     email public.citext NOT NULL,
     email_verified boolean DEFAULT false,
-    avatar_url text,
+    avatar_id uuid,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     version integer DEFAULT 1 NOT NULL
@@ -198,6 +198,14 @@ ALTER TABLE ONLY public.user_session
 
 ALTER TABLE ONLY public.user_session
     ADD CONSTRAINT user_session_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: users users_avatar_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_avatar_id_fkey FOREIGN KEY (avatar_id) REFERENCES public.images(id) ON DELETE SET NULL;
 
 
 --

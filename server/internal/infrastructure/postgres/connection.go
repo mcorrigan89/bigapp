@@ -8,7 +8,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	_ "github.com/lib/pq"
-	"github.com/mcorrigan89/simple_auth/server/internal/common"
+	"github.com/mcorrigan89/bigapp/server/internal/common"
 )
 
 const DefaultTimeout = 10 * time.Second

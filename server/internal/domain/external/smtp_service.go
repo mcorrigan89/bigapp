@@ -3,7 +3,7 @@ package external
 import (
 	"context"
 
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
 )
 
 type SmtpService interface {

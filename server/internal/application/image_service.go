@@ -5,13 +5,14 @@ import (
 	"sync"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/mcorrigan89/simple_auth/server/internal/application/commands"
-	"github.com/mcorrigan89/simple_auth/server/internal/application/queries"
-	"github.com/mcorrigan89/simple_auth/server/internal/common"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/external"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/services"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres/models"
+	"github.com/mcorrigan89/bigapp/server/internal/application/commands"
+	"github.com/mcorrigan89/bigapp/server/internal/application/queries"
+	"github.com/mcorrigan89/bigapp/server/internal/common"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/external"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/services"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres/models"
 
 	"github.com/rs/zerolog"
 )
@@ -19,7 +20,7 @@ import (
 type ImageApplicationService interface {
 	GetImageByID(ctx context.Context, query queries.ImageByIDQuery) (*entities.ImageEntity, error)
 	GetImageDataByID(ctx context.Context, query queries.ImageDataByIDQuery) ([]byte, string, error)
-	UploadImage(ctx context.Context, cmd commands.CreateNewImageCommand) (*entities.ImageEntity, error)
+	UploadAvatarImage(ctx context.Context, cmd commands.CreateNewAvatarImageCommand) (*entities.ImageEntity, error)
 }
 
 type imageApplicationService struct {
@@ -29,10 +30,11 @@ type imageApplicationService struct {
 	db                *pgxpool.Pool
 	queries           models.Querier
 	imageService      services.ImageService
+	userService       services.UserService
 	imageMediaService external.ImageMediaService
 }
 
-func NewImageApplicationService(db *pgxpool.Pool, wg *sync.WaitGroup, cfg *common.Config, logger *zerolog.Logger, imageService services.ImageService, imageMediaService external.ImageMediaService) *imageApplicationService {
+func NewImageApplicationService(db *pgxpool.Pool, wg *sync.WaitGroup, cfg *common.Config, logger *zerolog.Logger, imageService services.ImageService, userService services.UserService, imageMediaService external.ImageMediaService) *imageApplicationService {
 	dbQueries := models.New(db)
 	return &imageApplicationService{
 		db:                db,
@@ -41,6 +43,7 @@ func NewImageApplicationService(db *pgxpool.Pool, wg *sync.WaitGroup, cfg *commo
 		logger:            logger,
 		queries:           dbQueries,
 		imageService:      imageService,
+		userService:       userService,
 		imageMediaService: imageMediaService,
 	}
 }
@@ -75,18 +78,49 @@ func (app *imageApplicationService) GetImageDataByID(ctx context.Context, query 
 	return imageData, contentType, nil
 }
 
-func (app *imageApplicationService) UploadImage(ctx context.Context, cmd commands.CreateNewImageCommand) (*entities.ImageEntity, error) {
+func (app *imageApplicationService) UploadAvatarImage(ctx context.Context, cmd commands.CreateNewAvatarImageCommand) (*entities.ImageEntity, error) {
 	app.logger.Info().Ctx(ctx).Msg("Uploading image")
+	tx, cancel, err := postgres.CreateTransaction(ctx, app.db)
+	defer cancel()
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to create transaction")
+		return nil, err
+	}
+	defer tx.Rollback(ctx)
 
+	qtx := models.New(app.db).WithTx(tx)
+
+	app.logger.Info().Ctx(ctx).Msg("Uploading image data")
 	imageData, err := app.imageMediaService.UploadImage(ctx, "image", cmd.ObjectID, cmd.File, cmd.Size)
 	if err != nil {
 		app.logger.Err(err).Ctx(ctx).Msg("Failed to upload image")
 		return nil, err
 	}
 
-	image, err := app.imageService.CreateImage(ctx, app.queries, imageData)
+	app.logger.Info().Ctx(ctx).Msg("Creating image in database")
+	image, err := app.imageService.CreateImage(ctx, qtx, imageData)
 	if err != nil {
 		app.logger.Err(err).Ctx(ctx).Msg("Failed to create image")
+		return nil, err
+	}
+
+	app.logger.Info().Ctx(ctx).Msg("Getting user by ID")
+	user, err := app.userService.GetUserByID(ctx, app.queries, cmd.UserID)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to get user by ID")
+		return nil, err
+	}
+
+	app.logger.Info().Ctx(ctx).Msg("Setting image as avatar on user")
+	_, err = app.userService.SetAvatarImage(ctx, qtx, image, user)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to set avatar image")
+		return nil, err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to commit transaction")
 		return nil, err
 	}
 

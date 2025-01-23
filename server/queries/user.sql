@@ -12,14 +12,17 @@ JOIN user_session ON users.id = user_session.user_id
 WHERE user_session.token = $1;
 
 -- name: CreateUser :one
-INSERT INTO users (id, given_name, family_name, email, email_verified, avatar_url) 
-VALUES (sqlc.arg(id), sqlc.narg(given_name), sqlc.narg(family_name), sqlc.arg(email), sqlc.arg(email_verified)::boolean, sqlc.narg(avatar_url)) RETURNING *;
+INSERT INTO users (id, given_name, family_name, email, email_verified) 
+VALUES (sqlc.arg(id), sqlc.narg(given_name), sqlc.narg(family_name), sqlc.arg(email), sqlc.arg(email_verified)::boolean) RETURNING *;
  
 -- name: UpdateUser :one
-UPDATE users SET given_name = $2, family_name = $3 WHERE id = $1 RETURNING *;
+UPDATE users SET given_name = sqlc.narg(given_name), family_name = sqlc.narg(family_name) WHERE id = sqlc.arg(user_id) RETURNING *;
+
+-- name: SetAvatarImage :one
+UPDATE users SET avatar_id = sqlc.arg(image_id) WHERE id = sqlc.arg(user_id) RETURNING *;
 
 -- name: CreateUserSession :one
-INSERT INTO user_session (user_id, token, expires_at) VALUES ($1, $2, $3) RETURNING *;
+INSERT INTO user_session (user_id, token, expires_at) VALUES (sqlc.arg(user_id), sqlc.arg(token), sqlc.arg(expires_at)) RETURNING *;
 
 -- name: ExpireUserSession :exec
 UPDATE user_session SET user_expired = TRUE WHERE user_session.id = $1;

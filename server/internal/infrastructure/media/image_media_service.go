@@ -7,8 +7,8 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/h2non/bimg"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/entities"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/external"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/external"
 )
 
 type imageMediaService struct {
@@ -58,7 +58,7 @@ type CreateImageArgs struct {
 }
 
 func (service *imageMediaService) UploadImage(ctx context.Context, bucketName, fileName string, file io.Reader, size int64) (*entities.ImageEntity, error) {
-	assetId, err := service.blobStorageService.UploadObject(ctx, bucketName, fileName, file, size)
+	err := service.blobStorageService.UploadObject(ctx, bucketName, fileName, file, size)
 	if err != nil {
 		return nil, err
 	}
@@ -78,7 +78,7 @@ func (service *imageMediaService) UploadImage(ctx context.Context, bucketName, f
 	imageEntity := entities.ImageEntity{
 		ID:         uuid.New(),
 		BucketName: bucketName,
-		ObjectID:   *assetId,
+		ObjectID:   fileName,
 		Width:      int32(metadata.Size.Width),
 		Height:     int32(metadata.Size.Height),
 		Size:       int32(size),

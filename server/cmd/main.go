@@ -5,18 +5,18 @@ import (
 	"os"
 	"sync"
 
-	"github.com/mcorrigan89/simple_auth/server/internal/application"
-	"github.com/mcorrigan89/simple_auth/server/internal/common"
-	"github.com/mcorrigan89/simple_auth/server/internal/domain/services"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/email"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/media"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/postgres/repositories"
-	"github.com/mcorrigan89/simple_auth/server/internal/infrastructure/storage"
-	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/handlers"
-	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/middleware"
-	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/http/router"
-	"github.com/mcorrigan89/simple_auth/server/internal/interfaces/rpc/service"
+	"github.com/mcorrigan89/bigapp/server/internal/application"
+	"github.com/mcorrigan89/bigapp/server/internal/common"
+	"github.com/mcorrigan89/bigapp/server/internal/domain/services"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/email"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/media"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres/repositories"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/storage"
+	"github.com/mcorrigan89/bigapp/server/internal/interfaces/http/handlers"
+	"github.com/mcorrigan89/bigapp/server/internal/interfaces/http/middleware"
+	"github.com/mcorrigan89/bigapp/server/internal/interfaces/http/router"
+	"github.com/mcorrigan89/bigapp/server/internal/interfaces/rpc/service"
 	"github.com/rs/zerolog"
 )
 
@@ -51,12 +51,12 @@ func main() {
 	smtpService := email.NewSmtpService(&cfg)
 	imageMediaService := media.NewImageMediaService(blobStorageService)
 
-	userService := services.NewUserService(postgresUserRepository, postgresReferenceLinkRepository)
+	userService := services.NewUserService(postgresUserRepository, postgresReferenceLinkRepository, postgresImageRepository)
 	emailService := services.NewEmailService(smtpService)
 	imageService := services.NewImageService(postgresImageRepository)
 
 	userApplicationService := application.NewUserApplicationService(db, &wg, &cfg, &logger, userService, emailService)
-	imageApplicationService := application.NewImageApplicationService(db, &wg, &cfg, &logger, imageService, imageMediaService)
+	imageApplicationService := application.NewImageApplicationService(db, &wg, &cfg, &logger, imageService, userService, imageMediaService)
 	userHandler := handlers.NewUserHandler(&logger, userApplicationService)
 	imageHandler := handlers.NewImageHandler(&logger, imageApplicationService)
 

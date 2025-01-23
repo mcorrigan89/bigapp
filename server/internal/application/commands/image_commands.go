@@ -2,9 +2,12 @@ package commands
 
 import (
 	"io"
+
+	"github.com/google/uuid"
 )
 
-type CreateNewImageCommand struct {
+type CreateNewAvatarImageCommand struct {
+	UserID   uuid.UUID
 	ObjectID string
 	File     io.Reader
 	Size     int64

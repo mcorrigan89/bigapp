@@ -1,6 +1,7 @@
 import { createClient } from "@connectrpc/connect";
 import { UserService } from "@/api/user/v1/user_pb";
 import { createConnectTransport } from "@connectrpc/connect-node";
+import { cookies } from "next/headers";
 
 const transport = createConnectTransport({
   baseUrl: "http://localhost:3001",
@@ -66,9 +67,20 @@ export async function loginWithRefLink({
 export async function uploadImage({ file }: { file: File }) {
   const formData = new FormData();
   formData.append("image", file);
+
+  const cookieJar = await cookies();
+  const sessionToken = cookieJar.get("x-session-token");
+  if (!sessionToken?.value) {
+    throw new Error("Session token is missing");
+  }
+
+  const headers = new Headers();
+  headers.append("x-session-token", sessionToken?.value);
+
   const res = await fetch("http://localhost:3001/image/upload", {
     method: "POST",
     body: formData,
+    headers,
   });
   return res;
 }
