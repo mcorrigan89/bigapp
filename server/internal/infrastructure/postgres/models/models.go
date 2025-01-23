@@ -10,6 +10,18 @@ import (
 	"github.com/google/uuid"
 )
 
+type Image struct {
+	ID         uuid.UUID  `json:"id"`
+	BucketName string     `json:"bucket_name"`
+	ObjectID   string     `json:"object_id"`
+	Height     int32      `json:"height"`
+	Width      int32      `json:"width"`
+	FileSize   int32      `json:"file_size"`
+	CreatedAt  *time.Time `json:"created_at"`
+	UpdatedAt  *time.Time `json:"updated_at"`
+	Version    int32      `json:"version"`
+}
+
 type ReferenceLink struct {
 	ID        uuid.UUID  `json:"id"`
 	LinkID    uuid.UUID  `json:"link_id"`

@@ -41,29 +41,6 @@ func (service *smtpService) SendEmail(ctx context.Context, email *entities.Email
 	return nil
 }
 
-// func (service *smtpService) SendHTMLMail(ctx context.Context, email *entities.EmailEntity) error {
-// 	msg := mail.NewMsg()
-// 	msg.Subject(email.Subject)
-// 	msg.SetBodyString(mail.TypeTextHTML, email.HtmlBody)
-
-// 	err := service.addEmails(ctx, msg, args.ToEmail, args.FromEmail)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	client, err := service.createClient()
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	err = client.DialAndSend(msg)
-// 	if err != nil {
-// 		return err
-// 	}
-
-// 	return nil
-// }
-
 func (service *smtpService) createClient() (*mail.Client, error) {
 	smtpServer := service.config.Mail.SMTPServer
 	smtpUsername := service.config.Mail.SMTPUsername

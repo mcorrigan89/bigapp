@@ -47,3 +47,7 @@ migrate-up:
 .PHONY: migrate-down
 migrate-down:
 	migrate -path=./server/migrations -database="$(POSTGRES_URL)" down 1
+
+.PHONY: minio
+minio:
+	minio server  --console-address :9001 /Users/michaelcorrigan/minio

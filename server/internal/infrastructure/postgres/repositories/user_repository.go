@@ -17,11 +17,11 @@ func NewPostgresUserRepository() *postgresUserRepository {
 	return &postgresUserRepository{}
 }
 
-func (repo *postgresUserRepository) GetUserByID(ctx context.Context, querier models.Querier, userId uuid.UUID) (*entities.UserEntity, error) {
+func (repo *postgresUserRepository) GetUserByID(ctx context.Context, querier models.Querier, userID uuid.UUID) (*entities.UserEntity, error) {
 	ctx, cancel := context.WithTimeout(ctx, postgres.DefaultTimeout)
 	defer cancel()
 
-	row, err := querier.GetUserByID(ctx, userId)
+	row, err := querier.GetUserByID(ctx, userID)
 	if err != nil {
 		return nil, err
 	}

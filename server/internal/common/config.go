@@ -19,17 +19,10 @@ type Config struct {
 	Cors     struct {
 		TrustedOrigins []string
 	}
-	OAuth struct {
-		Google struct {
-			ClientID     string
-			ClientSecret string
-		}
-	}
 	Storage struct {
-		Endpoint   string
-		BucketName string
-		AccessKey  string
-		SecretKey  string
+		Endpoint  string
+		AccessKey string
+		SecretKey string
 	}
 	Mail struct {
 		SMTPServer   string
@@ -78,31 +71,11 @@ func LoadConfig(cfg *Config) {
 
 	cfg.Cors.TrustedOrigins = []string{"http://localhost:3000"}
 
-	// Load OAuth
-	google_client_id := os.Getenv("GOOGLE_CLIENT_ID")
-	if google_client_id == "" {
-		log.Fatalf("GOOGLE_CLIENT_ID not available in .env")
-	}
-
-	google_client_secret := os.Getenv("GOOGLE_CLIENT_SECRET")
-	if google_client_secret == "" {
-		log.Fatalf("GOOGLE_CLIENT_SECRET not available in .env")
-	}
-
-	cfg.OAuth.Google.ClientID = google_client_id
-	cfg.OAuth.Google.ClientSecret = google_client_secret
-
 	endpoint := os.Getenv("MINIO_ENDPOINT")
 	if endpoint == "" {
 		log.Fatalf("MINIO_ENDPOINT not available in .env")
 	}
 	cfg.Storage.Endpoint = endpoint
-
-	bucket_name := os.Getenv("MINIO_BUCKET_NAME")
-	if bucket_name == "" {
-		log.Fatalf("MINIO_BUCKET_NAME not available in .env")
-	}
-	cfg.Storage.BucketName = bucket_name
 
 	access_key := os.Getenv("MINIO_ACCESS_KEY")
 	if access_key == "" {

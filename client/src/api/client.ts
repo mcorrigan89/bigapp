@@ -62,3 +62,13 @@ export async function loginWithRefLink({
   });
   return res;
 }
+
+export async function uploadImage({ file }: { file: File }) {
+  const formData = new FormData();
+  formData.append("image", file);
+  const res = await fetch("http://localhost:3001/image/upload", {
+    method: "POST",
+    body: formData,
+  });
+  return res;
+}

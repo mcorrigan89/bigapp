@@ -11,11 +11,13 @@ import (
 )
 
 type Querier interface {
+	CreateImage(ctx context.Context, arg CreateImageParams) (Image, error)
 	CreateReferenceLink(ctx context.Context, arg CreateReferenceLinkParams) (ReferenceLink, error)
 	CreateUser(ctx context.Context, arg CreateUserParams) (User, error)
 	CreateUserSession(ctx context.Context, arg CreateUserSessionParams) (UserSession, error)
 	DeleteReferenceLink(ctx context.Context, id uuid.UUID) (ReferenceLink, error)
 	ExpireUserSession(ctx context.Context, id uuid.UUID) error
+	GetImageByID(ctx context.Context, id uuid.UUID) (GetImageByIDRow, error)
 	GetReferenceLinkByID(ctx context.Context, id uuid.UUID) (GetReferenceLinkByIDRow, error)
 	GetReferenceLinkByToken(ctx context.Context, token string) (GetReferenceLinkByTokenRow, error)
 	GetUserByEmail(ctx context.Context, email string) (GetUserByEmailRow, error)

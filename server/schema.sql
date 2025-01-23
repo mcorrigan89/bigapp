@@ -50,6 +50,25 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: images; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.images (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    bucket_name text NOT NULL,
+    object_id text NOT NULL,
+    height integer NOT NULL,
+    width integer NOT NULL,
+    file_size integer NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    version integer DEFAULT 1 NOT NULL
+);
+
+
+ALTER TABLE public.images OWNER TO admin;
+
+--
 -- Name: reference_link; Type: TABLE; Schema: public; Owner: admin
 --
 
@@ -116,6 +135,14 @@ CREATE TABLE public.users (
 
 
 ALTER TABLE public.users OWNER TO admin;
+
+--
+-- Name: images images_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.images
+    ADD CONSTRAINT images_pkey PRIMARY KEY (id);
+
 
 --
 -- Name: reference_link reference_link_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
