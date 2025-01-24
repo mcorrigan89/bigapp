@@ -12,7 +12,7 @@ const transport = createConnectTransport({
   httpVersion: "2",
 });
 
-async function getHeaders(): Promise<Headers> {
+async function getHeaders() {
   const cookieJar = await cookies();
   const sessionToken = cookieJar.get("x-session-token");
   const headers = new Headers();
@@ -20,12 +20,13 @@ async function getHeaders(): Promise<Headers> {
   if (sessionToken?.value) {
     headers.append("x-session-token", sessionToken.value);
   }
-  return headers;
+  return { headers, token: sessionToken?.value };
 }
 
 async function userByIdFunc(id: string) {
   const client = createClient(UserService, transport);
-  const res = await client.getUserById({ id }, { headers: await getHeaders() });
+  const { headers } = await getHeaders();
+  const res = await client.getUserById({ id }, { headers });
   return res;
 }
 
@@ -39,51 +40,27 @@ interface CreateUserArgs {
 
 export async function createUser({ email, familyName, givenName }: CreateUserArgs) {
   const client = createClient(UserService, transport);
-  const res = await client.createUser(
-    {
-      email,
-      familyName,
-      givenName,
-    },
-    {
-      headers: await getHeaders(),
-    },
-  );
+  const { headers } = await getHeaders();
+  const res = await client.createUser({ email, familyName, givenName }, { headers });
   return res;
 }
 
 export async function userByTokenFunc(token: string) {
   const client = createClient(UserService, transport);
-
-  const res = await client.getUserBySessionToken(
-    {
-      token,
-    },
-    {
-      headers: await getHeaders(),
-    },
-  );
+  const { headers } = await getHeaders();
+  const res = await client.getUserBySessionToken({ token }, { headers });
   return res;
 }
 
 export const userByToken = cache(userByTokenFunc);
 
 export async function getCurrentUserFunc() {
-  const cookieJar = await cookies();
-  const sessionToken = cookieJar.get("x-session-token");
-  const token = sessionToken?.value;
+  const { token, headers } = await getHeaders();
   if (!token) {
     return null;
   }
   const client = createClient(UserService, transport);
-  const res = await client.getUserBySessionToken(
-    {
-      token,
-    },
-    {
-      headers: await getHeaders(),
-    },
-  );
+  const res = await client.getUserBySessionToken({ token }, { headers });
   return res;
 }
 
@@ -91,53 +68,29 @@ export const getCurrentUser = cache(getCurrentUserFunc);
 
 export async function loginEmail({ email }: { email: string }) {
   const client = createClient(UserService, transport);
-  const res = await client.createLoginEmail(
-    {
-      email,
-    },
-    {
-      headers: await getHeaders(),
-    },
-  );
+  const { headers } = await getHeaders();
+  const res = await client.createLoginEmail({ email }, { headers });
   return res;
 }
 
 export async function loginWithRefLink({ refLinkToken }: { refLinkToken: string }) {
   const client = createClient(UserService, transport);
-  const res = await client.loginWithReferenceLink(
-    {
-      token: refLinkToken,
-    },
-    {
-      headers: await getHeaders(),
-    },
-  );
+  const { headers } = await getHeaders();
+  const res = await client.loginWithReferenceLink({ token: refLinkToken }, { headers });
   return res;
 }
 
 export async function inviteUser({ email }: { email: string }) {
   const client = createClient(UserService, transport);
-  const res = await client.inviteUser(
-    {
-      email,
-    },
-    {
-      headers: await getHeaders(),
-    },
-  );
+  const { headers } = await getHeaders();
+  const res = await client.inviteUser({ email }, { headers });
   return res;
 }
 
 export async function acceptInviteRefLink({ refLinkToken }: { refLinkToken: string }) {
   const client = createClient(UserService, transport);
-  const res = await client.acceptInviteReferenceLink(
-    {
-      token: refLinkToken,
-    },
-    {
-      headers: await getHeaders(),
-    },
-  );
+  const { headers } = await getHeaders();
+  const res = await client.acceptInviteReferenceLink({ token: refLinkToken }, { headers });
   return res;
 }
 
@@ -145,13 +98,10 @@ export async function uploadImage({ file }: { file: File }) {
   const formData = new FormData();
   formData.append("image", file);
 
-  const cookieJar = await cookies();
-  const sessionToken = cookieJar.get("x-session-token");
-  if (!sessionToken?.value) {
+  const { headers, token } = await getHeaders();
+  if (!token) {
     throw new Error("Session token is missing");
   }
-
-  const headers = await getHeaders();
 
   const res = await fetch(`${env.SERVER_URL}/image/upload`, {
     method: "POST",
