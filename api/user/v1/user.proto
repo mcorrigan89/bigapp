@@ -2,21 +2,11 @@ syntax = "proto3";
 
 package user.v1;
 
+import "common/v1/errors.proto";
 import "media/v1/image.proto";
 
-enum ErrorCode {
-  ERROR_CODE_UNSPECIFIED = 0;
-  ERROR_CODE_EMAIL_EXISTS = 1;
-  ERROR_CODE_HANDLE_EXISTS = 2;
-}
-
-message ErrorDetails {
-  ErrorCode code = 1;
-  string message = 2;
-}
-
 message User {
-  ErrorDetails error = 1;
+  common.v1.ErrorDetails error = 1;
   string id = 2;
   optional string given_name = 3;
   optional string family_name = 4;
@@ -26,43 +16,43 @@ message User {
 }
 
 message UserSession {
-  ErrorDetails error = 1;
+  common.v1.ErrorDetails error = 1;
   string token = 2;
   string expires_at = 3;
 }
 
 message GetUserByIdRequest { string id = 1; }
 
-message GetUserByIdResponse { ErrorDetails error = 1; User user = 2; }
+message GetUserByIdResponse { common.v1.ErrorDetails error = 1; User user = 2; }
 
 message CreateUserRequest {
-  ErrorDetails error = 1;
+  common.v1.ErrorDetails error = 1;
   optional string given_name = 2;
   optional string family_name = 3;
   string email = 4;
 }
 
-message CreateUserResponse { ErrorDetails error = 1; User user = 2; UserSession session = 3; }
+message CreateUserResponse { common.v1.ErrorDetails error = 1; User user = 2; UserSession session = 3; }
 
 message GetUserBySessionTokenRequest { string token = 1; }
 
-message GetUserBySessionTokenResponse { ErrorDetails error = 1; User user = 2; UserSession session = 3; }
+message GetUserBySessionTokenResponse { common.v1.ErrorDetails error = 1; User user = 2; UserSession session = 3; }
 
 message CreateLoginEmailRequest { string email = 1; }
 
-message CreateLoginEmailResponse { ErrorDetails error = 1; string status = 2; }
+message CreateLoginEmailResponse { common.v1.ErrorDetails error = 1; string status = 2; }
 
 message LoginWithReferenceLinkRequest { string token = 1; }
 
-message LoginWithReferenceLinkResponse { ErrorDetails error = 1; User user = 2; UserSession session = 3; }
+message LoginWithReferenceLinkResponse { common.v1.ErrorDetails error = 1; User user = 2; UserSession session = 3; }
 
 message InviteUserRequest { string email = 1; }
 
-message InviteUserResponse { ErrorDetails error = 1; string status = 2; }
+message InviteUserResponse { common.v1.ErrorDetails error = 1; string status = 2; }
 
 message AcceptInviteReferenceLinkRequest { string token = 1;  }
 
-message AcceptInviteReferenceLinkResponse { ErrorDetails error = 1; User user = 2; UserSession session = 3; }
+message AcceptInviteReferenceLinkResponse { common.v1.ErrorDetails error = 1; User user = 2; UserSession session = 3; }
 
 service UserService {
   rpc GetUserById(GetUserByIdRequest) returns (GetUserByIdResponse) {}

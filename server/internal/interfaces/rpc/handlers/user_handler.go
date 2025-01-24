@@ -13,6 +13,7 @@ import (
 	"github.com/mcorrigan89/bigapp/server/internal/application/commands"
 	"github.com/mcorrigan89/bigapp/server/internal/application/queries"
 	"github.com/mcorrigan89/bigapp/server/internal/domain/entities"
+	commonv1 "github.com/mcorrigan89/bigapp/server/internal/interfaces/rpc/gen/common/v1"
 	imagev1 "github.com/mcorrigan89/bigapp/server/internal/interfaces/rpc/gen/media/v1"
 	userv1 "github.com/mcorrigan89/bigapp/server/internal/interfaces/rpc/gen/user/v1"
 
@@ -142,8 +143,8 @@ func (rpc *userServiceV1) CreateUser(ctx context.Context, req *connect.Request[u
 		switch err {
 		case entities.ErrEmailInUse:
 			res = connect.NewResponse(&userv1.CreateUserResponse{
-				Error: &userv1.ErrorDetails{
-					Code:    userv1.ErrorCode_ERROR_CODE_EMAIL_EXISTS,
+				Error: &commonv1.ErrorDetails{
+					Code:    commonv1.ErrorCode_ERROR_CODE_EMAIL_EXISTS,
 					Message: "Email is not available",
 				},
 			})
@@ -262,8 +263,8 @@ func (rpc *userServiceV1) InviteUser(ctx context.Context, req *connect.Request[u
 		switch err {
 		case entities.ErrEmailInUse:
 			res = connect.NewResponse(&userv1.InviteUserResponse{
-				Error: &userv1.ErrorDetails{
-					Code:    userv1.ErrorCode_ERROR_CODE_EMAIL_EXISTS,
+				Error: &commonv1.ErrorDetails{
+					Code:    commonv1.ErrorCode_ERROR_CODE_EMAIL_EXISTS,
 					Message: "Email is not available",
 				},
 			})
@@ -271,8 +272,8 @@ func (rpc *userServiceV1) InviteUser(ctx context.Context, req *connect.Request[u
 			return res, nil
 		case entities.ErrUserClaimed:
 			res = connect.NewResponse(&userv1.InviteUserResponse{
-				Error: &userv1.ErrorDetails{
-					Code:    userv1.ErrorCode_ERROR_CODE_EMAIL_EXISTS,
+				Error: &commonv1.ErrorDetails{
+					Code:    commonv1.ErrorCode_ERROR_CODE_EMAIL_EXISTS,
 					Message: "User is already claimed",
 				},
 			})

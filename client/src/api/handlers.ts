@@ -1,5 +1,5 @@
 import { ConnectError } from "@connectrpc/connect";
-import { ErrorCode, ErrorDetails } from "@/api/gen/user/v1/user_pb";
+import { ErrorCode, ErrorDetails } from "@/api/gen/common/v1/errors_pb";
 
 export type ErrorHandler = {
   [key in ErrorCode]?: (message: string) => void;
@@ -10,10 +10,7 @@ type ServiceResult<T> = {
   error?: ErrorDetails;
 };
 
-export async function handleServiceCall<T extends { error?: ErrorDetails }>(
-  call: Promise<T>,
-  errorHandlers: ErrorHandler,
-): Promise<ServiceResult<T>> {
+export async function handleServiceCall<T extends { error?: ErrorDetails }>(call: Promise<T>, errorHandlers: ErrorHandler): Promise<ServiceResult<T>> {
   try {
     const response = await call;
     if (response.error?.code && errorHandlers[response.error.code]) {
@@ -26,7 +23,7 @@ export async function handleServiceCall<T extends { error?: ErrorDetails }>(
         error: {
           code: ErrorCode.UNSPECIFIED,
           message: err.message,
-          $typeName: "user.v1.ErrorDetails",
+          $typeName: "common.v1.ErrorDetails",
         },
       };
     }

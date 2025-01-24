@@ -24,14 +24,7 @@ async function getHeaders(): Promise<Headers> {
 
 async function userByIdFunc(id: string) {
   const client = createClient(UserService, transport);
-  const res = await client.getUserById(
-    {
-      id,
-    },
-    {
-      headers: await getHeaders(),
-    },
-  );
+  const res = await client.getUserById({ id }, { headers: await getHeaders() });
   return res;
 }
 
@@ -43,11 +36,7 @@ interface CreateUserArgs {
   givenName?: string;
 }
 
-export async function createUser({
-  email,
-  familyName,
-  givenName,
-}: CreateUserArgs) {
+export async function createUser({ email, familyName, givenName }: CreateUserArgs) {
   const client = createClient(UserService, transport);
   const res = await client.createUser(
     {
@@ -64,6 +53,7 @@ export async function createUser({
 
 export async function userByTokenFunc(token: string) {
   const client = createClient(UserService, transport);
+
   const res = await client.getUserBySessionToken(
     {
       token,
@@ -111,11 +101,7 @@ export async function loginEmail({ email }: { email: string }) {
   return res;
 }
 
-export async function loginWithRefLink({
-  refLinkToken,
-}: {
-  refLinkToken: string;
-}) {
+export async function loginWithRefLink({ refLinkToken }: { refLinkToken: string }) {
   const client = createClient(UserService, transport);
   const res = await client.loginWithReferenceLink(
     {
@@ -141,11 +127,7 @@ export async function inviteUser({ email }: { email: string }) {
   return res;
 }
 
-export async function acceptInviteRefLink({
-  refLinkToken,
-}: {
-  refLinkToken: string;
-}) {
+export async function acceptInviteRefLink({ refLinkToken }: { refLinkToken: string }) {
   const client = createClient(UserService, transport);
   const res = await client.acceptInviteReferenceLink(
     {
