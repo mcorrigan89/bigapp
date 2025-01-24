@@ -29,13 +29,7 @@ export default function InvitePage() {
   return (
     <>
       <div className="flex h-screen flex-col items-center justify-center">
-        <form
-          id={form.id}
-          onSubmit={form.onSubmit}
-          action={action}
-          noValidate
-          className="flex flex-col gap-4"
-        >
+        <form id={form.id} onSubmit={form.onSubmit} action={action} noValidate className="flex flex-col gap-4">
           <div className="text-mono-1400 flex flex-col gap-1">
             <Label htmlFor="email" className="text-md">
               Email
@@ -48,13 +42,9 @@ export default function InvitePage() {
               defaultValue={fields.email.initialValue}
               data-error={fields.email.errors && fields.email.errors.length > 0}
             />
-            {fields.email.errors?.map((error) => (
-              <FormError key={error}>{error}</FormError>
-            ))}
+            {fields.email.errors?.map((error) => <FormError key={error}>{error}</FormError>)}
           </div>
-          {form.errors?.map((error) => (
-            <FormError key={error}>{error}</FormError>
-          ))}
+          {form.errors?.map((error) => <FormError key={error}>{error}</FormError>)}
           <Button variant={"default"}>Login</Button>
         </form>
       </div>

@@ -18,8 +18,10 @@ export async function loginAction(prevState: unknown, formData: FormData) {
     const response = await loginEmail({
       email: submission.value.email,
     });
-    if (response.status !== "OK") {
-      return submission.reply();
+    if (response.error) {
+      return submission.reply({
+        formErrors: [response.error.message],
+      });
     }
   } catch (err) {
     console.error(err);

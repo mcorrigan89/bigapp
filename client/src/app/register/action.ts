@@ -22,8 +22,15 @@ export async function createUserAction(prevState: unknown, formData: FormData) {
       familyName: submission.value.familyName,
     });
 
+    if (response.error) {
+      return submission.reply({
+        formErrors: [response.error.message],
+      });
+    }
     if (!response.session?.token) {
-      return submission.reply();
+      return submission.reply({
+        formErrors: ["No session token received"],
+      });
     }
     const cookieStore = await cookies();
     cookieStore.set("x-session-token", response.session.token);
