@@ -11,6 +11,7 @@ export const env = createEnv({
   server: {
     // PORT: z.string(),
     SERVER_URL: z.string(),
+    SERVER_TOKEN: z.string(),
   },
   /*
    * Environment variables available on the client (and server).
@@ -30,5 +31,6 @@ export const env = createEnv({
     // PORT: process.env.PORT,
     SERVER_URL: process.env.SERVER_URL,
     NEXT_PUBLIC_SERVER_URL: process.env.NEXT_PUBLIC_SERVER_URL,
+    SERVER_TOKEN: process.env.SERVER_TOKEN,
   },
 });

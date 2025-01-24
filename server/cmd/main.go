@@ -65,7 +65,7 @@ func main() {
 	// HTTP Routes
 	httpRoutes := router.NewRouter(mux, mdlwr, userHandler, imageHandler)
 	// Connect RPC Routes
-	service.NewRpcRoutes(mux, &logger, &wg, userApplicationService)
+	service.NewRpcRoutes(mux, &cfg, &logger, &wg, userApplicationService)
 
 	server := &appServer{
 		wg:     &wg,

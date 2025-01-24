@@ -16,6 +16,7 @@ async function getHeaders(): Promise<Headers> {
   const cookieJar = await cookies();
   const sessionToken = cookieJar.get("x-session-token");
   const headers = new Headers();
+  headers.set("Server-Token", env.SERVER_TOKEN);
   if (sessionToken?.value) {
     headers.append("x-session-token", sessionToken.value);
   }

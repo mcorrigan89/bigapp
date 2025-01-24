@@ -15,8 +15,9 @@ type Config struct {
 		DSN     string
 		Logging bool
 	}
-	CientURL string
-	Cors     struct {
+	CientURL    string
+	ServerToken string
+	Cors        struct {
 		TrustedOrigins []string
 	}
 	Storage struct {
@@ -60,6 +61,14 @@ func LoadConfig(cfg *Config) {
 	}
 
 	cfg.CientURL = client_url
+
+	// Load SERVER_TOKEN
+	server_token := os.Getenv("SERVER_TOKEN")
+	if server_token == "" {
+		log.Fatalf("SERVER_TOKEN not available in .env")
+	}
+
+	cfg.ServerToken = server_token
 
 	// Load DATABASE_URL
 	postgres_url := os.Getenv("POSTGRES_URL")
