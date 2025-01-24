@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { parseWithZod } from "@conform-to/zod";
 import { inviteSchema } from "./schema";
 import { inviteUser } from "@/api/client";
-import { ErrorCode } from "@/api/gen/user/v1/user_pb";
+import { ErrorCode } from "@/api/gen/common/v1/errors_pb";
 import { ErrorHandler, handleServiceCall } from "@/api/handlers";
 
 const handlers: ErrorHandler = {

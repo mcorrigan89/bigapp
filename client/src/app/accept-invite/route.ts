@@ -1,4 +1,4 @@
-import { acceptInviteRefLink, loginWithRefLink } from "@/api/client";
+import { acceptInviteRefLink } from "@/api/client";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { type NextRequest } from "next/server";
