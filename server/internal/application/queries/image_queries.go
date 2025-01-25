@@ -9,5 +9,18 @@ type ImageByIDQuery struct {
 }
 
 type ImageDataByIDQuery struct {
+	ID        uuid.UUID
+	Rendition string
+}
+
+type CollectionByIDQuery struct {
 	ID uuid.UUID
+}
+
+type CollectionByOwnerIDQuery struct {
+	OwnerID uuid.UUID
+}
+
+type CollectionByOwnerTokenQuery struct {
+	Token string
 }

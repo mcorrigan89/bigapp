@@ -8,6 +8,7 @@ import (
 	"github.com/mcorrigan89/bigapp/server/internal/application"
 	"github.com/mcorrigan89/bigapp/server/internal/application/commands"
 	"github.com/mcorrigan89/bigapp/server/internal/application/queries"
+	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/media"
 	"github.com/mcorrigan89/bigapp/server/internal/interfaces/http/dto"
 	"github.com/mcorrigan89/bigapp/server/internal/interfaces/http/middleware"
 	"github.com/rs/zerolog"
@@ -70,7 +71,8 @@ func (h *ImageHandler) GetImageDataByID(w http.ResponseWriter, r *http.Request) 
 	}
 
 	query := queries.ImageDataByIDQuery{
-		ID: imageUUID,
+		ID:        imageUUID,
+		Rendition: media.RenditionMedium,
 	}
 
 	image, contentType, err := h.imageAppService.GetImageDataByID(ctx, query)
@@ -99,7 +101,7 @@ func (h *ImageHandler) UploadImage(w http.ResponseWriter, r *http.Request) {
 
 	userContextEntity := middleware.GetUserFromContext(ctx)
 	if userContextEntity == nil {
-		h.logger.Err(err).Ctx(ctx).Msg("User is not authenticated")
+		h.logger.Error().Ctx(ctx).Msg("User is not authenticated")
 		http.Error(w, "User is not authenticated", http.StatusUnauthorized)
 		return
 	}
@@ -108,6 +110,7 @@ func (h *ImageHandler) UploadImage(w http.ResponseWriter, r *http.Request) {
 
 	cmd := commands.CreateNewAvatarImageCommand{
 		UserID:   userContextEntity.UserID,
+		BucketID: "image",
 		ObjectID: fileName,
 		File:     file,
 		Size:     handler.Size,
@@ -129,4 +132,72 @@ func (h *ImageHandler) UploadImage(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(imageJson)
+}
+
+func (h *ImageHandler) UploadImages(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
+
+	collectionID := r.PathValue("collectionID")
+
+	collectionUUID, err := uuid.Parse(collectionID)
+	if err != nil {
+		http.Error(w, "Failed to parse UUID", http.StatusInternalServerError)
+		return
+	}
+
+	if err := r.ParseMultipartForm(50 << 20); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	userContextEntity := middleware.GetUserFromContext(ctx)
+	if userContextEntity == nil {
+		h.logger.Error().Ctx(ctx).Msg("User is not authenticated")
+		http.Error(w, "User is not authenticated", http.StatusUnauthorized)
+		return
+	}
+
+	fileImages := make([]commands.ImageUploadData, 0)
+
+	for _, fileHeader := range r.MultipartForm.File["images"] {
+		file, err := fileHeader.Open()
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		defer file.Close()
+
+		fileName := fmt.Sprintf("%s-%s", fileHeader.Filename, uuid.New().String())
+
+		fileImages = append(fileImages, commands.ImageUploadData{
+			ObjectID: fileName,
+			Size:     fileHeader.Size,
+			File:     file,
+		})
+	}
+
+	cmd := commands.UploadImagesToCollectionCommand{
+		UserID:       userContextEntity.UserID,
+		CollectionID: collectionUUID,
+		BucketID:     "image",
+		Files:        fileImages,
+	}
+
+	collectionWithAddedImages, err := h.imageAppService.UploadImagesToCollection(ctx, cmd)
+	if err != nil {
+		http.Error(w, "Failed to upload images", http.StatusInternalServerError)
+		return
+	}
+
+	collectionDto := dto.NewCollectionDtoFromEntity(collectionWithAddedImages)
+
+	collectionJson, err := collectionDto.ToJson()
+	if err != nil {
+		http.Error(w, "Failed to marshal image to JSON", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write(collectionJson)
 }

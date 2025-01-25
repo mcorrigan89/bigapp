@@ -2,6 +2,7 @@ package entities
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/google/uuid"
 	"github.com/mcorrigan89/bigapp/server/internal/infrastructure/postgres/models"
@@ -36,4 +37,19 @@ func NewUserEntity(userModel models.User, imageEntity *ImageEntity) *UserEntity 
 		Handle:        userModel.UserHandle,
 		Avatar:        imageEntity,
 	}
+}
+
+func (u *UserEntity) FullName() *string {
+	if u.GivenName != nil && u.FamilyName != nil {
+		fullName := fmt.Sprintf("%s %s", *u.GivenName, *u.FamilyName)
+		return &fullName
+	}
+	if u.GivenName != nil {
+		return u.GivenName
+	}
+
+	if u.FamilyName != nil {
+		return u.FamilyName
+	}
+	return nil
 }

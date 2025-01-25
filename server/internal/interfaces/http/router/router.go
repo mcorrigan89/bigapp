@@ -15,6 +15,7 @@ func NewRouter(mux *http.ServeMux, middleware middleware.Middleware, userHandler
 
 	// Image routes
 	mux.HandleFunc("POST /image/upload", imageHandler.UploadImage)
+	mux.HandleFunc("POST /image/{collectionID}/uploads", imageHandler.UploadImages)
 	mux.HandleFunc("GET /image/{id}/metadata", middleware.Authorization(imageHandler.GetImageByID))
 	mux.HandleFunc("GET /image/{id}", imageHandler.GetImageDataByID)
 

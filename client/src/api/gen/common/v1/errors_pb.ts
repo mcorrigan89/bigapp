@@ -10,7 +10,7 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file common/v1/errors.proto.
  */
 export const file_common_v1_errors: GenFile = /*@__PURE__*/
-  fileDesc("ChZjb21tb24vdjEvZXJyb3JzLnByb3RvEgljb21tb24udjEiQwoMRXJyb3JEZXRhaWxzEiIKBGNvZGUYASABKA4yFC5jb21tb24udjEuRXJyb3JDb2RlEg8KB21lc3NhZ2UYAiABKAkqYgoJRXJyb3JDb2RlEhoKFkVSUk9SX0NPREVfVU5TUEVDSUZJRUQQABIbChdFUlJPUl9DT0RFX0VNQUlMX0VYSVNUUxABEhwKGEVSUk9SX0NPREVfSEFORExFX0VYSVNUUxACQmEKDWNvbS5jb21tb24udjFCC0Vycm9yc1Byb3RvUAGiAgNDWFiqAglDb21tb24uVjHKAglDb21tb25cVjHiAhVDb21tb25cVjFcR1BCTWV0YWRhdGHqAgpDb21tb246OlYxYgZwcm90bzM");
+  fileDesc("ChZjb21tb24vdjEvZXJyb3JzLnByb3RvEgljb21tb24udjEiQwoMRXJyb3JEZXRhaWxzEiIKBGNvZGUYASABKA4yFC5jb21tb24udjEuRXJyb3JDb2RlEg8KB21lc3NhZ2UYAiABKAkqoQEKCUVycm9yQ29kZRIaChZFUlJPUl9DT0RFX1VOU1BFQ0lGSUVEEAASGwoXRVJST1JfQ09ERV9FTUFJTF9FWElTVFMQARIcChhFUlJPUl9DT0RFX0hBTkRMRV9FWElTVFMQAhIdChlFUlJPUl9DT0RFX1VTRVJfTk9UX0ZPVU5EEAMSHgoaRVJST1JfQ09ERV9JTUFHRV9OT1RfRk9VTkQQBEJhCg1jb20uY29tbW9uLnYxQgtFcnJvcnNQcm90b1ABogIDQ1hYqgIJQ29tbW9uLlYxygIJQ29tbW9uXFYx4gIVQ29tbW9uXFYxXEdQQk1ldGFkYXRh6gIKQ29tbW9uOjpWMWIGcHJvdG8z");
 
 /**
  * @generated from message common.v1.ErrorDetails
@@ -52,6 +52,16 @@ export enum ErrorCode {
    * @generated from enum value: ERROR_CODE_HANDLE_EXISTS = 2;
    */
   HANDLE_EXISTS = 2,
+
+  /**
+   * @generated from enum value: ERROR_CODE_USER_NOT_FOUND = 3;
+   */
+  USER_NOT_FOUND = 3,
+
+  /**
+   * @generated from enum value: ERROR_CODE_IMAGE_NOT_FOUND = 4;
+   */
+  IMAGE_NOT_FOUND = 4,
 }
 
 /**

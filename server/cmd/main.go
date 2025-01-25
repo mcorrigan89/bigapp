@@ -62,10 +62,11 @@ func main() {
 	imageHandler := handlers.NewImageHandler(&logger, imageApplicationService)
 
 	mdlwr := middleware.CreateMiddleware(&cfg, db, &logger, userService)
+
+	// Connect RPC Routes
+	service.NewRpcRoutes(mux, &cfg, &logger, &wg, userApplicationService, imageApplicationService)
 	// HTTP Routes
 	httpRoutes := router.NewRouter(mux, mdlwr, userHandler, imageHandler)
-	// Connect RPC Routes
-	service.NewRpcRoutes(mux, &cfg, &logger, &wg, userApplicationService)
 
 	server := &appServer{
 		wg:     &wg,

@@ -23,6 +23,25 @@ func (cmd *CreateNewUserCommand) ToDomain() *entities.UserEntity {
 	}
 }
 
+type UpdateUserCommand struct {
+	ID         uuid.UUID `json:"id" validate:"required"`
+	Email      string    `json:"email" validate:"required,email"`
+	GivenName  *string   `json:"firstName" validate:"-"`
+	FamilyName *string   `json:"lastName" validate:"-"`
+	Handle     string    `json:"handle" validate:"required"`
+}
+
+func (cmd *UpdateUserCommand) ToDomain() *entities.UserEntity {
+	return &entities.UserEntity{
+		ID:         cmd.ID,
+		Email:      cmd.Email,
+		GivenName:  cmd.GivenName,
+		FamilyName: cmd.FamilyName,
+		Claimed:    true,
+		Handle:     cmd.Handle,
+	}
+}
+
 type RequestEmailLoginCommand struct {
 	Email string `json:"email" validate:"required,email"`
 }

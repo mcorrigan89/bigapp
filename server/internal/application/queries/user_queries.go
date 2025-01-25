@@ -12,6 +12,10 @@ type UserByEmailQuery struct {
 	Email string `validate:"required,email"`
 }
 
+type UserByHandleQuery struct {
+	Handle string
+}
+
 type UserBySessionTokenQuery struct {
 	SessionToken string
 }

@@ -50,6 +50,36 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: collection_images; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.collection_images (
+    collection_id uuid NOT NULL,
+    image_id uuid NOT NULL,
+    sort_key text NOT NULL
+);
+
+
+ALTER TABLE public.collection_images OWNER TO admin;
+
+--
+-- Name: collections; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.collections (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    collection_name text NOT NULL,
+    owner_id uuid NOT NULL,
+    public boolean DEFAULT false NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    version integer DEFAULT 1 NOT NULL
+);
+
+
+ALTER TABLE public.collections OWNER TO admin;
+
+--
 -- Name: images; Type: TABLE; Schema: public; Owner: admin
 --
 
@@ -62,7 +92,8 @@ CREATE TABLE public.images (
     file_size integer NOT NULL,
     created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    version integer DEFAULT 1 NOT NULL
+    version integer DEFAULT 1 NOT NULL,
+    owner_id uuid
 );
 
 
@@ -139,6 +170,22 @@ CREATE TABLE public.users (
 ALTER TABLE public.users OWNER TO admin;
 
 --
+-- Name: collection_images collection_images_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.collection_images
+    ADD CONSTRAINT collection_images_pkey PRIMARY KEY (collection_id, image_id);
+
+
+--
+-- Name: collections collections_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.collections
+    ADD CONSTRAINT collections_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: images images_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
 --
 
@@ -192,6 +239,38 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_user_handle_key UNIQUE (user_handle);
+
+
+--
+-- Name: collection_images collection_images_collection_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.collection_images
+    ADD CONSTRAINT collection_images_collection_id_fkey FOREIGN KEY (collection_id) REFERENCES public.collections(id);
+
+
+--
+-- Name: collection_images collection_images_image_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.collection_images
+    ADD CONSTRAINT collection_images_image_id_fkey FOREIGN KEY (image_id) REFERENCES public.images(id);
+
+
+--
+-- Name: collections collections_owner_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.collections
+    ADD CONSTRAINT collections_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: images images_owner_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.images
+    ADD CONSTRAINT images_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.users(id);
 
 
 --

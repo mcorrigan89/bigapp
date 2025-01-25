@@ -15,8 +15,10 @@ import (
 type UserService interface {
 	GetUserByID(ctx context.Context, querier models.Querier, userID uuid.UUID) (*entities.UserEntity, error)
 	GetUserByEmail(ctx context.Context, querier models.Querier, email string) (*entities.UserEntity, error)
+	GetUserByHandle(ctx context.Context, querier models.Querier, userHandle string) (*entities.UserEntity, error)
 	GetUserContextBySessionToken(ctx context.Context, querier models.Querier, sessionToken string) (*entities.UserContextEntity, error)
 	CreateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error)
+	UpdateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error)
 	CreateSession(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserContextEntity, error)
 	CreateLoginLink(ctx context.Context, querier models.Querier, email string) (*entities.ReferenceLinkEntity, error)
 	CreateInviteLink(ctx context.Context, querier models.Querier, userEntity *entities.UserEntity) (*entities.ReferenceLinkEntity, error)
@@ -53,6 +55,15 @@ func (s *userService) GetUserByEmail(ctx context.Context, querier models.Querier
 	return user, nil
 }
 
+func (s *userService) GetUserByHandle(ctx context.Context, querier models.Querier, userHandle string) (*entities.UserEntity, error) {
+	user, err := s.userRepo.GetUserByHandle(ctx, querier, userHandle)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
 func (s *userService) GetUserContextBySessionToken(ctx context.Context, querier models.Querier, sessionToken string) (*entities.UserContextEntity, error) {
 	user, err := s.userRepo.GetUserContextBySessionToken(ctx, querier, sessionToken)
 	if err != nil {
@@ -64,6 +75,15 @@ func (s *userService) GetUserContextBySessionToken(ctx context.Context, querier 
 
 func (s *userService) CreateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error) {
 	user, err := s.userRepo.CreateUser(ctx, querier, user)
+	if err != nil {
+		return nil, err
+	}
+
+	return user, nil
+}
+
+func (s *userService) UpdateUser(ctx context.Context, querier models.Querier, user *entities.UserEntity) (*entities.UserEntity, error) {
+	user, err := s.userRepo.UpdateUser(ctx, querier, user)
 	if err != nil {
 		return nil, err
 	}

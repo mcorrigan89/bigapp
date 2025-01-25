@@ -4,13 +4,15 @@
 
 import type { GenFile, GenMessage, GenService } from "@bufbuild/protobuf/codegenv1";
 import { fileDesc, messageDesc, serviceDesc } from "@bufbuild/protobuf/codegenv1";
+import type { ErrorDetails } from "../../common/v1/errors_pb";
+import { file_common_v1_errors } from "../../common/v1/errors_pb";
 import type { Message } from "@bufbuild/protobuf";
 
 /**
  * Describes the file media/v1/image.proto.
  */
 export const file_media_v1_image: GenFile = /*@__PURE__*/
-  fileDesc("ChRtZWRpYS92MS9pbWFnZS5wcm90bxIIbWVkaWEudjEiTQoFSW1hZ2USCgoCaWQYASABKAkSCwoDdXJsGAIgASgJEg0KBXdpZHRoGAMgASgFEg4KBmhlaWdodBgEIAEoBRIMCgRzaXplGAUgASgFIicKE0dldEltYWdlQnlJZFJlcXVlc3QSEAoIaW1hZ2VfaWQYASABKAkiNgoUR2V0SW1hZ2VCeUlkUmVzcG9uc2USHgoFaW1hZ2UYASABKAsyDy5tZWRpYS52MS5JbWFnZTJfCgxJbWFnZVNlcnZpY2USTwoMR2V0SW1hZ2VCeUlkEh0ubWVkaWEudjEuR2V0SW1hZ2VCeUlkUmVxdWVzdBoeLm1lZGlhLnYxLkdldEltYWdlQnlJZFJlc3BvbnNlIgBCWwoMY29tLm1lZGlhLnYxQgpJbWFnZVByb3RvUAGiAgNNWFiqAghNZWRpYS5WMcoCCE1lZGlhXFYx4gIUTWVkaWFcVjFcR1BCTWV0YWRhdGHqAglNZWRpYTo6VjFiBnByb3RvMw");
+  fileDesc("ChRtZWRpYS92MS9pbWFnZS5wcm90bxIIbWVkaWEudjEiTQoFSW1hZ2USCgoCaWQYASABKAkSCwoDdXJsGAIgASgJEg0KBXdpZHRoGAMgASgFEg4KBmhlaWdodBgEIAEoBRIMCgRzaXplGAUgASgFIkcKCkNvbGxlY3Rpb24SCgoCaWQYASABKAkSDAoEbmFtZRgCIAEoCRIfCgZpbWFnZXMYAyADKAsyDy5tZWRpYS52MS5JbWFnZSInChNHZXRJbWFnZUJ5SWRSZXF1ZXN0EhAKCGltYWdlX2lkGAEgASgJIl4KFEdldEltYWdlQnlJZFJlc3BvbnNlEiYKBWVycm9yGAEgASgLMhcuY29tbW9uLnYxLkVycm9yRGV0YWlscxIeCgVpbWFnZRgCIAEoCzIPLm1lZGlhLnYxLkltYWdlIjEKGEdldENvbGxlY3Rpb25CeUlkUmVxdWVzdBIVCg1jb2xsZWN0aW9uX2lkGAEgASgJIm0KGUdldENvbGxlY3Rpb25CeUlkUmVzcG9uc2USJgoFZXJyb3IYASABKAsyFy5jb21tb24udjEuRXJyb3JEZXRhaWxzEigKCmNvbGxlY3Rpb24YAiABKAsyFC5tZWRpYS52MS5Db2xsZWN0aW9uIjEKHUdldENvbGxlY3Rpb25CeU93bmVySWRSZXF1ZXN0EhAKCG93bmVyX2lkGAEgASgJInMKHkdldENvbGxlY3Rpb25CeU93bmVySWRSZXNwb25zZRImCgVlcnJvchgBIAEoCzIXLmNvbW1vbi52MS5FcnJvckRldGFpbHMSKQoLY29sbGVjdGlvbnMYAiADKAsyFC5tZWRpYS52MS5Db2xsZWN0aW9uIjEKIEdldENvbGxlY3Rpb25CeU93bmVyVG9rZW5SZXF1ZXN0Eg0KBXRva2VuGAEgASgJInYKIUdldENvbGxlY3Rpb25CeU93bmVyVG9rZW5SZXNwb25zZRImCgVlcnJvchgBIAEoCzIXLmNvbW1vbi52MS5FcnJvckRldGFpbHMSKQoLY29sbGVjdGlvbnMYAiADKAsyFC5tZWRpYS52MS5Db2xsZWN0aW9uIkEKF0NyZWF0ZUNvbGxlY3Rpb25SZXF1ZXN0Eg0KBXRva2VuGAEgASgJEhcKD2NvbGxlY3Rpb25fbmFtZRgCIAEoCSJsChhDcmVhdGVDb2xsZWN0aW9uUmVzcG9uc2USJgoFZXJyb3IYASABKAsyFy5jb21tb24udjEuRXJyb3JEZXRhaWxzEigKCmNvbGxlY3Rpb24YAiABKAsyFC5tZWRpYS52MS5Db2xsZWN0aW9uMoMECgxJbWFnZVNlcnZpY2USTwoMR2V0SW1hZ2VCeUlkEh0ubWVkaWEudjEuR2V0SW1hZ2VCeUlkUmVxdWVzdBoeLm1lZGlhLnYxLkdldEltYWdlQnlJZFJlc3BvbnNlIgASXgoRR2V0Q29sbGVjdGlvbkJ5SWQSIi5tZWRpYS52MS5HZXRDb2xsZWN0aW9uQnlJZFJlcXVlc3QaIy5tZWRpYS52MS5HZXRDb2xsZWN0aW9uQnlJZFJlc3BvbnNlIgASbQoWR2V0Q29sbGVjdGlvbkJ5T3duZXJJZBInLm1lZGlhLnYxLkdldENvbGxlY3Rpb25CeU93bmVySWRSZXF1ZXN0GigubWVkaWEudjEuR2V0Q29sbGVjdGlvbkJ5T3duZXJJZFJlc3BvbnNlIgASdgoZR2V0Q29sbGVjdGlvbkJ5T3duZXJUb2tlbhIqLm1lZGlhLnYxLkdldENvbGxlY3Rpb25CeU93bmVyVG9rZW5SZXF1ZXN0GisubWVkaWEudjEuR2V0Q29sbGVjdGlvbkJ5T3duZXJUb2tlblJlc3BvbnNlIgASWwoQQ3JlYXRlQ29sbGVjdGlvbhIhLm1lZGlhLnYxLkNyZWF0ZUNvbGxlY3Rpb25SZXF1ZXN0GiIubWVkaWEudjEuQ3JlYXRlQ29sbGVjdGlvblJlc3BvbnNlIgBCWwoMY29tLm1lZGlhLnYxQgpJbWFnZVByb3RvUAGiAgNNWFiqAghNZWRpYS5WMcoCCE1lZGlhXFYx4gIUTWVkaWFcVjFcR1BCTWV0YWRhdGHqAglNZWRpYTo6VjFiBnByb3RvMw", [file_common_v1_errors]);
 
 /**
  * @generated from message media.v1.Image
@@ -50,6 +52,33 @@ export const ImageSchema: GenMessage<Image> = /*@__PURE__*/
   messageDesc(file_media_v1_image, 0);
 
 /**
+ * @generated from message media.v1.Collection
+ */
+export type Collection = Message<"media.v1.Collection"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: string name = 2;
+   */
+  name: string;
+
+  /**
+   * @generated from field: repeated media.v1.Image images = 3;
+   */
+  images: Image[];
+};
+
+/**
+ * Describes the message media.v1.Collection.
+ * Use `create(CollectionSchema)` to create a new message.
+ */
+export const CollectionSchema: GenMessage<Collection> = /*@__PURE__*/
+  messageDesc(file_media_v1_image, 1);
+
+/**
  * @generated from message media.v1.GetImageByIdRequest
  */
 export type GetImageByIdRequest = Message<"media.v1.GetImageByIdRequest"> & {
@@ -64,14 +93,19 @@ export type GetImageByIdRequest = Message<"media.v1.GetImageByIdRequest"> & {
  * Use `create(GetImageByIdRequestSchema)` to create a new message.
  */
 export const GetImageByIdRequestSchema: GenMessage<GetImageByIdRequest> = /*@__PURE__*/
-  messageDesc(file_media_v1_image, 1);
+  messageDesc(file_media_v1_image, 2);
 
 /**
  * @generated from message media.v1.GetImageByIdResponse
  */
 export type GetImageByIdResponse = Message<"media.v1.GetImageByIdResponse"> & {
   /**
-   * @generated from field: media.v1.Image image = 1;
+   * @generated from field: common.v1.ErrorDetails error = 1;
+   */
+  error?: ErrorDetails;
+
+  /**
+   * @generated from field: media.v1.Image image = 2;
    */
   image?: Image;
 };
@@ -81,7 +115,168 @@ export type GetImageByIdResponse = Message<"media.v1.GetImageByIdResponse"> & {
  * Use `create(GetImageByIdResponseSchema)` to create a new message.
  */
 export const GetImageByIdResponseSchema: GenMessage<GetImageByIdResponse> = /*@__PURE__*/
-  messageDesc(file_media_v1_image, 2);
+  messageDesc(file_media_v1_image, 3);
+
+/**
+ * @generated from message media.v1.GetCollectionByIdRequest
+ */
+export type GetCollectionByIdRequest = Message<"media.v1.GetCollectionByIdRequest"> & {
+  /**
+   * @generated from field: string collection_id = 1;
+   */
+  collectionId: string;
+};
+
+/**
+ * Describes the message media.v1.GetCollectionByIdRequest.
+ * Use `create(GetCollectionByIdRequestSchema)` to create a new message.
+ */
+export const GetCollectionByIdRequestSchema: GenMessage<GetCollectionByIdRequest> = /*@__PURE__*/
+  messageDesc(file_media_v1_image, 4);
+
+/**
+ * @generated from message media.v1.GetCollectionByIdResponse
+ */
+export type GetCollectionByIdResponse = Message<"media.v1.GetCollectionByIdResponse"> & {
+  /**
+   * @generated from field: common.v1.ErrorDetails error = 1;
+   */
+  error?: ErrorDetails;
+
+  /**
+   * @generated from field: media.v1.Collection collection = 2;
+   */
+  collection?: Collection;
+};
+
+/**
+ * Describes the message media.v1.GetCollectionByIdResponse.
+ * Use `create(GetCollectionByIdResponseSchema)` to create a new message.
+ */
+export const GetCollectionByIdResponseSchema: GenMessage<GetCollectionByIdResponse> = /*@__PURE__*/
+  messageDesc(file_media_v1_image, 5);
+
+/**
+ * @generated from message media.v1.GetCollectionByOwnerIdRequest
+ */
+export type GetCollectionByOwnerIdRequest = Message<"media.v1.GetCollectionByOwnerIdRequest"> & {
+  /**
+   * @generated from field: string owner_id = 1;
+   */
+  ownerId: string;
+};
+
+/**
+ * Describes the message media.v1.GetCollectionByOwnerIdRequest.
+ * Use `create(GetCollectionByOwnerIdRequestSchema)` to create a new message.
+ */
+export const GetCollectionByOwnerIdRequestSchema: GenMessage<GetCollectionByOwnerIdRequest> = /*@__PURE__*/
+  messageDesc(file_media_v1_image, 6);
+
+/**
+ * @generated from message media.v1.GetCollectionByOwnerIdResponse
+ */
+export type GetCollectionByOwnerIdResponse = Message<"media.v1.GetCollectionByOwnerIdResponse"> & {
+  /**
+   * @generated from field: common.v1.ErrorDetails error = 1;
+   */
+  error?: ErrorDetails;
+
+  /**
+   * @generated from field: repeated media.v1.Collection collections = 2;
+   */
+  collections: Collection[];
+};
+
+/**
+ * Describes the message media.v1.GetCollectionByOwnerIdResponse.
+ * Use `create(GetCollectionByOwnerIdResponseSchema)` to create a new message.
+ */
+export const GetCollectionByOwnerIdResponseSchema: GenMessage<GetCollectionByOwnerIdResponse> = /*@__PURE__*/
+  messageDesc(file_media_v1_image, 7);
+
+/**
+ * @generated from message media.v1.GetCollectionByOwnerTokenRequest
+ */
+export type GetCollectionByOwnerTokenRequest = Message<"media.v1.GetCollectionByOwnerTokenRequest"> & {
+  /**
+   * @generated from field: string token = 1;
+   */
+  token: string;
+};
+
+/**
+ * Describes the message media.v1.GetCollectionByOwnerTokenRequest.
+ * Use `create(GetCollectionByOwnerTokenRequestSchema)` to create a new message.
+ */
+export const GetCollectionByOwnerTokenRequestSchema: GenMessage<GetCollectionByOwnerTokenRequest> = /*@__PURE__*/
+  messageDesc(file_media_v1_image, 8);
+
+/**
+ * @generated from message media.v1.GetCollectionByOwnerTokenResponse
+ */
+export type GetCollectionByOwnerTokenResponse = Message<"media.v1.GetCollectionByOwnerTokenResponse"> & {
+  /**
+   * @generated from field: common.v1.ErrorDetails error = 1;
+   */
+  error?: ErrorDetails;
+
+  /**
+   * @generated from field: repeated media.v1.Collection collections = 2;
+   */
+  collections: Collection[];
+};
+
+/**
+ * Describes the message media.v1.GetCollectionByOwnerTokenResponse.
+ * Use `create(GetCollectionByOwnerTokenResponseSchema)` to create a new message.
+ */
+export const GetCollectionByOwnerTokenResponseSchema: GenMessage<GetCollectionByOwnerTokenResponse> = /*@__PURE__*/
+  messageDesc(file_media_v1_image, 9);
+
+/**
+ * @generated from message media.v1.CreateCollectionRequest
+ */
+export type CreateCollectionRequest = Message<"media.v1.CreateCollectionRequest"> & {
+  /**
+   * @generated from field: string token = 1;
+   */
+  token: string;
+
+  /**
+   * @generated from field: string collection_name = 2;
+   */
+  collectionName: string;
+};
+
+/**
+ * Describes the message media.v1.CreateCollectionRequest.
+ * Use `create(CreateCollectionRequestSchema)` to create a new message.
+ */
+export const CreateCollectionRequestSchema: GenMessage<CreateCollectionRequest> = /*@__PURE__*/
+  messageDesc(file_media_v1_image, 10);
+
+/**
+ * @generated from message media.v1.CreateCollectionResponse
+ */
+export type CreateCollectionResponse = Message<"media.v1.CreateCollectionResponse"> & {
+  /**
+   * @generated from field: common.v1.ErrorDetails error = 1;
+   */
+  error?: ErrorDetails;
+
+  /**
+   * @generated from field: media.v1.Collection collection = 2;
+   */
+  collection?: Collection;
+};
+
+/**
+ * Describes the message media.v1.CreateCollectionResponse.
+ * Use `create(CreateCollectionResponseSchema)` to create a new message.
+ */
+export const CreateCollectionResponseSchema: GenMessage<CreateCollectionResponse> = /*@__PURE__*/
+  messageDesc(file_media_v1_image, 11);
 
 /**
  * @generated from service media.v1.ImageService
@@ -94,6 +289,38 @@ export const ImageService: GenService<{
     methodKind: "unary";
     input: typeof GetImageByIdRequestSchema;
     output: typeof GetImageByIdResponseSchema;
+  },
+  /**
+   * @generated from rpc media.v1.ImageService.GetCollectionById
+   */
+  getCollectionById: {
+    methodKind: "unary";
+    input: typeof GetCollectionByIdRequestSchema;
+    output: typeof GetCollectionByIdResponseSchema;
+  },
+  /**
+   * @generated from rpc media.v1.ImageService.GetCollectionByOwnerId
+   */
+  getCollectionByOwnerId: {
+    methodKind: "unary";
+    input: typeof GetCollectionByOwnerIdRequestSchema;
+    output: typeof GetCollectionByOwnerIdResponseSchema;
+  },
+  /**
+   * @generated from rpc media.v1.ImageService.GetCollectionByOwnerToken
+   */
+  getCollectionByOwnerToken: {
+    methodKind: "unary";
+    input: typeof GetCollectionByOwnerTokenRequestSchema;
+    output: typeof GetCollectionByOwnerTokenResponseSchema;
+  },
+  /**
+   * @generated from rpc media.v1.ImageService.CreateCollection
+   */
+  createCollection: {
+    methodKind: "unary";
+    input: typeof CreateCollectionRequestSchema;
+    output: typeof CreateCollectionResponseSchema;
   },
 }> = /*@__PURE__*/
   serviceDesc(file_media_v1_image, 0);

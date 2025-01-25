@@ -2,7 +2,6 @@ import { userByToken } from "@/api/client";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import Image from "next/image";
-import { NavBar } from "../../components/navbar";
 import { env } from "@/env";
 
 export default async function CurrentUserPage() {
@@ -13,11 +12,6 @@ export default async function CurrentUserPage() {
   }
 
   const response = await userByToken(sessionToken.value);
-  await userByToken(sessionToken.value);
-  await userByToken(sessionToken.value);
-  await userByToken(sessionToken.value);
-  await userByToken(sessionToken.value);
-  await userByToken(sessionToken.value);
   const user = response.user;
 
   if (!user) {
@@ -27,7 +21,6 @@ export default async function CurrentUserPage() {
 
   return (
     <>
-      <NavBar />
       <div>
         <div>Current User</div>
         <div>First Name</div>
@@ -37,14 +30,7 @@ export default async function CurrentUserPage() {
         <div>Email</div>
         <div>{user.email}</div>
         <div>{avatarImage?.url}</div>
-        {avatarImage ? (
-          <Image
-            src={env.SERVER_URL + avatarImage.url}
-            width={avatarImage.width}
-            height={avatarImage.height}
-            alt="avatar"
-          />
-        ) : null}
+        {avatarImage ? <Image src={env.SERVER_URL + avatarImage.url} width={avatarImage.width} height={avatarImage.height} alt="avatar" /> : null}
       </div>
     </>
   );

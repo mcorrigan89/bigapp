@@ -28,3 +28,19 @@ func NewImageDtoFromEntity(entity *entities.ImageEntity) *ImageDto {
 func (dto *ImageDto) ToJson() ([]byte, error) {
 	return json.Marshal(dto)
 }
+
+type CollectionDto struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+}
+
+func NewCollectionDtoFromEntity(entity *entities.CollectionEntity) *CollectionDto {
+	return &CollectionDto{
+		ID:   entity.ID,
+		Name: entity.Name,
+	}
+}
+
+func (dto *CollectionDto) ToJson() ([]byte, error) {
+	return json.Marshal(dto)
+}

@@ -36,11 +36,27 @@ const (
 	// ImageServiceGetImageByIdProcedure is the fully-qualified name of the ImageService's GetImageById
 	// RPC.
 	ImageServiceGetImageByIdProcedure = "/media.v1.ImageService/GetImageById"
+	// ImageServiceGetCollectionByIdProcedure is the fully-qualified name of the ImageService's
+	// GetCollectionById RPC.
+	ImageServiceGetCollectionByIdProcedure = "/media.v1.ImageService/GetCollectionById"
+	// ImageServiceGetCollectionByOwnerIdProcedure is the fully-qualified name of the ImageService's
+	// GetCollectionByOwnerId RPC.
+	ImageServiceGetCollectionByOwnerIdProcedure = "/media.v1.ImageService/GetCollectionByOwnerId"
+	// ImageServiceGetCollectionByOwnerTokenProcedure is the fully-qualified name of the ImageService's
+	// GetCollectionByOwnerToken RPC.
+	ImageServiceGetCollectionByOwnerTokenProcedure = "/media.v1.ImageService/GetCollectionByOwnerToken"
+	// ImageServiceCreateCollectionProcedure is the fully-qualified name of the ImageService's
+	// CreateCollection RPC.
+	ImageServiceCreateCollectionProcedure = "/media.v1.ImageService/CreateCollection"
 )
 
 // ImageServiceClient is a client for the media.v1.ImageService service.
 type ImageServiceClient interface {
 	GetImageById(context.Context, *connect.Request[v1.GetImageByIdRequest]) (*connect.Response[v1.GetImageByIdResponse], error)
+	GetCollectionById(context.Context, *connect.Request[v1.GetCollectionByIdRequest]) (*connect.Response[v1.GetCollectionByIdResponse], error)
+	GetCollectionByOwnerId(context.Context, *connect.Request[v1.GetCollectionByOwnerIdRequest]) (*connect.Response[v1.GetCollectionByOwnerIdResponse], error)
+	GetCollectionByOwnerToken(context.Context, *connect.Request[v1.GetCollectionByOwnerTokenRequest]) (*connect.Response[v1.GetCollectionByOwnerTokenResponse], error)
+	CreateCollection(context.Context, *connect.Request[v1.CreateCollectionRequest]) (*connect.Response[v1.CreateCollectionResponse], error)
 }
 
 // NewImageServiceClient constructs a client for the media.v1.ImageService service. By default, it
@@ -60,12 +76,40 @@ func NewImageServiceClient(httpClient connect.HTTPClient, baseURL string, opts .
 			connect.WithSchema(imageServiceMethods.ByName("GetImageById")),
 			connect.WithClientOptions(opts...),
 		),
+		getCollectionById: connect.NewClient[v1.GetCollectionByIdRequest, v1.GetCollectionByIdResponse](
+			httpClient,
+			baseURL+ImageServiceGetCollectionByIdProcedure,
+			connect.WithSchema(imageServiceMethods.ByName("GetCollectionById")),
+			connect.WithClientOptions(opts...),
+		),
+		getCollectionByOwnerId: connect.NewClient[v1.GetCollectionByOwnerIdRequest, v1.GetCollectionByOwnerIdResponse](
+			httpClient,
+			baseURL+ImageServiceGetCollectionByOwnerIdProcedure,
+			connect.WithSchema(imageServiceMethods.ByName("GetCollectionByOwnerId")),
+			connect.WithClientOptions(opts...),
+		),
+		getCollectionByOwnerToken: connect.NewClient[v1.GetCollectionByOwnerTokenRequest, v1.GetCollectionByOwnerTokenResponse](
+			httpClient,
+			baseURL+ImageServiceGetCollectionByOwnerTokenProcedure,
+			connect.WithSchema(imageServiceMethods.ByName("GetCollectionByOwnerToken")),
+			connect.WithClientOptions(opts...),
+		),
+		createCollection: connect.NewClient[v1.CreateCollectionRequest, v1.CreateCollectionResponse](
+			httpClient,
+			baseURL+ImageServiceCreateCollectionProcedure,
+			connect.WithSchema(imageServiceMethods.ByName("CreateCollection")),
+			connect.WithClientOptions(opts...),
+		),
 	}
 }
 
 // imageServiceClient implements ImageServiceClient.
 type imageServiceClient struct {
-	getImageById *connect.Client[v1.GetImageByIdRequest, v1.GetImageByIdResponse]
+	getImageById              *connect.Client[v1.GetImageByIdRequest, v1.GetImageByIdResponse]
+	getCollectionById         *connect.Client[v1.GetCollectionByIdRequest, v1.GetCollectionByIdResponse]
+	getCollectionByOwnerId    *connect.Client[v1.GetCollectionByOwnerIdRequest, v1.GetCollectionByOwnerIdResponse]
+	getCollectionByOwnerToken *connect.Client[v1.GetCollectionByOwnerTokenRequest, v1.GetCollectionByOwnerTokenResponse]
+	createCollection          *connect.Client[v1.CreateCollectionRequest, v1.CreateCollectionResponse]
 }
 
 // GetImageById calls media.v1.ImageService.GetImageById.
@@ -73,9 +117,33 @@ func (c *imageServiceClient) GetImageById(ctx context.Context, req *connect.Requ
 	return c.getImageById.CallUnary(ctx, req)
 }
 
+// GetCollectionById calls media.v1.ImageService.GetCollectionById.
+func (c *imageServiceClient) GetCollectionById(ctx context.Context, req *connect.Request[v1.GetCollectionByIdRequest]) (*connect.Response[v1.GetCollectionByIdResponse], error) {
+	return c.getCollectionById.CallUnary(ctx, req)
+}
+
+// GetCollectionByOwnerId calls media.v1.ImageService.GetCollectionByOwnerId.
+func (c *imageServiceClient) GetCollectionByOwnerId(ctx context.Context, req *connect.Request[v1.GetCollectionByOwnerIdRequest]) (*connect.Response[v1.GetCollectionByOwnerIdResponse], error) {
+	return c.getCollectionByOwnerId.CallUnary(ctx, req)
+}
+
+// GetCollectionByOwnerToken calls media.v1.ImageService.GetCollectionByOwnerToken.
+func (c *imageServiceClient) GetCollectionByOwnerToken(ctx context.Context, req *connect.Request[v1.GetCollectionByOwnerTokenRequest]) (*connect.Response[v1.GetCollectionByOwnerTokenResponse], error) {
+	return c.getCollectionByOwnerToken.CallUnary(ctx, req)
+}
+
+// CreateCollection calls media.v1.ImageService.CreateCollection.
+func (c *imageServiceClient) CreateCollection(ctx context.Context, req *connect.Request[v1.CreateCollectionRequest]) (*connect.Response[v1.CreateCollectionResponse], error) {
+	return c.createCollection.CallUnary(ctx, req)
+}
+
 // ImageServiceHandler is an implementation of the media.v1.ImageService service.
 type ImageServiceHandler interface {
 	GetImageById(context.Context, *connect.Request[v1.GetImageByIdRequest]) (*connect.Response[v1.GetImageByIdResponse], error)
+	GetCollectionById(context.Context, *connect.Request[v1.GetCollectionByIdRequest]) (*connect.Response[v1.GetCollectionByIdResponse], error)
+	GetCollectionByOwnerId(context.Context, *connect.Request[v1.GetCollectionByOwnerIdRequest]) (*connect.Response[v1.GetCollectionByOwnerIdResponse], error)
+	GetCollectionByOwnerToken(context.Context, *connect.Request[v1.GetCollectionByOwnerTokenRequest]) (*connect.Response[v1.GetCollectionByOwnerTokenResponse], error)
+	CreateCollection(context.Context, *connect.Request[v1.CreateCollectionRequest]) (*connect.Response[v1.CreateCollectionResponse], error)
 }
 
 // NewImageServiceHandler builds an HTTP handler from the service implementation. It returns the
@@ -91,10 +159,42 @@ func NewImageServiceHandler(svc ImageServiceHandler, opts ...connect.HandlerOpti
 		connect.WithSchema(imageServiceMethods.ByName("GetImageById")),
 		connect.WithHandlerOptions(opts...),
 	)
+	imageServiceGetCollectionByIdHandler := connect.NewUnaryHandler(
+		ImageServiceGetCollectionByIdProcedure,
+		svc.GetCollectionById,
+		connect.WithSchema(imageServiceMethods.ByName("GetCollectionById")),
+		connect.WithHandlerOptions(opts...),
+	)
+	imageServiceGetCollectionByOwnerIdHandler := connect.NewUnaryHandler(
+		ImageServiceGetCollectionByOwnerIdProcedure,
+		svc.GetCollectionByOwnerId,
+		connect.WithSchema(imageServiceMethods.ByName("GetCollectionByOwnerId")),
+		connect.WithHandlerOptions(opts...),
+	)
+	imageServiceGetCollectionByOwnerTokenHandler := connect.NewUnaryHandler(
+		ImageServiceGetCollectionByOwnerTokenProcedure,
+		svc.GetCollectionByOwnerToken,
+		connect.WithSchema(imageServiceMethods.ByName("GetCollectionByOwnerToken")),
+		connect.WithHandlerOptions(opts...),
+	)
+	imageServiceCreateCollectionHandler := connect.NewUnaryHandler(
+		ImageServiceCreateCollectionProcedure,
+		svc.CreateCollection,
+		connect.WithSchema(imageServiceMethods.ByName("CreateCollection")),
+		connect.WithHandlerOptions(opts...),
+	)
 	return "/media.v1.ImageService/", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case ImageServiceGetImageByIdProcedure:
 			imageServiceGetImageByIdHandler.ServeHTTP(w, r)
+		case ImageServiceGetCollectionByIdProcedure:
+			imageServiceGetCollectionByIdHandler.ServeHTTP(w, r)
+		case ImageServiceGetCollectionByOwnerIdProcedure:
+			imageServiceGetCollectionByOwnerIdHandler.ServeHTTP(w, r)
+		case ImageServiceGetCollectionByOwnerTokenProcedure:
+			imageServiceGetCollectionByOwnerTokenHandler.ServeHTTP(w, r)
+		case ImageServiceCreateCollectionProcedure:
+			imageServiceCreateCollectionHandler.ServeHTTP(w, r)
 		default:
 			http.NotFound(w, r)
 		}
@@ -106,4 +206,20 @@ type UnimplementedImageServiceHandler struct{}
 
 func (UnimplementedImageServiceHandler) GetImageById(context.Context, *connect.Request[v1.GetImageByIdRequest]) (*connect.Response[v1.GetImageByIdResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("media.v1.ImageService.GetImageById is not implemented"))
+}
+
+func (UnimplementedImageServiceHandler) GetCollectionById(context.Context, *connect.Request[v1.GetCollectionByIdRequest]) (*connect.Response[v1.GetCollectionByIdResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("media.v1.ImageService.GetCollectionById is not implemented"))
+}
+
+func (UnimplementedImageServiceHandler) GetCollectionByOwnerId(context.Context, *connect.Request[v1.GetCollectionByOwnerIdRequest]) (*connect.Response[v1.GetCollectionByOwnerIdResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("media.v1.ImageService.GetCollectionByOwnerId is not implemented"))
+}
+
+func (UnimplementedImageServiceHandler) GetCollectionByOwnerToken(context.Context, *connect.Request[v1.GetCollectionByOwnerTokenRequest]) (*connect.Response[v1.GetCollectionByOwnerTokenResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("media.v1.ImageService.GetCollectionByOwnerToken is not implemented"))
+}
+
+func (UnimplementedImageServiceHandler) CreateCollection(context.Context, *connect.Request[v1.CreateCollectionRequest]) (*connect.Response[v1.CreateCollectionResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("media.v1.ImageService.CreateCollection is not implemented"))
 }

@@ -6,6 +6,10 @@ WHERE users.id = $1;
 SELECT sqlc.embed(users) FROM users
 WHERE users.email = $1;
 
+-- name: GetUserByHandle :one
+SELECT sqlc.embed(users) FROM users
+WHERE users.user_handle = $1;
+
 -- name: GetUserBySessionToken :one
 SELECT sqlc.embed(users), sqlc.embed(user_session) FROM users
 JOIN user_session ON users.id = user_session.user_id

@@ -21,8 +21,10 @@ import (
 type UserApplicationService interface {
 	GetUserByID(ctx context.Context, query queries.UserByIDQuery) (*entities.UserEntity, error)
 	GetUserByEmail(ctx context.Context, query queries.UserByEmailQuery) (*entities.UserEntity, error)
+	GetUserByHandle(ctx context.Context, query queries.UserByHandleQuery) (*entities.UserEntity, error)
 	GetUserBySessionToken(ctx context.Context, query queries.UserBySessionTokenQuery) (*entities.UserEntity, error)
 	CreateUser(ctx context.Context, cmd commands.CreateNewUserCommand) (*entities.UserContextEntity, error)
+	UpdateUser(ctx context.Context, cmd commands.UpdateUserCommand) (*entities.UserEntity, error)
 	RequestEmailLogin(ctx context.Context, cmd commands.RequestEmailLoginCommand) error
 	LoginWithReferenceLink(ctx context.Context, cmd commands.LoginWithReferenceLinkCommand) (*entities.UserContextEntity, error)
 	InviteUser(ctx context.Context, cmd commands.InviteUserCommand) error
@@ -78,6 +80,18 @@ func (app *userApplicationService) GetUserByEmail(ctx context.Context, query que
 	return user, nil
 }
 
+func (app *userApplicationService) GetUserByHandle(ctx context.Context, query queries.UserByHandleQuery) (*entities.UserEntity, error) {
+	app.logger.Info().Ctx(ctx).Msg("Getting user by handle")
+
+	user, err := app.userService.GetUserByHandle(ctx, app.queries, query.Handle)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to get user by handle")
+		return nil, err
+	}
+
+	return user, nil
+}
+
 func (app *userApplicationService) GetUserBySessionToken(ctx context.Context, query queries.UserBySessionTokenQuery) (*entities.UserEntity, error) {
 	app.logger.Info().Ctx(ctx).Msg("Getting user by sessionToken")
 
@@ -124,6 +138,36 @@ func (app *userApplicationService) CreateUser(ctx context.Context, cmd commands.
 	}
 
 	return userSession, nil
+}
+
+func (app *userApplicationService) UpdateUser(ctx context.Context, cmd commands.UpdateUserCommand) (*entities.UserEntity, error) {
+	tx, cancel, err := postgres.CreateTransaction(ctx, app.db)
+	defer cancel()
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to create transaction")
+		return nil, err
+	}
+	defer tx.Rollback(ctx)
+
+	qtx := models.New(app.db).WithTx(tx)
+
+	app.logger.Info().Ctx(ctx).Msg("Updating user")
+
+	userEntity := cmd.ToDomain()
+
+	updatedUser, err := app.userService.UpdateUser(ctx, qtx, userEntity)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to update user")
+		return nil, err
+	}
+
+	err = tx.Commit(ctx)
+	if err != nil {
+		app.logger.Err(err).Ctx(ctx).Msg("Failed to commit transaction")
+		return nil, err
+	}
+
+	return updatedUser, nil
 }
 
 func (app *userApplicationService) InviteUser(ctx context.Context, cmd commands.InviteUserCommand) error {

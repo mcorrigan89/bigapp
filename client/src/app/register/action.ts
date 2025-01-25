@@ -1,43 +1,40 @@
 "use server";
 
-import { redirect } from "next/navigation";
-import { parseWithZod } from "@conform-to/zod";
+import { returnValidationErrors } from "next-safe-action";
 import { createUserSchema } from "./schema";
-import { cookies } from "next/headers";
+import { actionClient } from "@/lib/safe-actions";
 import { createUser } from "@/api/client";
+import { ErrorCode } from "@/api/gen/common/v1/errors_pb";
+import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 
-export async function createUserAction(prevState: unknown, formData: FormData) {
-  const submission = parseWithZod(formData, {
-    schema: createUserSchema,
-  });
-
-  if (submission.status !== "success") {
-    return submission.reply();
-  }
-
-  try {
+export const createUserAction = actionClient
+  .schema(createUserSchema)
+  .action(async ({ parsedInput: { givenName, familyName, email } }) => {
     const response = await createUser({
-      email: submission.value.email,
-      givenName: submission.value.givenName,
-      familyName: submission.value.familyName,
+      email: email,
+      familyName: familyName,
+      givenName: givenName,
     });
 
     if (response.error) {
-      return submission.reply({
-        formErrors: [response.error.message],
-      });
+      if (response.error.code === ErrorCode.EMAIL_EXISTS) {
+        returnValidationErrors(createUserSchema, {
+          email: {
+            _errors: ["Email already exists"],
+          },
+        });
+      }
     }
+
     if (!response.session?.token) {
-      return submission.reply({
-        formErrors: ["No session token received"],
+      returnValidationErrors(createUserSchema, {
+        _errors: ["No session token received"],
       });
     }
+
     const cookieStore = await cookies();
     cookieStore.set("x-session-token", response.session.token);
-  } catch (err) {
-    console.error(err);
-    return submission.reply();
-  } finally {
-    redirect("/");
-  }
-}
+
+    redirect("/me");
+  });

@@ -126,6 +126,34 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (GetUserByEm
 	return i, err
 }
 
+const getUserByHandle = `-- name: GetUserByHandle :one
+SELECT users.id, users.given_name, users.family_name, users.email, users.email_verified, users.user_handle, users.claimed, users.avatar_id, users.created_at, users.updated_at, users.version FROM users
+WHERE users.user_handle = $1
+`
+
+type GetUserByHandleRow struct {
+	User User `json:"user"`
+}
+
+func (q *Queries) GetUserByHandle(ctx context.Context, userHandle string) (GetUserByHandleRow, error) {
+	row := q.db.QueryRow(ctx, getUserByHandle, userHandle)
+	var i GetUserByHandleRow
+	err := row.Scan(
+		&i.User.ID,
+		&i.User.GivenName,
+		&i.User.FamilyName,
+		&i.User.Email,
+		&i.User.EmailVerified,
+		&i.User.UserHandle,
+		&i.User.Claimed,
+		&i.User.AvatarID,
+		&i.User.CreatedAt,
+		&i.User.UpdatedAt,
+		&i.User.Version,
+	)
+	return i, err
+}
+
 const getUserByID = `-- name: GetUserByID :one
 SELECT users.id, users.given_name, users.family_name, users.email, users.email_verified, users.user_handle, users.claimed, users.avatar_id, users.created_at, users.updated_at, users.version FROM users
 WHERE users.id = $1

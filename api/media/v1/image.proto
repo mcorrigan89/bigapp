@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+import "common/v1/errors.proto";
 package media.v1;
 
 message Image {
@@ -10,14 +11,62 @@ message Image {
   int32 size = 5;
 }
 
+message Collection {
+  string id = 1;
+  string name = 2;
+  repeated Image images = 3;
+}
+
 message GetImageByIdRequest {
   string image_id = 1;
 }
 
 message GetImageByIdResponse {
-  Image image = 1;
+  common.v1.ErrorDetails error = 1;
+  Image image = 2;
 }
 
+message GetCollectionByIdRequest {
+  string collection_id = 1;
+}
+
+message GetCollectionByIdResponse {
+  common.v1.ErrorDetails error = 1;
+  Collection collection = 2;
+}
+
+message GetCollectionByOwnerIdRequest {
+  string owner_id = 1;
+}
+
+message GetCollectionByOwnerIdResponse {
+  common.v1.ErrorDetails error = 1;
+  repeated Collection collections = 2;
+}
+
+message GetCollectionByOwnerTokenRequest {
+  string token = 1;
+}
+
+message GetCollectionByOwnerTokenResponse {
+  common.v1.ErrorDetails error = 1;
+  repeated Collection collections = 2;
+}
+
+message CreateCollectionRequest {
+  string token = 1;
+  string collection_name = 2;
+}
+
+message CreateCollectionResponse {
+  common.v1.ErrorDetails error = 1;
+  Collection collection = 2;
+}
+ 
 service ImageService {
   rpc GetImageById(GetImageByIdRequest) returns (GetImageByIdResponse) {}
+  rpc GetCollectionById(GetCollectionByIdRequest) returns (GetCollectionByIdResponse) {}
+  rpc GetCollectionByOwnerId(GetCollectionByOwnerIdRequest) returns (GetCollectionByOwnerIdResponse) {}
+  rpc GetCollectionByOwnerToken(GetCollectionByOwnerTokenRequest) returns (GetCollectionByOwnerTokenResponse) {}
+  rpc CreateCollection(CreateCollectionRequest) returns (CreateCollectionResponse) {}
 }

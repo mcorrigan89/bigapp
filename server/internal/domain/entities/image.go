@@ -8,7 +8,9 @@ import (
 )
 
 var (
-	ErrImageNotFound = fmt.Errorf("image not found")
+	ErrImageNotFound           = fmt.Errorf("image not found")
+	ErrCollectionNotFound      = fmt.Errorf("image not found")
+	ErrCollectionNotAuthorized = fmt.Errorf("collection not authorized")
 )
 
 type ImageEntity struct {
@@ -34,4 +36,22 @@ func NewImageEntity(model models.Image) *ImageEntity {
 func (p *ImageEntity) UrlSlug() string {
 	url := fmt.Sprintf("/image/%s", p.ID)
 	return url
+}
+
+type CollectionEntity struct {
+	ID      uuid.UUID
+	Name    string
+	OwnerID uuid.UUID
+	Public  bool
+	Images  []*ImageEntity
+}
+
+func NewCollectionEntity(model models.Collection, images []*ImageEntity) *CollectionEntity {
+	return &CollectionEntity{
+		ID:      model.ID,
+		Name:    model.CollectionName,
+		OwnerID: model.OwnerID,
+		Public:  model.Public,
+		Images:  images,
+	}
 }

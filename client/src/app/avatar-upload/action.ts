@@ -3,12 +3,9 @@
 import { redirect } from "next/navigation";
 import { parseWithZod } from "@conform-to/zod";
 import { imageSchema } from "./schema";
-import { uploadImage } from "@/api/client";
+import { uploadAvatarImage } from "@/api/client";
 
-export async function uploadImageAction(
-  prevState: unknown,
-  formData: FormData,
-) {
+export async function uploadImageAction(prevState: unknown, formData: FormData) {
   const submission = parseWithZod(formData, {
     schema: imageSchema,
   });
@@ -18,7 +15,7 @@ export async function uploadImageAction(
   }
 
   try {
-    await uploadImage({
+    await uploadAvatarImage({
       file: submission.value.file,
     });
   } catch (err) {

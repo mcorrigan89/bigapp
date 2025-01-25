@@ -10,6 +10,22 @@ import (
 	"github.com/google/uuid"
 )
 
+type Collection struct {
+	ID             uuid.UUID  `json:"id"`
+	CollectionName string     `json:"collection_name"`
+	OwnerID        uuid.UUID  `json:"owner_id"`
+	Public         bool       `json:"public"`
+	CreatedAt      *time.Time `json:"created_at"`
+	UpdatedAt      *time.Time `json:"updated_at"`
+	Version        int32      `json:"version"`
+}
+
+type CollectionImage struct {
+	CollectionID uuid.UUID `json:"collection_id"`
+	ImageID      uuid.UUID `json:"image_id"`
+	SortKey      string    `json:"sort_key"`
+}
+
 type Image struct {
 	ID         uuid.UUID  `json:"id"`
 	BucketName string     `json:"bucket_name"`
@@ -20,6 +36,7 @@ type Image struct {
 	CreatedAt  *time.Time `json:"created_at"`
 	UpdatedAt  *time.Time `json:"updated_at"`
 	Version    int32      `json:"version"`
+	OwnerID    *uuid.UUID `json:"owner_id"`
 }
 
 type ReferenceLink struct {

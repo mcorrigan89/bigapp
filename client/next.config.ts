@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   experimental: {
+    serverActions: {
+      bodySizeLimit: "4gb",
+    },
     turbo: {
       rules: {
         "*.svg": {
@@ -19,6 +22,10 @@ const nextConfig: NextConfig = {
         port: "3001",
         pathname: "/image/**",
         search: "",
+      },
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
       },
     ],
   },

@@ -35,11 +35,16 @@ const (
 const (
 	// UserServiceGetUserByIdProcedure is the fully-qualified name of the UserService's GetUserById RPC.
 	UserServiceGetUserByIdProcedure = "/user.v1.UserService/GetUserById"
+	// UserServiceGetUserByHandleProcedure is the fully-qualified name of the UserService's
+	// GetUserByHandle RPC.
+	UserServiceGetUserByHandleProcedure = "/user.v1.UserService/GetUserByHandle"
 	// UserServiceGetUserBySessionTokenProcedure is the fully-qualified name of the UserService's
 	// GetUserBySessionToken RPC.
 	UserServiceGetUserBySessionTokenProcedure = "/user.v1.UserService/GetUserBySessionToken"
 	// UserServiceCreateUserProcedure is the fully-qualified name of the UserService's CreateUser RPC.
 	UserServiceCreateUserProcedure = "/user.v1.UserService/CreateUser"
+	// UserServiceUpdateUserProcedure is the fully-qualified name of the UserService's UpdateUser RPC.
+	UserServiceUpdateUserProcedure = "/user.v1.UserService/UpdateUser"
 	// UserServiceCreateLoginEmailProcedure is the fully-qualified name of the UserService's
 	// CreateLoginEmail RPC.
 	UserServiceCreateLoginEmailProcedure = "/user.v1.UserService/CreateLoginEmail"
@@ -56,8 +61,10 @@ const (
 // UserServiceClient is a client for the user.v1.UserService service.
 type UserServiceClient interface {
 	GetUserById(context.Context, *connect.Request[v1.GetUserByIdRequest]) (*connect.Response[v1.GetUserByIdResponse], error)
+	GetUserByHandle(context.Context, *connect.Request[v1.GetUserByHandleRequest]) (*connect.Response[v1.GetUserByHandleResponse], error)
 	GetUserBySessionToken(context.Context, *connect.Request[v1.GetUserBySessionTokenRequest]) (*connect.Response[v1.GetUserBySessionTokenResponse], error)
 	CreateUser(context.Context, *connect.Request[v1.CreateUserRequest]) (*connect.Response[v1.CreateUserResponse], error)
+	UpdateUser(context.Context, *connect.Request[v1.UpdateUserRequest]) (*connect.Response[v1.UpdateUserResponse], error)
 	CreateLoginEmail(context.Context, *connect.Request[v1.CreateLoginEmailRequest]) (*connect.Response[v1.CreateLoginEmailResponse], error)
 	LoginWithReferenceLink(context.Context, *connect.Request[v1.LoginWithReferenceLinkRequest]) (*connect.Response[v1.LoginWithReferenceLinkResponse], error)
 	InviteUser(context.Context, *connect.Request[v1.InviteUserRequest]) (*connect.Response[v1.InviteUserResponse], error)
@@ -81,6 +88,12 @@ func NewUserServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			connect.WithSchema(userServiceMethods.ByName("GetUserById")),
 			connect.WithClientOptions(opts...),
 		),
+		getUserByHandle: connect.NewClient[v1.GetUserByHandleRequest, v1.GetUserByHandleResponse](
+			httpClient,
+			baseURL+UserServiceGetUserByHandleProcedure,
+			connect.WithSchema(userServiceMethods.ByName("GetUserByHandle")),
+			connect.WithClientOptions(opts...),
+		),
 		getUserBySessionToken: connect.NewClient[v1.GetUserBySessionTokenRequest, v1.GetUserBySessionTokenResponse](
 			httpClient,
 			baseURL+UserServiceGetUserBySessionTokenProcedure,
@@ -91,6 +104,12 @@ func NewUserServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 			httpClient,
 			baseURL+UserServiceCreateUserProcedure,
 			connect.WithSchema(userServiceMethods.ByName("CreateUser")),
+			connect.WithClientOptions(opts...),
+		),
+		updateUser: connect.NewClient[v1.UpdateUserRequest, v1.UpdateUserResponse](
+			httpClient,
+			baseURL+UserServiceUpdateUserProcedure,
+			connect.WithSchema(userServiceMethods.ByName("UpdateUser")),
 			connect.WithClientOptions(opts...),
 		),
 		createLoginEmail: connect.NewClient[v1.CreateLoginEmailRequest, v1.CreateLoginEmailResponse](
@@ -123,8 +142,10 @@ func NewUserServiceClient(httpClient connect.HTTPClient, baseURL string, opts ..
 // userServiceClient implements UserServiceClient.
 type userServiceClient struct {
 	getUserById               *connect.Client[v1.GetUserByIdRequest, v1.GetUserByIdResponse]
+	getUserByHandle           *connect.Client[v1.GetUserByHandleRequest, v1.GetUserByHandleResponse]
 	getUserBySessionToken     *connect.Client[v1.GetUserBySessionTokenRequest, v1.GetUserBySessionTokenResponse]
 	createUser                *connect.Client[v1.CreateUserRequest, v1.CreateUserResponse]
+	updateUser                *connect.Client[v1.UpdateUserRequest, v1.UpdateUserResponse]
 	createLoginEmail          *connect.Client[v1.CreateLoginEmailRequest, v1.CreateLoginEmailResponse]
 	loginWithReferenceLink    *connect.Client[v1.LoginWithReferenceLinkRequest, v1.LoginWithReferenceLinkResponse]
 	inviteUser                *connect.Client[v1.InviteUserRequest, v1.InviteUserResponse]
@@ -136,6 +157,11 @@ func (c *userServiceClient) GetUserById(ctx context.Context, req *connect.Reques
 	return c.getUserById.CallUnary(ctx, req)
 }
 
+// GetUserByHandle calls user.v1.UserService.GetUserByHandle.
+func (c *userServiceClient) GetUserByHandle(ctx context.Context, req *connect.Request[v1.GetUserByHandleRequest]) (*connect.Response[v1.GetUserByHandleResponse], error) {
+	return c.getUserByHandle.CallUnary(ctx, req)
+}
+
 // GetUserBySessionToken calls user.v1.UserService.GetUserBySessionToken.
 func (c *userServiceClient) GetUserBySessionToken(ctx context.Context, req *connect.Request[v1.GetUserBySessionTokenRequest]) (*connect.Response[v1.GetUserBySessionTokenResponse], error) {
 	return c.getUserBySessionToken.CallUnary(ctx, req)
@@ -144,6 +170,11 @@ func (c *userServiceClient) GetUserBySessionToken(ctx context.Context, req *conn
 // CreateUser calls user.v1.UserService.CreateUser.
 func (c *userServiceClient) CreateUser(ctx context.Context, req *connect.Request[v1.CreateUserRequest]) (*connect.Response[v1.CreateUserResponse], error) {
 	return c.createUser.CallUnary(ctx, req)
+}
+
+// UpdateUser calls user.v1.UserService.UpdateUser.
+func (c *userServiceClient) UpdateUser(ctx context.Context, req *connect.Request[v1.UpdateUserRequest]) (*connect.Response[v1.UpdateUserResponse], error) {
+	return c.updateUser.CallUnary(ctx, req)
 }
 
 // CreateLoginEmail calls user.v1.UserService.CreateLoginEmail.
@@ -169,8 +200,10 @@ func (c *userServiceClient) AcceptInviteReferenceLink(ctx context.Context, req *
 // UserServiceHandler is an implementation of the user.v1.UserService service.
 type UserServiceHandler interface {
 	GetUserById(context.Context, *connect.Request[v1.GetUserByIdRequest]) (*connect.Response[v1.GetUserByIdResponse], error)
+	GetUserByHandle(context.Context, *connect.Request[v1.GetUserByHandleRequest]) (*connect.Response[v1.GetUserByHandleResponse], error)
 	GetUserBySessionToken(context.Context, *connect.Request[v1.GetUserBySessionTokenRequest]) (*connect.Response[v1.GetUserBySessionTokenResponse], error)
 	CreateUser(context.Context, *connect.Request[v1.CreateUserRequest]) (*connect.Response[v1.CreateUserResponse], error)
+	UpdateUser(context.Context, *connect.Request[v1.UpdateUserRequest]) (*connect.Response[v1.UpdateUserResponse], error)
 	CreateLoginEmail(context.Context, *connect.Request[v1.CreateLoginEmailRequest]) (*connect.Response[v1.CreateLoginEmailResponse], error)
 	LoginWithReferenceLink(context.Context, *connect.Request[v1.LoginWithReferenceLinkRequest]) (*connect.Response[v1.LoginWithReferenceLinkResponse], error)
 	InviteUser(context.Context, *connect.Request[v1.InviteUserRequest]) (*connect.Response[v1.InviteUserResponse], error)
@@ -190,6 +223,12 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 		connect.WithSchema(userServiceMethods.ByName("GetUserById")),
 		connect.WithHandlerOptions(opts...),
 	)
+	userServiceGetUserByHandleHandler := connect.NewUnaryHandler(
+		UserServiceGetUserByHandleProcedure,
+		svc.GetUserByHandle,
+		connect.WithSchema(userServiceMethods.ByName("GetUserByHandle")),
+		connect.WithHandlerOptions(opts...),
+	)
 	userServiceGetUserBySessionTokenHandler := connect.NewUnaryHandler(
 		UserServiceGetUserBySessionTokenProcedure,
 		svc.GetUserBySessionToken,
@@ -200,6 +239,12 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 		UserServiceCreateUserProcedure,
 		svc.CreateUser,
 		connect.WithSchema(userServiceMethods.ByName("CreateUser")),
+		connect.WithHandlerOptions(opts...),
+	)
+	userServiceUpdateUserHandler := connect.NewUnaryHandler(
+		UserServiceUpdateUserProcedure,
+		svc.UpdateUser,
+		connect.WithSchema(userServiceMethods.ByName("UpdateUser")),
 		connect.WithHandlerOptions(opts...),
 	)
 	userServiceCreateLoginEmailHandler := connect.NewUnaryHandler(
@@ -230,10 +275,14 @@ func NewUserServiceHandler(svc UserServiceHandler, opts ...connect.HandlerOption
 		switch r.URL.Path {
 		case UserServiceGetUserByIdProcedure:
 			userServiceGetUserByIdHandler.ServeHTTP(w, r)
+		case UserServiceGetUserByHandleProcedure:
+			userServiceGetUserByHandleHandler.ServeHTTP(w, r)
 		case UserServiceGetUserBySessionTokenProcedure:
 			userServiceGetUserBySessionTokenHandler.ServeHTTP(w, r)
 		case UserServiceCreateUserProcedure:
 			userServiceCreateUserHandler.ServeHTTP(w, r)
+		case UserServiceUpdateUserProcedure:
+			userServiceUpdateUserHandler.ServeHTTP(w, r)
 		case UserServiceCreateLoginEmailProcedure:
 			userServiceCreateLoginEmailHandler.ServeHTTP(w, r)
 		case UserServiceLoginWithReferenceLinkProcedure:
@@ -255,12 +304,20 @@ func (UnimplementedUserServiceHandler) GetUserById(context.Context, *connect.Req
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("user.v1.UserService.GetUserById is not implemented"))
 }
 
+func (UnimplementedUserServiceHandler) GetUserByHandle(context.Context, *connect.Request[v1.GetUserByHandleRequest]) (*connect.Response[v1.GetUserByHandleResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("user.v1.UserService.GetUserByHandle is not implemented"))
+}
+
 func (UnimplementedUserServiceHandler) GetUserBySessionToken(context.Context, *connect.Request[v1.GetUserBySessionTokenRequest]) (*connect.Response[v1.GetUserBySessionTokenResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("user.v1.UserService.GetUserBySessionToken is not implemented"))
 }
 
 func (UnimplementedUserServiceHandler) CreateUser(context.Context, *connect.Request[v1.CreateUserRequest]) (*connect.Response[v1.CreateUserResponse], error) {
 	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("user.v1.UserService.CreateUser is not implemented"))
+}
+
+func (UnimplementedUserServiceHandler) UpdateUser(context.Context, *connect.Request[v1.UpdateUserRequest]) (*connect.Response[v1.UpdateUserResponse], error) {
+	return nil, connect.NewError(connect.CodeUnimplemented, errors.New("user.v1.UserService.UpdateUser is not implemented"))
 }
 
 func (UnimplementedUserServiceHandler) CreateLoginEmail(context.Context, *connect.Request[v1.CreateLoginEmailRequest]) (*connect.Response[v1.CreateLoginEmailResponse], error) {

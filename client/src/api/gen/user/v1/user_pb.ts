@@ -14,31 +14,31 @@ import type { Message } from "@bufbuild/protobuf";
  * Describes the file user/v1/user.proto.
  */
 export const file_user_v1_user: GenFile = /*@__PURE__*/
-  fileDesc("ChJ1c2VyL3YxL3VzZXIucHJvdG8SB3VzZXIudjEi1AEKBFVzZXISJgoFZXJyb3IYASABKAsyFy5jb21tb24udjEuRXJyb3JEZXRhaWxzEgoKAmlkGAIgASgJEhcKCmdpdmVuX25hbWUYAyABKAlIAIgBARIYCgtmYW1pbHlfbmFtZRgEIAEoCUgBiAEBEg0KBWVtYWlsGAUgASgJEhYKDmVtYWlsX3ZlcmlmaWVkGAYgASgIEh8KBmF2YXRhchgHIAEoCzIPLm1lZGlhLnYxLkltYWdlQg0KC19naXZlbl9uYW1lQg4KDF9mYW1pbHlfbmFtZSJYCgtVc2VyU2Vzc2lvbhImCgVlcnJvchgBIAEoCzIXLmNvbW1vbi52MS5FcnJvckRldGFpbHMSDQoFdG9rZW4YAiABKAkSEgoKZXhwaXJlc19hdBgDIAEoCSIgChJHZXRVc2VyQnlJZFJlcXVlc3QSCgoCaWQYASABKAkiWgoTR2V0VXNlckJ5SWRSZXNwb25zZRImCgVlcnJvchgBIAEoCzIXLmNvbW1vbi52MS5FcnJvckRldGFpbHMSGwoEdXNlchgCIAEoCzINLnVzZXIudjEuVXNlciKcAQoRQ3JlYXRlVXNlclJlcXVlc3QSJgoFZXJyb3IYASABKAsyFy5jb21tb24udjEuRXJyb3JEZXRhaWxzEhcKCmdpdmVuX25hbWUYAiABKAlIAIgBARIYCgtmYW1pbHlfbmFtZRgDIAEoCUgBiAEBEg0KBWVtYWlsGAQgASgJQg0KC19naXZlbl9uYW1lQg4KDF9mYW1pbHlfbmFtZSKAAQoSQ3JlYXRlVXNlclJlc3BvbnNlEiYKBWVycm9yGAEgASgLMhcuY29tbW9uLnYxLkVycm9yRGV0YWlscxIbCgR1c2VyGAIgASgLMg0udXNlci52MS5Vc2VyEiUKB3Nlc3Npb24YAyABKAsyFC51c2VyLnYxLlVzZXJTZXNzaW9uIi0KHEdldFVzZXJCeVNlc3Npb25Ub2tlblJlcXVlc3QSDQoFdG9rZW4YASABKAkiiwEKHUdldFVzZXJCeVNlc3Npb25Ub2tlblJlc3BvbnNlEiYKBWVycm9yGAEgASgLMhcuY29tbW9uLnYxLkVycm9yRGV0YWlscxIbCgR1c2VyGAIgASgLMg0udXNlci52MS5Vc2VyEiUKB3Nlc3Npb24YAyABKAsyFC51c2VyLnYxLlVzZXJTZXNzaW9uIigKF0NyZWF0ZUxvZ2luRW1haWxSZXF1ZXN0Eg0KBWVtYWlsGAEgASgJIlIKGENyZWF0ZUxvZ2luRW1haWxSZXNwb25zZRImCgVlcnJvchgBIAEoCzIXLmNvbW1vbi52MS5FcnJvckRldGFpbHMSDgoGc3RhdHVzGAIgASgJIi4KHUxvZ2luV2l0aFJlZmVyZW5jZUxpbmtSZXF1ZXN0Eg0KBXRva2VuGAEgASgJIowBCh5Mb2dpbldpdGhSZWZlcmVuY2VMaW5rUmVzcG9uc2USJgoFZXJyb3IYASABKAsyFy5jb21tb24udjEuRXJyb3JEZXRhaWxzEhsKBHVzZXIYAiABKAsyDS51c2VyLnYxLlVzZXISJQoHc2Vzc2lvbhgDIAEoCzIULnVzZXIudjEuVXNlclNlc3Npb24iIgoRSW52aXRlVXNlclJlcXVlc3QSDQoFZW1haWwYASABKAkiTAoSSW52aXRlVXNlclJlc3BvbnNlEiYKBWVycm9yGAEgASgLMhcuY29tbW9uLnYxLkVycm9yRGV0YWlscxIOCgZzdGF0dXMYAiABKAkiMQogQWNjZXB0SW52aXRlUmVmZXJlbmNlTGlua1JlcXVlc3QSDQoFdG9rZW4YASABKAkijwEKIUFjY2VwdEludml0ZVJlZmVyZW5jZUxpbmtSZXNwb25zZRImCgVlcnJvchgBIAEoCzIXLmNvbW1vbi52MS5FcnJvckRldGFpbHMSGwoEdXNlchgCIAEoCzINLnVzZXIudjEuVXNlchIlCgdzZXNzaW9uGAMgASgLMhQudXNlci52MS5Vc2VyU2Vzc2lvbjKTBQoLVXNlclNlcnZpY2USSgoLR2V0VXNlckJ5SWQSGy51c2VyLnYxLkdldFVzZXJCeUlkUmVxdWVzdBocLnVzZXIudjEuR2V0VXNlckJ5SWRSZXNwb25zZSIAEmgKFUdldFVzZXJCeVNlc3Npb25Ub2tlbhIlLnVzZXIudjEuR2V0VXNlckJ5U2Vzc2lvblRva2VuUmVxdWVzdBomLnVzZXIudjEuR2V0VXNlckJ5U2Vzc2lvblRva2VuUmVzcG9uc2UiABJHCgpDcmVhdGVVc2VyEhoudXNlci52MS5DcmVhdGVVc2VyUmVxdWVzdBobLnVzZXIudjEuQ3JlYXRlVXNlclJlc3BvbnNlIgASWQoQQ3JlYXRlTG9naW5FbWFpbBIgLnVzZXIudjEuQ3JlYXRlTG9naW5FbWFpbFJlcXVlc3QaIS51c2VyLnYxLkNyZWF0ZUxvZ2luRW1haWxSZXNwb25zZSIAEmsKFkxvZ2luV2l0aFJlZmVyZW5jZUxpbmsSJi51c2VyLnYxLkxvZ2luV2l0aFJlZmVyZW5jZUxpbmtSZXF1ZXN0GicudXNlci52MS5Mb2dpbldpdGhSZWZlcmVuY2VMaW5rUmVzcG9uc2UiABJHCgpJbnZpdGVVc2VyEhoudXNlci52MS5JbnZpdGVVc2VyUmVxdWVzdBobLnVzZXIudjEuSW52aXRlVXNlclJlc3BvbnNlIgASdAoZQWNjZXB0SW52aXRlUmVmZXJlbmNlTGluaxIpLnVzZXIudjEuQWNjZXB0SW52aXRlUmVmZXJlbmNlTGlua1JlcXVlc3QaKi51c2VyLnYxLkFjY2VwdEludml0ZVJlZmVyZW5jZUxpbmtSZXNwb25zZSIAQlUKC2NvbS51c2VyLnYxQglVc2VyUHJvdG9QAaICA1VYWKoCB1VzZXIuVjHKAgdVc2VyXFYx4gITVXNlclxWMVxHUEJNZXRhZGF0YeoCCFVzZXI6OlYxYgZwcm90bzM", [file_common_v1_errors, file_media_v1_image]);
+  fileDesc("ChJ1c2VyL3YxL3VzZXIucHJvdG8SB3VzZXIudjEiygEKBFVzZXISCgoCaWQYASABKAkSFwoKZ2l2ZW5fbmFtZRgCIAEoCUgAiAEBEhgKC2ZhbWlseV9uYW1lGAMgASgJSAGIAQESFgoJZnVsbF9uYW1lGAQgASgJSAKIAQESDQoFZW1haWwYBSABKAkSDgoGaGFuZGxlGAYgASgJEh8KBmF2YXRhchgHIAEoCzIPLm1lZGlhLnYxLkltYWdlQg0KC19naXZlbl9uYW1lQg4KDF9mYW1pbHlfbmFtZUIMCgpfZnVsbF9uYW1lIjAKC1VzZXJTZXNzaW9uEg0KBXRva2VuGAEgASgJEhIKCmV4cGlyZXNfYXQYAiABKAkiIAoSR2V0VXNlckJ5SWRSZXF1ZXN0EgoKAmlkGAEgASgJIloKE0dldFVzZXJCeUlkUmVzcG9uc2USJgoFZXJyb3IYASABKAsyFy5jb21tb24udjEuRXJyb3JEZXRhaWxzEhsKBHVzZXIYAiABKAsyDS51c2VyLnYxLlVzZXIiKAoWR2V0VXNlckJ5SGFuZGxlUmVxdWVzdBIOCgZoYW5kbGUYASABKAkiXgoXR2V0VXNlckJ5SGFuZGxlUmVzcG9uc2USJgoFZXJyb3IYASABKAsyFy5jb21tb24udjEuRXJyb3JEZXRhaWxzEhsKBHVzZXIYAiABKAsyDS51c2VyLnYxLlVzZXIidAoRQ3JlYXRlVXNlclJlcXVlc3QSFwoKZ2l2ZW5fbmFtZRgBIAEoCUgAiAEBEhgKC2ZhbWlseV9uYW1lGAIgASgJSAGIAQESDQoFZW1haWwYAyABKAlCDQoLX2dpdmVuX25hbWVCDgoMX2ZhbWlseV9uYW1lIoABChJDcmVhdGVVc2VyUmVzcG9uc2USJgoFZXJyb3IYASABKAsyFy5jb21tb24udjEuRXJyb3JEZXRhaWxzEhsKBHVzZXIYAiABKAsyDS51c2VyLnYxLlVzZXISJQoHc2Vzc2lvbhgDIAEoCzIULnVzZXIudjEuVXNlclNlc3Npb24ikAEKEVVwZGF0ZVVzZXJSZXF1ZXN0EgoKAmlkGAEgASgJEhcKCmdpdmVuX25hbWUYAiABKAlIAIgBARIYCgtmYW1pbHlfbmFtZRgDIAEoCUgBiAEBEg0KBWVtYWlsGAQgASgJEg4KBmhhbmRsZRgFIAEoCUINCgtfZ2l2ZW5fbmFtZUIOCgxfZmFtaWx5X25hbWUigAEKElVwZGF0ZVVzZXJSZXNwb25zZRImCgVlcnJvchgBIAEoCzIXLmNvbW1vbi52MS5FcnJvckRldGFpbHMSGwoEdXNlchgCIAEoCzINLnVzZXIudjEuVXNlchIlCgdzZXNzaW9uGAMgASgLMhQudXNlci52MS5Vc2VyU2Vzc2lvbiItChxHZXRVc2VyQnlTZXNzaW9uVG9rZW5SZXF1ZXN0Eg0KBXRva2VuGAEgASgJIosBCh1HZXRVc2VyQnlTZXNzaW9uVG9rZW5SZXNwb25zZRImCgVlcnJvchgBIAEoCzIXLmNvbW1vbi52MS5FcnJvckRldGFpbHMSGwoEdXNlchgCIAEoCzINLnVzZXIudjEuVXNlchIlCgdzZXNzaW9uGAMgASgLMhQudXNlci52MS5Vc2VyU2Vzc2lvbiIoChdDcmVhdGVMb2dpbkVtYWlsUmVxdWVzdBINCgVlbWFpbBgBIAEoCSJSChhDcmVhdGVMb2dpbkVtYWlsUmVzcG9uc2USJgoFZXJyb3IYASABKAsyFy5jb21tb24udjEuRXJyb3JEZXRhaWxzEg4KBnN0YXR1cxgCIAEoCSIuCh1Mb2dpbldpdGhSZWZlcmVuY2VMaW5rUmVxdWVzdBINCgV0b2tlbhgBIAEoCSKMAQoeTG9naW5XaXRoUmVmZXJlbmNlTGlua1Jlc3BvbnNlEiYKBWVycm9yGAEgASgLMhcuY29tbW9uLnYxLkVycm9yRGV0YWlscxIbCgR1c2VyGAIgASgLMg0udXNlci52MS5Vc2VyEiUKB3Nlc3Npb24YAyABKAsyFC51c2VyLnYxLlVzZXJTZXNzaW9uIiIKEUludml0ZVVzZXJSZXF1ZXN0Eg0KBWVtYWlsGAEgASgJIkwKEkludml0ZVVzZXJSZXNwb25zZRImCgVlcnJvchgBIAEoCzIXLmNvbW1vbi52MS5FcnJvckRldGFpbHMSDgoGc3RhdHVzGAIgASgJIjEKIEFjY2VwdEludml0ZVJlZmVyZW5jZUxpbmtSZXF1ZXN0Eg0KBXRva2VuGAEgASgJIo8BCiFBY2NlcHRJbnZpdGVSZWZlcmVuY2VMaW5rUmVzcG9uc2USJgoFZXJyb3IYASABKAsyFy5jb21tb24udjEuRXJyb3JEZXRhaWxzEhsKBHVzZXIYAiABKAsyDS51c2VyLnYxLlVzZXISJQoHc2Vzc2lvbhgDIAEoCzIULnVzZXIudjEuVXNlclNlc3Npb24ytAYKC1VzZXJTZXJ2aWNlEkoKC0dldFVzZXJCeUlkEhsudXNlci52MS5HZXRVc2VyQnlJZFJlcXVlc3QaHC51c2VyLnYxLkdldFVzZXJCeUlkUmVzcG9uc2UiABJWCg9HZXRVc2VyQnlIYW5kbGUSHy51c2VyLnYxLkdldFVzZXJCeUhhbmRsZVJlcXVlc3QaIC51c2VyLnYxLkdldFVzZXJCeUhhbmRsZVJlc3BvbnNlIgASaAoVR2V0VXNlckJ5U2Vzc2lvblRva2VuEiUudXNlci52MS5HZXRVc2VyQnlTZXNzaW9uVG9rZW5SZXF1ZXN0GiYudXNlci52MS5HZXRVc2VyQnlTZXNzaW9uVG9rZW5SZXNwb25zZSIAEkcKCkNyZWF0ZVVzZXISGi51c2VyLnYxLkNyZWF0ZVVzZXJSZXF1ZXN0GhsudXNlci52MS5DcmVhdGVVc2VyUmVzcG9uc2UiABJHCgpVcGRhdGVVc2VyEhoudXNlci52MS5VcGRhdGVVc2VyUmVxdWVzdBobLnVzZXIudjEuVXBkYXRlVXNlclJlc3BvbnNlIgASWQoQQ3JlYXRlTG9naW5FbWFpbBIgLnVzZXIudjEuQ3JlYXRlTG9naW5FbWFpbFJlcXVlc3QaIS51c2VyLnYxLkNyZWF0ZUxvZ2luRW1haWxSZXNwb25zZSIAEmsKFkxvZ2luV2l0aFJlZmVyZW5jZUxpbmsSJi51c2VyLnYxLkxvZ2luV2l0aFJlZmVyZW5jZUxpbmtSZXF1ZXN0GicudXNlci52MS5Mb2dpbldpdGhSZWZlcmVuY2VMaW5rUmVzcG9uc2UiABJHCgpJbnZpdGVVc2VyEhoudXNlci52MS5JbnZpdGVVc2VyUmVxdWVzdBobLnVzZXIudjEuSW52aXRlVXNlclJlc3BvbnNlIgASdAoZQWNjZXB0SW52aXRlUmVmZXJlbmNlTGluaxIpLnVzZXIudjEuQWNjZXB0SW52aXRlUmVmZXJlbmNlTGlua1JlcXVlc3QaKi51c2VyLnYxLkFjY2VwdEludml0ZVJlZmVyZW5jZUxpbmtSZXNwb25zZSIAQlUKC2NvbS51c2VyLnYxQglVc2VyUHJvdG9QAaICA1VYWKoCB1VzZXIuVjHKAgdVc2VyXFYx4gITVXNlclxWMVxHUEJNZXRhZGF0YeoCCFVzZXI6OlYxYgZwcm90bzM", [file_common_v1_errors, file_media_v1_image]);
 
 /**
  * @generated from message user.v1.User
  */
 export type User = Message<"user.v1.User"> & {
   /**
-   * @generated from field: common.v1.ErrorDetails error = 1;
-   */
-  error?: ErrorDetails;
-
-  /**
-   * @generated from field: string id = 2;
+   * @generated from field: string id = 1;
    */
   id: string;
 
   /**
-   * @generated from field: optional string given_name = 3;
+   * @generated from field: optional string given_name = 2;
    */
   givenName?: string;
 
   /**
-   * @generated from field: optional string family_name = 4;
+   * @generated from field: optional string family_name = 3;
    */
   familyName?: string;
+
+  /**
+   * @generated from field: optional string full_name = 4;
+   */
+  fullName?: string;
 
   /**
    * @generated from field: string email = 5;
@@ -46,9 +46,9 @@ export type User = Message<"user.v1.User"> & {
   email: string;
 
   /**
-   * @generated from field: bool email_verified = 6;
+   * @generated from field: string handle = 6;
    */
-  emailVerified: boolean;
+  handle: string;
 
   /**
    * @generated from field: media.v1.Image avatar = 7;
@@ -68,17 +68,12 @@ export const UserSchema: GenMessage<User> = /*@__PURE__*/
  */
 export type UserSession = Message<"user.v1.UserSession"> & {
   /**
-   * @generated from field: common.v1.ErrorDetails error = 1;
-   */
-  error?: ErrorDetails;
-
-  /**
-   * @generated from field: string token = 2;
+   * @generated from field: string token = 1;
    */
   token: string;
 
   /**
-   * @generated from field: string expires_at = 3;
+   * @generated from field: string expires_at = 2;
    */
   expiresAt: string;
 };
@@ -130,26 +125,60 @@ export const GetUserByIdResponseSchema: GenMessage<GetUserByIdResponse> = /*@__P
   messageDesc(file_user_v1_user, 3);
 
 /**
- * @generated from message user.v1.CreateUserRequest
+ * @generated from message user.v1.GetUserByHandleRequest
  */
-export type CreateUserRequest = Message<"user.v1.CreateUserRequest"> & {
+export type GetUserByHandleRequest = Message<"user.v1.GetUserByHandleRequest"> & {
+  /**
+   * @generated from field: string handle = 1;
+   */
+  handle: string;
+};
+
+/**
+ * Describes the message user.v1.GetUserByHandleRequest.
+ * Use `create(GetUserByHandleRequestSchema)` to create a new message.
+ */
+export const GetUserByHandleRequestSchema: GenMessage<GetUserByHandleRequest> = /*@__PURE__*/
+  messageDesc(file_user_v1_user, 4);
+
+/**
+ * @generated from message user.v1.GetUserByHandleResponse
+ */
+export type GetUserByHandleResponse = Message<"user.v1.GetUserByHandleResponse"> & {
   /**
    * @generated from field: common.v1.ErrorDetails error = 1;
    */
   error?: ErrorDetails;
 
   /**
-   * @generated from field: optional string given_name = 2;
+   * @generated from field: user.v1.User user = 2;
+   */
+  user?: User;
+};
+
+/**
+ * Describes the message user.v1.GetUserByHandleResponse.
+ * Use `create(GetUserByHandleResponseSchema)` to create a new message.
+ */
+export const GetUserByHandleResponseSchema: GenMessage<GetUserByHandleResponse> = /*@__PURE__*/
+  messageDesc(file_user_v1_user, 5);
+
+/**
+ * @generated from message user.v1.CreateUserRequest
+ */
+export type CreateUserRequest = Message<"user.v1.CreateUserRequest"> & {
+  /**
+   * @generated from field: optional string given_name = 1;
    */
   givenName?: string;
 
   /**
-   * @generated from field: optional string family_name = 3;
+   * @generated from field: optional string family_name = 2;
    */
   familyName?: string;
 
   /**
-   * @generated from field: string email = 4;
+   * @generated from field: string email = 3;
    */
   email: string;
 };
@@ -159,7 +188,7 @@ export type CreateUserRequest = Message<"user.v1.CreateUserRequest"> & {
  * Use `create(CreateUserRequestSchema)` to create a new message.
  */
 export const CreateUserRequestSchema: GenMessage<CreateUserRequest> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 4);
+  messageDesc(file_user_v1_user, 6);
 
 /**
  * @generated from message user.v1.CreateUserResponse
@@ -186,7 +215,71 @@ export type CreateUserResponse = Message<"user.v1.CreateUserResponse"> & {
  * Use `create(CreateUserResponseSchema)` to create a new message.
  */
 export const CreateUserResponseSchema: GenMessage<CreateUserResponse> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 5);
+  messageDesc(file_user_v1_user, 7);
+
+/**
+ * @generated from message user.v1.UpdateUserRequest
+ */
+export type UpdateUserRequest = Message<"user.v1.UpdateUserRequest"> & {
+  /**
+   * @generated from field: string id = 1;
+   */
+  id: string;
+
+  /**
+   * @generated from field: optional string given_name = 2;
+   */
+  givenName?: string;
+
+  /**
+   * @generated from field: optional string family_name = 3;
+   */
+  familyName?: string;
+
+  /**
+   * @generated from field: string email = 4;
+   */
+  email: string;
+
+  /**
+   * @generated from field: string handle = 5;
+   */
+  handle: string;
+};
+
+/**
+ * Describes the message user.v1.UpdateUserRequest.
+ * Use `create(UpdateUserRequestSchema)` to create a new message.
+ */
+export const UpdateUserRequestSchema: GenMessage<UpdateUserRequest> = /*@__PURE__*/
+  messageDesc(file_user_v1_user, 8);
+
+/**
+ * @generated from message user.v1.UpdateUserResponse
+ */
+export type UpdateUserResponse = Message<"user.v1.UpdateUserResponse"> & {
+  /**
+   * @generated from field: common.v1.ErrorDetails error = 1;
+   */
+  error?: ErrorDetails;
+
+  /**
+   * @generated from field: user.v1.User user = 2;
+   */
+  user?: User;
+
+  /**
+   * @generated from field: user.v1.UserSession session = 3;
+   */
+  session?: UserSession;
+};
+
+/**
+ * Describes the message user.v1.UpdateUserResponse.
+ * Use `create(UpdateUserResponseSchema)` to create a new message.
+ */
+export const UpdateUserResponseSchema: GenMessage<UpdateUserResponse> = /*@__PURE__*/
+  messageDesc(file_user_v1_user, 9);
 
 /**
  * @generated from message user.v1.GetUserBySessionTokenRequest
@@ -203,7 +296,7 @@ export type GetUserBySessionTokenRequest = Message<"user.v1.GetUserBySessionToke
  * Use `create(GetUserBySessionTokenRequestSchema)` to create a new message.
  */
 export const GetUserBySessionTokenRequestSchema: GenMessage<GetUserBySessionTokenRequest> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 6);
+  messageDesc(file_user_v1_user, 10);
 
 /**
  * @generated from message user.v1.GetUserBySessionTokenResponse
@@ -230,7 +323,7 @@ export type GetUserBySessionTokenResponse = Message<"user.v1.GetUserBySessionTok
  * Use `create(GetUserBySessionTokenResponseSchema)` to create a new message.
  */
 export const GetUserBySessionTokenResponseSchema: GenMessage<GetUserBySessionTokenResponse> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 7);
+  messageDesc(file_user_v1_user, 11);
 
 /**
  * @generated from message user.v1.CreateLoginEmailRequest
@@ -247,7 +340,7 @@ export type CreateLoginEmailRequest = Message<"user.v1.CreateLoginEmailRequest">
  * Use `create(CreateLoginEmailRequestSchema)` to create a new message.
  */
 export const CreateLoginEmailRequestSchema: GenMessage<CreateLoginEmailRequest> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 8);
+  messageDesc(file_user_v1_user, 12);
 
 /**
  * @generated from message user.v1.CreateLoginEmailResponse
@@ -269,7 +362,7 @@ export type CreateLoginEmailResponse = Message<"user.v1.CreateLoginEmailResponse
  * Use `create(CreateLoginEmailResponseSchema)` to create a new message.
  */
 export const CreateLoginEmailResponseSchema: GenMessage<CreateLoginEmailResponse> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 9);
+  messageDesc(file_user_v1_user, 13);
 
 /**
  * @generated from message user.v1.LoginWithReferenceLinkRequest
@@ -286,7 +379,7 @@ export type LoginWithReferenceLinkRequest = Message<"user.v1.LoginWithReferenceL
  * Use `create(LoginWithReferenceLinkRequestSchema)` to create a new message.
  */
 export const LoginWithReferenceLinkRequestSchema: GenMessage<LoginWithReferenceLinkRequest> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 10);
+  messageDesc(file_user_v1_user, 14);
 
 /**
  * @generated from message user.v1.LoginWithReferenceLinkResponse
@@ -313,7 +406,7 @@ export type LoginWithReferenceLinkResponse = Message<"user.v1.LoginWithReference
  * Use `create(LoginWithReferenceLinkResponseSchema)` to create a new message.
  */
 export const LoginWithReferenceLinkResponseSchema: GenMessage<LoginWithReferenceLinkResponse> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 11);
+  messageDesc(file_user_v1_user, 15);
 
 /**
  * @generated from message user.v1.InviteUserRequest
@@ -330,7 +423,7 @@ export type InviteUserRequest = Message<"user.v1.InviteUserRequest"> & {
  * Use `create(InviteUserRequestSchema)` to create a new message.
  */
 export const InviteUserRequestSchema: GenMessage<InviteUserRequest> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 12);
+  messageDesc(file_user_v1_user, 16);
 
 /**
  * @generated from message user.v1.InviteUserResponse
@@ -352,7 +445,7 @@ export type InviteUserResponse = Message<"user.v1.InviteUserResponse"> & {
  * Use `create(InviteUserResponseSchema)` to create a new message.
  */
 export const InviteUserResponseSchema: GenMessage<InviteUserResponse> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 13);
+  messageDesc(file_user_v1_user, 17);
 
 /**
  * @generated from message user.v1.AcceptInviteReferenceLinkRequest
@@ -369,7 +462,7 @@ export type AcceptInviteReferenceLinkRequest = Message<"user.v1.AcceptInviteRefe
  * Use `create(AcceptInviteReferenceLinkRequestSchema)` to create a new message.
  */
 export const AcceptInviteReferenceLinkRequestSchema: GenMessage<AcceptInviteReferenceLinkRequest> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 14);
+  messageDesc(file_user_v1_user, 18);
 
 /**
  * @generated from message user.v1.AcceptInviteReferenceLinkResponse
@@ -396,7 +489,7 @@ export type AcceptInviteReferenceLinkResponse = Message<"user.v1.AcceptInviteRef
  * Use `create(AcceptInviteReferenceLinkResponseSchema)` to create a new message.
  */
 export const AcceptInviteReferenceLinkResponseSchema: GenMessage<AcceptInviteReferenceLinkResponse> = /*@__PURE__*/
-  messageDesc(file_user_v1_user, 15);
+  messageDesc(file_user_v1_user, 19);
 
 /**
  * @generated from service user.v1.UserService
@@ -409,6 +502,14 @@ export const UserService: GenService<{
     methodKind: "unary";
     input: typeof GetUserByIdRequestSchema;
     output: typeof GetUserByIdResponseSchema;
+  },
+  /**
+   * @generated from rpc user.v1.UserService.GetUserByHandle
+   */
+  getUserByHandle: {
+    methodKind: "unary";
+    input: typeof GetUserByHandleRequestSchema;
+    output: typeof GetUserByHandleResponseSchema;
   },
   /**
    * @generated from rpc user.v1.UserService.GetUserBySessionToken
@@ -425,6 +526,14 @@ export const UserService: GenService<{
     methodKind: "unary";
     input: typeof CreateUserRequestSchema;
     output: typeof CreateUserResponseSchema;
+  },
+  /**
+   * @generated from rpc user.v1.UserService.UpdateUser
+   */
+  updateUser: {
+    methodKind: "unary";
+    input: typeof UpdateUserRequestSchema;
+    output: typeof UpdateUserResponseSchema;
   },
   /**
    * @generated from rpc user.v1.UserService.CreateLoginEmail

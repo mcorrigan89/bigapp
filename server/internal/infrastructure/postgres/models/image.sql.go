@@ -11,9 +11,59 @@ import (
 	"github.com/google/uuid"
 )
 
+const addImageToCollection = `-- name: AddImageToCollection :one
+INSERT INTO collection_images (collection_id, image_id, sort_key)
+VALUES ($1, $2, $3) RETURNING collection_id, image_id, sort_key
+`
+
+type AddImageToCollectionParams struct {
+	CollectionID uuid.UUID `json:"collection_id"`
+	ImageID      uuid.UUID `json:"image_id"`
+	SortKey      string    `json:"sort_key"`
+}
+
+func (q *Queries) AddImageToCollection(ctx context.Context, arg AddImageToCollectionParams) (CollectionImage, error) {
+	row := q.db.QueryRow(ctx, addImageToCollection, arg.CollectionID, arg.ImageID, arg.SortKey)
+	var i CollectionImage
+	err := row.Scan(&i.CollectionID, &i.ImageID, &i.SortKey)
+	return i, err
+}
+
+const createCollection = `-- name: CreateCollection :one
+INSERT INTO collections (id, collection_name, owner_id, public) 
+VALUES ($1, $2, $3, $4) RETURNING id, collection_name, owner_id, public, created_at, updated_at, version
+`
+
+type CreateCollectionParams struct {
+	ID             uuid.UUID `json:"id"`
+	CollectionName string    `json:"collection_name"`
+	OwnerID        uuid.UUID `json:"owner_id"`
+	Public         bool      `json:"public"`
+}
+
+func (q *Queries) CreateCollection(ctx context.Context, arg CreateCollectionParams) (Collection, error) {
+	row := q.db.QueryRow(ctx, createCollection,
+		arg.ID,
+		arg.CollectionName,
+		arg.OwnerID,
+		arg.Public,
+	)
+	var i Collection
+	err := row.Scan(
+		&i.ID,
+		&i.CollectionName,
+		&i.OwnerID,
+		&i.Public,
+		&i.CreatedAt,
+		&i.UpdatedAt,
+		&i.Version,
+	)
+	return i, err
+}
+
 const createImage = `-- name: CreateImage :one
 INSERT INTO images (id, bucket_name, object_id, width, height, file_size) 
-VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, bucket_name, object_id, height, width, file_size, created_at, updated_at, version
+VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, bucket_name, object_id, height, width, file_size, created_at, updated_at, version, owner_id
 `
 
 type CreateImageParams struct {
@@ -45,12 +95,115 @@ func (q *Queries) CreateImage(ctx context.Context, arg CreateImageParams) (Image
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.Version,
+		&i.OwnerID,
 	)
 	return i, err
 }
 
+const getCollectionByID = `-- name: GetCollectionByID :one
+SELECT collections.id, collections.collection_name, collections.owner_id, collections.public, collections.created_at, collections.updated_at, collections.version FROM collections
+WHERE collections.id = $1
+`
+
+type GetCollectionByIDRow struct {
+	Collection Collection `json:"collection"`
+}
+
+func (q *Queries) GetCollectionByID(ctx context.Context, id uuid.UUID) (GetCollectionByIDRow, error) {
+	row := q.db.QueryRow(ctx, getCollectionByID, id)
+	var i GetCollectionByIDRow
+	err := row.Scan(
+		&i.Collection.ID,
+		&i.Collection.CollectionName,
+		&i.Collection.OwnerID,
+		&i.Collection.Public,
+		&i.Collection.CreatedAt,
+		&i.Collection.UpdatedAt,
+		&i.Collection.Version,
+	)
+	return i, err
+}
+
+const getCollectionByOwnerID = `-- name: GetCollectionByOwnerID :many
+SELECT collections.id, collections.collection_name, collections.owner_id, collections.public, collections.created_at, collections.updated_at, collections.version FROM collections
+WHERE collections.owner_id = $1
+`
+
+type GetCollectionByOwnerIDRow struct {
+	Collection Collection `json:"collection"`
+}
+
+func (q *Queries) GetCollectionByOwnerID(ctx context.Context, ownerID uuid.UUID) ([]GetCollectionByOwnerIDRow, error) {
+	rows, err := q.db.Query(ctx, getCollectionByOwnerID, ownerID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetCollectionByOwnerIDRow{}
+	for rows.Next() {
+		var i GetCollectionByOwnerIDRow
+		if err := rows.Scan(
+			&i.Collection.ID,
+			&i.Collection.CollectionName,
+			&i.Collection.OwnerID,
+			&i.Collection.Public,
+			&i.Collection.CreatedAt,
+			&i.Collection.UpdatedAt,
+			&i.Collection.Version,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
+const getCollectionImagesByCollectionID = `-- name: GetCollectionImagesByCollectionID :many
+SELECT images.id, images.bucket_name, images.object_id, images.height, images.width, images.file_size, images.created_at, images.updated_at, images.version, images.owner_id FROM images
+JOIN collection_images ON images.id = collection_images.image_id
+WHERE collection_images.collection_id = $1
+`
+
+type GetCollectionImagesByCollectionIDRow struct {
+	Image Image `json:"image"`
+}
+
+func (q *Queries) GetCollectionImagesByCollectionID(ctx context.Context, collectionID uuid.UUID) ([]GetCollectionImagesByCollectionIDRow, error) {
+	rows, err := q.db.Query(ctx, getCollectionImagesByCollectionID, collectionID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	items := []GetCollectionImagesByCollectionIDRow{}
+	for rows.Next() {
+		var i GetCollectionImagesByCollectionIDRow
+		if err := rows.Scan(
+			&i.Image.ID,
+			&i.Image.BucketName,
+			&i.Image.ObjectID,
+			&i.Image.Height,
+			&i.Image.Width,
+			&i.Image.FileSize,
+			&i.Image.CreatedAt,
+			&i.Image.UpdatedAt,
+			&i.Image.Version,
+			&i.Image.OwnerID,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
+}
+
 const getImageByID = `-- name: GetImageByID :one
-SELECT images.id, images.bucket_name, images.object_id, images.height, images.width, images.file_size, images.created_at, images.updated_at, images.version FROM images
+SELECT images.id, images.bucket_name, images.object_id, images.height, images.width, images.file_size, images.created_at, images.updated_at, images.version, images.owner_id FROM images
 WHERE images.id = $1
 `
 
@@ -71,6 +224,22 @@ func (q *Queries) GetImageByID(ctx context.Context, id uuid.UUID) (GetImageByIDR
 		&i.Image.CreatedAt,
 		&i.Image.UpdatedAt,
 		&i.Image.Version,
+		&i.Image.OwnerID,
 	)
 	return i, err
+}
+
+const removeImageFromCollection = `-- name: RemoveImageFromCollection :exec
+DELETE FROM collection_images
+WHERE collection_id = $1 AND image_id = $2
+`
+
+type RemoveImageFromCollectionParams struct {
+	CollectionID uuid.UUID `json:"collection_id"`
+	ImageID      uuid.UUID `json:"image_id"`
+}
+
+func (q *Queries) RemoveImageFromCollection(ctx context.Context, arg RemoveImageFromCollectionParams) error {
+	_, err := q.db.Exec(ctx, removeImageFromCollection, arg.CollectionID, arg.ImageID)
+	return err
 }
