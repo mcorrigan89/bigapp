@@ -53,7 +53,7 @@ codegen:
 
 .PHONY: models
 models:
-	pg_dump --schema-only simple_auth > server/schema.sql
+	pg_dump --schema-only salon > server/schema.sql
 	sqlc generate -f server/sqlc.yaml
 
 .PHONY: migrate-create
@@ -70,4 +70,4 @@ migrate-down:
 
 .PHONY: minio
 minio:
-	minio server  --console-address :9001 /Users/michaelcorrigan/minio
+	minio server  --console-address :9001 ./data

@@ -2,13 +2,12 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17.2 (Postgres.app)
--- Dumped by pg_dump version 17.2 (Postgres.app)
+-- Dumped from database version 14.11 (Postgres.app)
+-- Dumped by pg_dump version 14.11 (Postgres.app)
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
 SET idle_in_transaction_session_timeout = 0;
-SET transaction_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SELECT pg_catalog.set_config('search_path', '', false);
@@ -295,13 +294,6 @@ ALTER TABLE ONLY public.user_session
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_avatar_id_fkey FOREIGN KEY (avatar_id) REFERENCES public.images(id) ON DELETE SET NULL;
-
-
---
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: pg_database_owner
---
-
-GRANT ALL ON SCHEMA public TO admin;
 
 
 --
