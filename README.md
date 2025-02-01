@@ -59,11 +59,11 @@ export PATH=$PATH:$(go env GOPATH)/bin
 ```shell
 pnpm install --dir client
 ```
-#### 5. You'll need to create a database for **salon** and grant permissions to admin
+#### 5. You'll need to create a database for **bigapp** and grant permissions to admin
 
 ```shell
-CREATE DATABASE salon;
-GRANT ALL PRIVILEGES ON DATABASE salon TO admin;
+CREATE DATABASE bigapp;
+GRANT ALL PRIVILEGES ON DATABASE bigapp TO admin;
 GRANT ALL ON SCHEMA public TO admin;
 ```
 Depending on the name you choose for the database you'll need to update the reference in 2 places:
