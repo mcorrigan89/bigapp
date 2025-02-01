@@ -3,5 +3,15 @@
     "tailwindCSS.experimental.classRegex": [
         ["cva\\(((?:[^()]|\\([^()]*\\))*)\\)", "[\"'`]([^\"'`]*).*?[\"'`]"],
         ["cx\\(((?:[^()]|\\([^()]*\\))*)\\)", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
+      ],
+      "cSpell.words": [
+        "bigapp",
+        "bufbuild",
+        "codegen",
+        "connectrpc",
+        "GOBIN",
+        "GOPATH",
+        "protoc",
+        "sqlc"
       ]
 }
