@@ -44,9 +44,6 @@ func (repo *postgresUserRepository) GetUserByEmail(ctx context.Context, querier 
 
 	row, err := querier.GetUserByEmail(ctx, email)
 	if err != nil {
-		if err == pgx.ErrNoRows {
-			return nil, entities.ErrUserNotFound
-		}
 		return nil, err
 	}
 

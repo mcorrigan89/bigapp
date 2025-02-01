@@ -5,7 +5,7 @@ sql:
       - "queries/*.sql"
     schema: "schema.sql"
     database:
-      uri: "postgres://admin:admin@localhost:5432/bigapp"
+      uri: "postgres://admin:admin@localhost:5432/simple_auth"
     gen:
       go:
         emit_empty_slices: true
