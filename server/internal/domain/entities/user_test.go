@@ -79,30 +79,71 @@ func TestNewUserEntity(t *testing.T) {
 		assert.Equal(t, userEntity.Claimed, true)
 		assert.Equal(t, userEntity.Handle, handle)
 		assert.Equal(t, userEntity.Avatar, avatarEntity)
+		assert.Equal(t, *userEntity.FullName(), "John Doe")
 	})
-}
 
-func TestUserEntityFullName(t *testing.T) {
-	t.Run("user entity full name", func(t *testing.T) {
+	t.Run("create entity from model with given name", func(t *testing.T) {
 		userId := uuid.New()
 		givenName := "John"
-		familyName := "Doe"
 		email := "johndoe@gmail.com"
 		handle := "johndoe"
 
 		userModel := models.User{
 			ID:            userId,
 			GivenName:     &givenName,
-			FamilyName:    &familyName,
+			FamilyName:    nil,
 			Email:         email,
 			EmailVerified: true,
-			Claimed:       true,
 			UserHandle:    handle,
+			Claimed:       true,
 			AvatarID:      nil,
 		}
 
 		userEntity := NewUserEntity(userModel, nil)
 
-		assert.Equal(t, *userEntity.FullName(), "John Doe")
+		assert.Equal(t, *userEntity.FullName(), "John")
+	})
+
+	t.Run("create entity from model with family name", func(t *testing.T) {
+		userId := uuid.New()
+		familyName := "Doe"
+		email := "johndoe@gmail.com"
+		handle := "johndoe"
+
+		userModel := models.User{
+			ID:            userId,
+			GivenName:     nil,
+			FamilyName:    &familyName,
+			Email:         email,
+			EmailVerified: true,
+			UserHandle:    handle,
+			Claimed:       true,
+			AvatarID:      nil,
+		}
+
+		userEntity := NewUserEntity(userModel, nil)
+
+		assert.Equal(t, *userEntity.FullName(), "Doe")
+	})
+
+	t.Run("create entity from model with no name", func(t *testing.T) {
+		userId := uuid.New()
+		email := "johndoe@gmail.com"
+		handle := "johndoe"
+
+		userModel := models.User{
+			ID:            userId,
+			GivenName:     nil,
+			FamilyName:    nil,
+			Email:         email,
+			EmailVerified: true,
+			UserHandle:    handle,
+			Claimed:       true,
+			AvatarID:      nil,
+		}
+
+		userEntity := NewUserEntity(userModel, nil)
+
+		assert.Empty(t, userEntity.FullName())
 	})
 }
