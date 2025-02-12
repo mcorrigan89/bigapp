@@ -39,6 +39,36 @@ type Image struct {
 	OwnerID    *uuid.UUID `json:"owner_id"`
 }
 
+type Organization struct {
+	ID                 uuid.UUID  `json:"id"`
+	OrganizationName   string     `json:"organization_name"`
+	OrganizationHandle string     `json:"organization_handle"`
+	CreatedAt          *time.Time `json:"created_at"`
+	UpdatedAt          *time.Time `json:"updated_at"`
+	Version            int32      `json:"version"`
+}
+
+type OrganizationRole struct {
+	ID              uuid.UUID  `json:"id"`
+	OrganizationID  uuid.UUID  `json:"organization_id"`
+	RoleName        string     `json:"role_name"`
+	RoleDescription *string    `json:"role_description"`
+	RoleType        string     `json:"role_type"`
+	CreatedAt       *time.Time `json:"created_at"`
+	UpdatedAt       *time.Time `json:"updated_at"`
+	Version         int32      `json:"version"`
+}
+
+type OrganizationUser struct {
+	ID             uuid.UUID  `json:"id"`
+	OrganizationID uuid.UUID  `json:"organization_id"`
+	UserID         uuid.UUID  `json:"user_id"`
+	RoleID         uuid.UUID  `json:"role_id"`
+	CreatedAt      *time.Time `json:"created_at"`
+	UpdatedAt      *time.Time `json:"updated_at"`
+	Version        int32      `json:"version"`
+}
+
 type ReferenceLink struct {
 	ID        uuid.UUID  `json:"id"`
 	LinkID    uuid.UUID  `json:"link_id"`

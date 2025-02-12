@@ -117,7 +117,7 @@ func (repo *postgresUserRepository) CreateUser(ctx context.Context, querier mode
 			case "users_email_key":
 				return nil, entities.ErrEmailInUse
 			case "users_user_handle_key":
-				return nil, entities.ErrHandleInUse
+				return nil, entities.ErrUserHandleInUse
 			default:
 				return nil, fmt.Errorf("unique constraint violation: %s", pgErr.ConstraintName)
 			}
@@ -153,7 +153,7 @@ func (repo *postgresUserRepository) UpdateUser(ctx context.Context, querier mode
 			case "users_email_key":
 				return nil, entities.ErrEmailInUse
 			case "users_user_handle_key":
-				return nil, entities.ErrHandleInUse
+				return nil, entities.ErrUserHandleInUse
 			default:
 				return nil, fmt.Errorf("unique constraint violation: %s", pgErr.ConstraintName)
 			}

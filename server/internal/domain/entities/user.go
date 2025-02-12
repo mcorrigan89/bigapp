@@ -9,10 +9,10 @@ import (
 )
 
 var (
-	ErrUserNotFound = errors.New("user not found")
-	ErrEmailInUse   = errors.New("email in use")
-	ErrHandleInUse  = errors.New("handle in use")
-	ErrUserClaimed  = errors.New("user already claimed")
+	ErrUserNotFound    = errors.New("user not found")
+	ErrEmailInUse      = errors.New("email in use")
+	ErrUserHandleInUse = errors.New("handle in use")
+	ErrUserClaimed     = errors.New("user already claimed")
 )
 
 type UserEntity struct {

@@ -45,6 +45,7 @@ func main() {
 	mux := http.NewServeMux()
 
 	postgresUserRepository := repositories.NewPostgresUserRepository()
+	postgresOrganizationRepository := repositories.NewPostgresOrganizationRepository()
 	postgresReferenceLinkRepository := repositories.NewPostgresReferenceLinkRepository()
 	postgresImageRepository := repositories.NewPostgresImageRepository()
 	blobStorageService := storage.NewBlobStorageService(&cfg)
@@ -52,11 +53,13 @@ func main() {
 	imageMediaService := media.NewImageMediaService(blobStorageService)
 
 	userService := services.NewUserService(postgresUserRepository, postgresReferenceLinkRepository, postgresImageRepository)
+	organizationService := services.NewOrganizationService(postgresOrganizationRepository)
 	emailService := services.NewEmailService(smtpService)
 	emailTemplateService := services.NewEmailTemplateService(&cfg)
 	imageService := services.NewImageService(postgresImageRepository)
 
 	userApplicationService := application.NewUserApplicationService(db, &wg, &cfg, &logger, userService, emailService, emailTemplateService)
+	_ = application.NewOrganizationApplicationService(db, &wg, &cfg, &logger, organizationService, userService)
 	imageApplicationService := application.NewImageApplicationService(db, &wg, &cfg, &logger, imageService, userService, imageMediaService)
 	userHandler := handlers.NewUserHandler(&logger, userApplicationService)
 	imageHandler := handlers.NewImageHandler(&logger, imageApplicationService)
