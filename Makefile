@@ -5,6 +5,14 @@ endif
 
 export PATH := $(PWD)/client/node_modules/.bin:$(PATH)
 
+.PHONT: test
+test:
+	@cd server && go test ./...
+
+.PHONT: test-cov
+test-cov:
+	@cd server && go test -v -cover ./...
+
 .PHONY: dev
 dev:
 	@$(MAKE) -j2 dev-server dev-client
