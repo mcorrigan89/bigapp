@@ -61,7 +61,7 @@ codegen:
 
 .PHONY: models
 models:
-	pg_dump --schema-only simple_auth > server/schema.sql
+	pg_dump --schema-only bigapp > server/schema.sql
 	sqlc generate -f server/sqlc.yaml
 
 .PHONY: migrate-create

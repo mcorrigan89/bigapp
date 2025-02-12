@@ -224,7 +224,7 @@ func (app *userApplicationService) InviteUser(ctx context.Context, cmd commands.
 		ID:        uuid.New(),
 		ToEmail:   userForInvite.Email,
 		FromEmail: "mcorrigan89@gmail.com",
-		Subject:   "Invite to Simple Auth",
+		Subject:   "Invite to Big App",
 		PlainBody: plainBody,
 		HtmlBody:  htmlBody,
 	}
@@ -265,7 +265,7 @@ func (app *userApplicationService) RequestEmailLogin(ctx context.Context, cmd co
 		ID:        uuid.New(),
 		ToEmail:   email,
 		FromEmail: "mcorrigan89@gmail.com",
-		Subject:   "Login to Simple Auth",
+		Subject:   "Login to Big App",
 		PlainBody: plainBody,
 		HtmlBody:  htmlBody,
 	}
