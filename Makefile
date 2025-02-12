@@ -7,10 +7,10 @@ export PATH := $(PWD)/client/node_modules/.bin:$(PATH)
 
 .PHONT: test
 test:
-	@cd server && go test ./...
+	@cd server && go test -cover ./...
 
-.PHONT: test-cov
-test-cov:
+.PHONT: test-verbose
+test-verbose:
 	@cd server && go test -v -cover ./...
 
 .PHONY: dev
