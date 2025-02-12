@@ -25,7 +25,7 @@ type ImageApplicationService interface {
 	GetCollectionByID(ctx context.Context, query queries.CollectionByIDQuery) (*entities.CollectionEntity, error)
 	GetCollectionByOwnerID(ctx context.Context, query queries.CollectionByOwnerIDQuery) ([]*entities.CollectionEntity, error)
 	GetCollectionByOwnerToken(ctx context.Context, query queries.CollectionByOwnerTokenQuery) ([]*entities.CollectionEntity, error)
-	CreatCollection(ctx context.Context, cmd commands.CreateNewCollectionCommand) (*entities.CollectionEntity, error)
+	CreateCollection(ctx context.Context, cmd commands.CreateNewCollectionCommand) (*entities.CollectionEntity, error)
 	UploadImagesToCollection(ctx context.Context, cmd commands.UploadImagesToCollectionCommand) (*entities.CollectionEntity, error)
 }
 
@@ -280,7 +280,7 @@ func (app *imageApplicationService) UploadImagesToCollection(ctx context.Context
 	return collectionEntity, nil
 }
 
-func (app *imageApplicationService) CreatCollection(ctx context.Context, cmd commands.CreateNewCollectionCommand) (*entities.CollectionEntity, error) {
+func (app *imageApplicationService) CreateCollection(ctx context.Context, cmd commands.CreateNewCollectionCommand) (*entities.CollectionEntity, error) {
 	app.logger.Info().Ctx(ctx).Msg("Uploading images to collection")
 	tx, cancel, err := postgres.CreateTransaction(ctx, app.db)
 	defer cancel()

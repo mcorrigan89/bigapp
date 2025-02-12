@@ -194,7 +194,7 @@ func (rpc *imageServiceV1) CreateCollection(ctx context.Context, req *connect.Re
 
 	var res *connect.Response[mediav1.CreateCollectionResponse]
 
-	collectionEntity, err := rpc.imageApplicationService.CreatCollection(ctx, cmd)
+	collectionEntity, err := rpc.imageApplicationService.CreateCollection(ctx, cmd)
 	if err != nil {
 		rpc.logger.Err(err).Ctx(ctx).Msg("Error creating collection")
 		return nil, connect.NewError(connect.CodeInternal, err)

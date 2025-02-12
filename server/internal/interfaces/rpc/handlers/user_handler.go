@@ -227,7 +227,7 @@ func (rpc *userServiceV1) UpdateUser(ctx context.Context, req *connect.Request[u
 			})
 			res.Header().Set("User-Version", "v1")
 			return res, nil
-		case entities.ErrHandleInUse:
+		case entities.ErrUserHandleInUse:
 			res = connect.NewResponse(&userv1.UpdateUserResponse{
 				Error: &commonv1.ErrorDetails{
 					Code:    commonv1.ErrorCode_ERROR_CODE_HANDLE_EXISTS,

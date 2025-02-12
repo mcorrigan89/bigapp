@@ -100,6 +100,57 @@ CREATE TABLE public.images (
 ALTER TABLE public.images OWNER TO admin;
 
 --
+-- Name: organization_roles; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.organization_roles (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    organization_id uuid NOT NULL,
+    role_name text NOT NULL,
+    role_description text,
+    role_type public.citext NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    version integer DEFAULT 1 NOT NULL
+);
+
+
+ALTER TABLE public.organization_roles OWNER TO admin;
+
+--
+-- Name: organization_users; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.organization_users (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    organization_id uuid NOT NULL,
+    user_id uuid NOT NULL,
+    role_id uuid NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    version integer DEFAULT 1 NOT NULL
+);
+
+
+ALTER TABLE public.organization_users OWNER TO admin;
+
+--
+-- Name: organizations; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public.organizations (
+    id uuid DEFAULT public.uuid_generate_v4() NOT NULL,
+    organization_name text NOT NULL,
+    organization_handle public.citext NOT NULL,
+    created_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    updated_at timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+    version integer DEFAULT 1 NOT NULL
+);
+
+
+ALTER TABLE public.organizations OWNER TO admin;
+
+--
 -- Name: reference_link; Type: TABLE; Schema: public; Owner: admin
 --
 
@@ -194,6 +245,38 @@ ALTER TABLE ONLY public.images
 
 
 --
+-- Name: organization_roles organization_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.organization_roles
+    ADD CONSTRAINT organization_roles_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organization_users organization_users_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.organization_users
+    ADD CONSTRAINT organization_users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: organizations organizations_organization_handle_key; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.organizations
+    ADD CONSTRAINT organizations_organization_handle_key UNIQUE (organization_handle);
+
+
+--
+-- Name: organizations organizations_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.organizations
+    ADD CONSTRAINT organizations_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: reference_link reference_link_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
 --
 
@@ -271,6 +354,38 @@ ALTER TABLE ONLY public.collections
 
 ALTER TABLE ONLY public.images
     ADD CONSTRAINT images_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.users(id);
+
+
+--
+-- Name: organization_roles organization_roles_organization_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.organization_roles
+    ADD CONSTRAINT organization_roles_organization_id_fkey FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
+
+
+--
+-- Name: organization_users organization_users_organization_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.organization_users
+    ADD CONSTRAINT organization_users_organization_id_fkey FOREIGN KEY (organization_id) REFERENCES public.organizations(id);
+
+
+--
+-- Name: organization_users organization_users_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.organization_users
+    ADD CONSTRAINT organization_users_role_id_fkey FOREIGN KEY (role_id) REFERENCES public.organization_roles(id);
+
+
+--
+-- Name: organization_users organization_users_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public.organization_users
+    ADD CONSTRAINT organization_users_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
