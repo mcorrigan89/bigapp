@@ -32,7 +32,7 @@ export const updateUserAction = actionClient
           },
         });
       }
-      if (response.error.code === ErrorCode.HANDLE_EXISTS) {
+      if (response.error.code === ErrorCode.USER_HANDLE_EXISTS) {
         returnValidationErrors(updateUserSchema, {
           handle: {
             _errors: ["Handle already taken"],

@@ -17,7 +17,7 @@ import (
 )
 
 type OrganizationApplicationService interface {
-	GetOrganizationByID(ctx context.Context, query queries.UserByIDQuery) (*entities.OrganizationEntity, error)
+	GetOrganizationByID(ctx context.Context, query queries.OrganizationByIDQuery) (*entities.OrganizationEntity, error)
 	CreateOrganization(ctx context.Context, command commands.CreateNewOrganizationCommand) (*entities.OrganizationEntity, error)
 }
 
@@ -44,7 +44,7 @@ func NewOrganizationApplicationService(db *pgxpool.Pool, wg *sync.WaitGroup, cfg
 	}
 }
 
-func (app *organizationModelApplicationService) GetUserByID(ctx context.Context, query queries.OrganizationByIDQuery) (*entities.OrganizationEntity, error) {
+func (app *organizationModelApplicationService) GetOrganizationByID(ctx context.Context, query queries.OrganizationByIDQuery) (*entities.OrganizationEntity, error) {
 	app.logger.Info().Ctx(ctx).Msg("Getting organization by ID")
 
 	user, err := app.organizationService.GetOrganizationByID(ctx, app.queries, query.ID)

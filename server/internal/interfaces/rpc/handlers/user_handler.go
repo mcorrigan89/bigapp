@@ -230,7 +230,7 @@ func (rpc *userServiceV1) UpdateUser(ctx context.Context, req *connect.Request[u
 		case entities.ErrUserHandleInUse:
 			res = connect.NewResponse(&userv1.UpdateUserResponse{
 				Error: &commonv1.ErrorDetails{
-					Code:    commonv1.ErrorCode_ERROR_CODE_HANDLE_EXISTS,
+					Code:    commonv1.ErrorCode_ERROR_CODE_USER_HANDLE_EXISTS,
 					Message: "Handle is not available",
 				},
 			})
