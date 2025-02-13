@@ -59,7 +59,7 @@ func main() {
 	imageService := services.NewImageService(postgresImageRepository)
 
 	userApplicationService := application.NewUserApplicationService(db, &wg, &cfg, &logger, userService, emailService, emailTemplateService)
-	_ = application.NewOrganizationApplicationService(db, &wg, &cfg, &logger, organizationService, userService)
+	organizationApplicationService := application.NewOrganizationApplicationService(db, &wg, &cfg, &logger, organizationService, userService)
 	imageApplicationService := application.NewImageApplicationService(db, &wg, &cfg, &logger, imageService, userService, imageMediaService)
 	userHandler := handlers.NewUserHandler(&logger, userApplicationService)
 	imageHandler := handlers.NewImageHandler(&logger, imageApplicationService)
@@ -67,7 +67,7 @@ func main() {
 	mdlwr := middleware.CreateMiddleware(&cfg, db, &logger, userService)
 
 	// Connect RPC Routes
-	service.NewRpcRoutes(mux, &cfg, &logger, &wg, userApplicationService, imageApplicationService)
+	service.NewRpcRoutes(mux, &cfg, &logger, &wg, userApplicationService, imageApplicationService, organizationApplicationService)
 	// HTTP Routes
 	httpRoutes := router.NewRouter(mux, mdlwr, userHandler, imageHandler)
 
